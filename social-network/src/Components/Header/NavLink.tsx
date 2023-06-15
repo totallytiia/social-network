@@ -1,4 +1,5 @@
 export const NavLink = (props: { href: String; text: String }) => {
+    console.log(props);
     const navLinkClasses =
         'text-black bg-gray-200 hover:bg-gray-300 focus:bg-gray-300  py-2 px-3 rounded-full';
 

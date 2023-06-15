@@ -1,15 +1,17 @@
 import { useState, createContext } from 'react';
 
-import Header from './Components/Header/Header';
-import Posts from './Components/Posts/Posts';
-import Footer from './Components/Footer/Footer';
+import Page from '../Page/Page';
 import './styles.css';
+import { BrowserRouter } from 'react-router-dom';
 
 interface ApiUserContextInterface {
     id: number;
-    name: string;
-    username: string;
+    fName: string;
+    lName: string;
+    dateOfBirth: string;
+    nickname: string;
     email: string;
+    about: string;
 }
 
 interface UserContextType {
@@ -23,11 +25,11 @@ function App() {
     const [userData, setUserData] = useState({} as ApiUserContextInterface);
     return (
         <>
-            <UserContext.Provider value={{ userData, setUserData }}>
-                <Header />
-                <Posts />
-                <Footer />
-            </UserContext.Provider>
+            <BrowserRouter>
+                <UserContext.Provider value={{ userData, setUserData }}>
+                    <Page></Page>
+                </UserContext.Provider>
+            </BrowserRouter>
         </>
     );
 }
