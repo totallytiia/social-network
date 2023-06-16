@@ -3,16 +3,13 @@ package main
 import (
 	"encoding/json"
 	"net/http"
+	ep "social_network_api/api_endpoints"
+	s "social_network_api/structs"
 	"strings"
 )
 
-type ErrorResponse struct {
-	Errors   string      `json:"errors"`
-	Detaiils interface{} `json:"details,omitempty"`
-}
-
 // Create a JSON response for bad requests
-var badReqJSON, _ = json.Marshal(ErrorResponse{Errors: "Bad request"})
+var badReqJSON, _ = json.Marshal(s.ErrorResponse{Errors: "Bad request"})
 
 func api(w http.ResponseWriter, r *http.Request) {
 	reqUrl := strings.Split(r.URL.Path[len("/api/"):], "/")
@@ -30,7 +27,7 @@ func api(w http.ResponseWriter, r *http.Request) {
 		}
 		switch reqUrl[1] {
 		case "register":
-			// register(w, r)
+			ep.RegisterUser(w, r)
 		case "login":
 			// login(w, r)
 		default:

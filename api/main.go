@@ -7,6 +7,7 @@ import (
 	http "net/http"
 	"os"
 	"os/signal"
+	db "social_network_api/db"
 	"time"
 )
 
@@ -14,6 +15,8 @@ func main() {
 	var srv http.Server
 	srv.Addr = ":8080"
 
+	// Initialize the database
+	db.InitDB()
 	http.HandleFunc("/api/", api)
 	go func() {
 		if err := srv.ListenAndServe(); err != nil {
