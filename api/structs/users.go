@@ -60,6 +60,15 @@ func (s *Session) Generate() error {
 	return nil
 }
 
+func UserFromSession(session string) (User, error) {
+	for _, user := range Users {
+		if user.Session.SessionID == session {
+			return user, nil
+		}
+	}
+	return User{}, errors.New("invalid session")
+}
+
 // Validate the input data when creating/registering a new user
 func (u NewUser) Validate() error {
 	if u.Email == "" || u.Password == "" || u.FName == "" || u.LName == "" || u.DoB == "" {
@@ -101,11 +110,12 @@ func (u NewUser) Validate() error {
 	}
 	// Validate the avatar blob using regex
 	var avatarReqEx = regexp.MustCompile(`^data:image\/(png|jpg|jpeg);base64,([a-zA-Z0-9+/=]+)$`)
-	if !avatarReqEx.MatchString(u.Avatar) {
+	if !avatarReqEx.MatchString(u.Avatar) && u.Avatar != "" {
 		return errors.New("invalid avatar")
 	}
 	// Validate the about me using regex
-	var aboutMeReqEx = regexp.MustCompile(`^[a-zA-Z0-9._%+\-]{3,255}$`)
+	// Preferred RegEx = ^((?!(<script)|(on.*=))[a-zA-Z0-9.,!?<>_%:+\- \n]){0,255}$ but golang regex doesn't support lookaheads
+	var aboutMeReqEx = regexp.MustCompile(`^[a-zA-Z0-9.,!?="'€$#_%+\-]{0,255}$`)
 	if !aboutMeReqEx.MatchString(u.AboutMe) {
 		return errors.New("invalid about me")
 	}
@@ -130,7 +140,7 @@ func (u NewUser) Register() error {
 	if err != nil {
 		return err
 	}
-	var query = "INSERT INTO users (email, fname, lname, password, date_of_birth, nickname, avatar, about_me, private) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)"
+	var query = "INSERT INTO users (email, fname, lname, password, dob, nickname, avatar, about, private) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)"
 	_, err = db.DB.Exec(query, u.Email, u.FName, u.LName, hashedPassword, u.DoB, u.Nickname, u.Avatar, u.AboutMe, u.Private)
 	if err != nil {
 		return err
@@ -172,7 +182,7 @@ func (u User) Logout() error {
 
 // Get a user from the database
 func (u User) Get() error {
-	var query = "SELECT id, email, fname, lname, date_of_birth, nickname, avatar, about_me, created_at, updated_at, private FROM users WHERE id = ?"
+	var query = "SELECT id, email, fname, lname, dob, nickname, avatar, about, created_at, updated_at, private FROM users WHERE id = ?"
 	err := db.DB.QueryRow(query, u.ID).Scan(&u.ID, &u.Email, &u.FName, &u.LName, &u.DoB, &u.Nickname, &u.Avatar, &u.AboutMe, &u.CreatedAt, &u.UpdatedAt, &u.Private)
 	if err != nil {
 		return err
@@ -182,7 +192,7 @@ func (u User) Get() error {
 
 // Update a user in the database
 func (u User) Update() error {
-	var query = "UPDATE users SET fname = ?, lname = ?, date_of_birth = ?, nickname = ?, avatar = ?, about_me = ?, private = ? WHERE id = ?"
+	var query = "UPDATE users SET fname = ?, lname = ?, dob = ?, nickname = ?, avatar = ?, about = ?, private = ? WHERE id = ?"
 	_, err := db.DB.Exec(query, u.FName, u.LName, u.DoB, u.Nickname, u.Avatar, u.AboutMe, u.Private, u.ID)
 	if err != nil {
 		return err
@@ -202,7 +212,7 @@ func (u User) Delete() error {
 
 // Get all the users from the database
 func GetAllUsers() ([]User, error) {
-	var query = "SELECT id, email, fname, lname, date_of_birth, nickname, avatar, about_me, created_at, updated_at, private FROM users"
+	var query = "SELECT id, email, fname, lname, dob, nickname, avatar, about, created_at, updated_at, private FROM users"
 	rows, err := db.DB.Query(query)
 	if err != nil {
 		return nil, err

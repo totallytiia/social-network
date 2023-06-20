@@ -1,10 +1,28 @@
 package endpoints
 
 import (
+	"encoding/base64"
 	"encoding/json"
 	"net/http"
 	s "social_network_api/structs"
+	"strconv"
+	"time"
 )
+
+func ValidateCookie(w http.ResponseWriter, r *http.Request) (bool, s.User) {
+	var cookie, err = r.Cookie("session")
+	if cookie.Expires.Before(time.Now()) {
+		return false, s.User{}
+	}
+	if err != nil {
+		return false, s.User{}
+	}
+	user, err := s.UserFromSession(cookie.Value)
+	if err != nil {
+		return false, s.User{}
+	}
+	return true, user
+}
 
 func RegisterUser(w http.ResponseWriter, r *http.Request) {
 	if r.Method != "POST" {
@@ -30,6 +48,13 @@ func RegisterUser(w http.ResponseWriter, r *http.Request) {
 	user.DoB = r.FormValue("date_of_birth")
 	user.Avatar = r.FormValue("avatar")
 	user.AboutMe = r.FormValue("about_me")
+	user.Private, err = strconv.ParseBool(r.FormValue("private"))
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		badReqJSON, _ := json.Marshal(s.ErrorResponse{Errors: "There was an error with your request", Details: err.Error()})
+		w.Write(badReqJSON)
+		return
+	}
 	err = user.Validate()
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
@@ -67,7 +92,15 @@ func LoginUser(w http.ResponseWriter, r *http.Request) {
 	var user s.User
 	user.Email = r.FormValue("email")
 	pass := r.FormValue("password")
-	err = user.Login(pass)
+	// Base64 decode the password
+	decodedPass, err := base64.StdEncoding.DecodeString(pass)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		badReqJSON, _ := json.Marshal(s.ErrorResponse{Errors: "There was an error with your request", Details: err.Error()})
+		w.Write(badReqJSON)
+		return
+	}
+	err = user.Login(string(decodedPass))
 	if err != nil {
 		w.WriteHeader(http.StatusUnauthorized)
 		badReqJSON, _ := json.Marshal(s.ErrorResponse{Errors: "There was an error logging in the user", Details: err.Error()})
@@ -75,9 +108,37 @@ func LoginUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	// Set the cookie
-	cookie := http.Cookie{Name: "session", Value: user.Session.SessionID, Path: "/"}
+	cookie := http.Cookie{Name: "session", Value: user.Session.SessionID, Path: "/", Expires: time.Now().Add(24 * time.Hour * 7)}
 	http.SetCookie(w, &cookie)
 	w.WriteHeader(http.StatusOK)
 	var okJSON, _ = json.Marshal(s.OKResponse{Message: "User logged in successfully"})
 	w.Write(okJSON)
+}
+
+func LogoutUser(w http.ResponseWriter, r *http.Request) {
+	if r.Method == "POST" {
+		w.WriteHeader(http.StatusMethodNotAllowed)
+		var badReqMethodJSON, _ = json.Marshal(s.ErrorResponse{Errors: "There was an error with your request", Details: "Method not allowed"})
+		w.Write(badReqMethodJSON)
+		return
+	}
+	var sessionCookie, err = r.Cookie("session")
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		badReqJSON, _ := json.Marshal(s.ErrorResponse{Errors: "There was an error with your request", Details: err.Error()})
+		w.Write(badReqJSON)
+		return
+	}
+	var user s.User = s.User{Session: s.Session{SessionID: sessionCookie.Value}}
+	err = user.Logout()
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		badReqJSON, _ := json.Marshal(s.ErrorResponse{Errors: "There was an error logging out the user", Details: err.Error()})
+		w.Write(badReqJSON)
+		return
+	}
+	// Set the cookie
+	cookie := http.Cookie{Name: "session", Value: "", Path: "/"}
+	http.SetCookie(w, &cookie)
+	http.Redirect(w, r, "/", http.StatusMovedPermanently)
 }

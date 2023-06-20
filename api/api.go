@@ -30,6 +30,8 @@ func api(w http.ResponseWriter, r *http.Request) {
 			ep.RegisterUser(w, r)
 		case "login":
 			ep.LoginUser(w, r)
+		case "logout":
+			ep.LogoutUser(w, r)
 		default:
 			http.NotFound(w, r)
 			return
