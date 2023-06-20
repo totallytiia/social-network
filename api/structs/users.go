@@ -7,8 +7,11 @@ import (
 	"strconv"
 	"strings"
 	"time"
+
+	"golang.org/x/crypto/bcrypt"
 )
 
+// Used when creating/registering a new user
 type NewUser struct {
 	Email    string `json:"email"`
 	FName    string `json:"fname"`
@@ -18,8 +21,10 @@ type NewUser struct {
 	Nickname string `json:"nickname"`
 	Avatar   string `json:"avatar"`
 	AboutMe  string `json:"about_me"`
+	Private  bool   `json:"private"`
 }
 
+// Used when getting a user
 type User struct {
 	ID        int    `json:"id"`
 	Email     string `json:"email"`
@@ -31,8 +36,10 @@ type User struct {
 	AboutMe   string `json:"about_me"`
 	CreatedAt string `json:"created_at"`
 	UpdatedAt string `json:"updated_at"`
+	Private   bool   `json:"private"`
 }
 
+// Validate the input data when creating/registering a new user
 func (u NewUser) Validate() error {
 	if u.Email == "" || u.Password == "" || u.FName == "" || u.LName == "" || u.DoB == "" {
 		return errors.New("missing required fields")
@@ -85,27 +92,99 @@ func (u NewUser) Validate() error {
 }
 
 func (u User) Exists() bool {
-	// Check if the user exists in the database
-	var user User
-	// Create the query
-	var query = "SELECT * FROM users WHERE email = ?"
-	// Execute the query
-	db.DB.QueryRow(query, u.Email).Scan(&user.ID, &user.Email, &user.FName, &user.LName, &user.DoB, &user.Nickname, &user.Avatar, &user.AboutMe, &user.CreatedAt, &user.UpdatedAt)
+	var query = "SELECT id FROM users WHERE email = ?"
+	db.DB.QueryRow(query, u.Email).Scan(&u.ID)
 	// Check if the user exists
-	return user.ID != 0
+	return u.ID != 0
 }
 
+// Register a new user (insert into the database)
 func (u NewUser) Register() error {
 	var usr = User{Email: u.Email}
 	if usr.Exists() {
-		return errors.New("user already exists")
+		return errors.New("an account using this email already exists")
 	}
-	// Create the query
-	var query = "INSERT INTO users (email, fname, lname, password, date_of_birth, nickname, avatar, about_me) VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
-	// Execute the query
-	_, err := db.DB.Exec(query, u.Email, u.FName, u.LName, u.Password, u.DoB, u.Nickname, u.Avatar, u.AboutMe)
+	// Hash the password using bcrypt
+	var hashedPassword, err = bcrypt.GenerateFromPassword([]byte(u.Password), bcrypt.DefaultCost)
+	if err != nil {
+		return err
+	}
+	var query = "INSERT INTO users (email, fname, lname, password, date_of_birth, nickname, avatar, about_me, private) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)"
+	_, err = db.DB.Exec(query, u.Email, u.FName, u.LName, hashedPassword, u.DoB, u.Nickname, u.Avatar, u.AboutMe, u.Private)
 	if err != nil {
 		return err
 	}
 	return nil
+}
+
+func (u User) Login(password string) error {
+	var query = "SELECT id, password FROM users WHERE email = ?"
+	var hashedPassword string
+	db.DB.QueryRow(query, u.Email).Scan(&u.ID, &hashedPassword)
+	// Check if the user exists
+	if u.ID == 0 {
+		return errors.New("an account using this email doesn't exist")
+	}
+	// Compare the passwords
+	err := bcrypt.CompareHashAndPassword([]byte(hashedPassword), []byte(password))
+	if err != nil {
+		return errors.New("invalid password")
+	}
+	// Get the user data
+	err = u.Get()
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+// Get a user from the database
+func (u User) Get() error {
+	var query = "SELECT id, email, fname, lname, date_of_birth, nickname, avatar, about_me, created_at, updated_at, private FROM users WHERE id = ?"
+	err := db.DB.QueryRow(query, u.ID).Scan(&u.ID, &u.Email, &u.FName, &u.LName, &u.DoB, &u.Nickname, &u.Avatar, &u.AboutMe, &u.CreatedAt, &u.UpdatedAt, &u.Private)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+// Update a user in the database
+func (u User) Update() error {
+	var query = "UPDATE users SET fname = ?, lname = ?, date_of_birth = ?, nickname = ?, avatar = ?, about_me = ?, private = ? WHERE id = ?"
+	_, err := db.DB.Exec(query, u.FName, u.LName, u.DoB, u.Nickname, u.Avatar, u.AboutMe, u.Private, u.ID)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+// Delete a user from the database
+func (u User) Delete() error {
+	var query = "DELETE FROM users WHERE id = ?"
+	_, err := db.DB.Exec(query, u.ID)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+// Get all the users from the database
+func GetAllUsers() ([]User, error) {
+	var query = "SELECT id, email, fname, lname, date_of_birth, nickname, avatar, about_me, created_at, updated_at, private FROM users"
+	rows, err := db.DB.Query(query)
+	if err != nil {
+		return nil, err
+	}
+	var users []User
+	defer rows.Close()
+	// Iterate over the rows
+	for rows.Next() {
+		var u User
+		err := rows.Scan(&u.ID, &u.Email, &u.FName, &u.LName, &u.DoB, &u.Nickname, &u.Avatar, &u.AboutMe, &u.CreatedAt, &u.UpdatedAt, &u.Private)
+		if err != nil {
+			return users, err
+		}
+		users = append(users, u)
+	}
+	return users, nil
 }

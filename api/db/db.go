@@ -12,6 +12,8 @@ import (
 
 var DB *sql.DB
 
+// Initializes the database by making sure there is a database file and
+// running the migrations
 func InitDB() {
 	var err error
 	// Create the database file if it doesn't exist
