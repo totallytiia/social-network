@@ -14,7 +14,7 @@ func RegisterUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	// Extract the Form data from the request
-	var err = r.ParseMultipartForm(128000)
+	var err = r.ParseMultipartForm(1000)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		badReqJSON, _ := json.Marshal(s.ErrorResponse{Errors: "There was an error with your request", Details: err.Error()})
@@ -46,5 +46,38 @@ func RegisterUser(w http.ResponseWriter, r *http.Request) {
 	}
 	w.WriteHeader(http.StatusOK)
 	var okJSON, _ = json.Marshal(s.OKResponse{Message: "User registered successfully"})
+	w.Write(okJSON)
+}
+
+func LoginUser(w http.ResponseWriter, r *http.Request) {
+	if r.Method != "POST" {
+		w.WriteHeader(http.StatusMethodNotAllowed)
+		var badReqMethodJSON, _ = json.Marshal(s.ErrorResponse{Errors: "There was an error with your request", Details: "Method not allowed"})
+		w.Write(badReqMethodJSON)
+		return
+	}
+	// Extract the Form data from the request
+	var err = r.ParseMultipartForm(512)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		badReqJSON, _ := json.Marshal(s.ErrorResponse{Errors: "There was an error with your request", Details: err.Error()})
+		w.Write(badReqJSON)
+		return
+	}
+	var user s.User
+	user.Email = r.FormValue("email")
+	pass := r.FormValue("password")
+	err = user.Login(pass)
+	if err != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		badReqJSON, _ := json.Marshal(s.ErrorResponse{Errors: "There was an error logging in the user", Details: err.Error()})
+		w.Write(badReqJSON)
+		return
+	}
+	// Set the cookie
+	cookie := http.Cookie{Name: "session", Value: user.Session.SessionID, Path: "/"}
+	http.SetCookie(w, &cookie)
+	w.WriteHeader(http.StatusOK)
+	var okJSON, _ = json.Marshal(s.OKResponse{Message: "User logged in successfully"})
 	w.Write(okJSON)
 }

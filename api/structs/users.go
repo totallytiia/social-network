@@ -2,14 +2,18 @@ package structs
 
 import (
 	"errors"
+	"log"
 	"regexp"
 	db "social_network_api/db"
 	"strconv"
 	"strings"
 	"time"
 
+	"github.com/gofrs/uuid"
 	"golang.org/x/crypto/bcrypt"
 )
+
+var Users = map[int]User{}
 
 // Used when creating/registering a new user
 type NewUser struct {
@@ -37,6 +41,23 @@ type User struct {
 	CreatedAt string `json:"created_at"`
 	UpdatedAt string `json:"updated_at"`
 	Private   bool   `json:"private"`
+	Session   Session
+}
+
+type Session struct {
+	ID        int
+	UserID    int
+	SessionID string
+}
+
+func (s *Session) Generate() error {
+	suuid, err := uuid.NewV4()
+	if err != nil {
+		log.Println("Failed to generate UUID", err)
+		return err
+	}
+	s.SessionID = suuid.String()
+	return nil
 }
 
 // Validate the input data when creating/registering a new user
@@ -121,7 +142,6 @@ func (u User) Login(password string) error {
 	var query = "SELECT id, password FROM users WHERE email = ?"
 	var hashedPassword string
 	db.DB.QueryRow(query, u.Email).Scan(&u.ID, &hashedPassword)
-	// Check if the user exists
 	if u.ID == 0 {
 		return errors.New("an account using this email doesn't exist")
 	}
@@ -130,11 +150,23 @@ func (u User) Login(password string) error {
 	if err != nil {
 		return errors.New("invalid password")
 	}
-	// Get the user data
 	err = u.Get()
 	if err != nil {
 		return err
 	}
+	// Generate a new session
+	var session = Session{ID: len(Users), UserID: u.ID}
+	err = session.Generate()
+	if err != nil {
+		return err
+	}
+	// Add the user to the list of logged in users
+	Users[u.ID] = u
+	return nil
+}
+
+func (u User) Logout() error {
+	delete(Users, u.ID)
 	return nil
 }
 

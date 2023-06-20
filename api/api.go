@@ -29,7 +29,7 @@ func api(w http.ResponseWriter, r *http.Request) {
 		case "register":
 			ep.RegisterUser(w, r)
 		case "login":
-			// login(w, r)
+			ep.LoginUser(w, r)
 		default:
 			http.NotFound(w, r)
 			return
