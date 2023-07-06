@@ -219,7 +219,6 @@ func GetAllUsers() ([]User, error) {
 	}
 	var users []User
 	defer rows.Close()
-	// Iterate over the rows
 	for rows.Next() {
 		var u User
 		err := rows.Scan(&u.ID, &u.Email, &u.FName, &u.LName, &u.DoB, &u.Nickname, &u.Avatar, &u.AboutMe, &u.CreatedAt, &u.UpdatedAt, &u.Private)

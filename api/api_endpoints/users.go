@@ -9,21 +9,6 @@ import (
 	"time"
 )
 
-func ValidateCookie(w http.ResponseWriter, r *http.Request) (bool, s.User) {
-	var cookie, err = r.Cookie("session")
-	if cookie.Expires.Before(time.Now()) {
-		return false, s.User{}
-	}
-	if err != nil {
-		return false, s.User{}
-	}
-	user, err := s.UserFromSession(cookie.Value)
-	if err != nil {
-		return false, s.User{}
-	}
-	return true, user
-}
-
 func RegisterUser(w http.ResponseWriter, r *http.Request) {
 	if r.Method != "POST" {
 		w.WriteHeader(http.StatusMethodNotAllowed)
