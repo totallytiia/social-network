@@ -29,7 +29,13 @@ func CreatePost(w http.ResponseWriter, r *http.Request) {
 	post.Title = r.FormValue("title")
 	post.Content = r.FormValue("content")
 	post.Image = r.FormValue("image")
-	post.Privacy = r.FormValue("privacy")
+	post.Privacy, err = strconv.Atoi(r.FormValue("privacy"))
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		badReqJSON, _ := json.Marshal(s.ErrorResponse{Errors: "There was an error with your request", Details: "Invalid privacy setting"})
+		w.Write(badReqJSON)
+		return
+	}
 	post.PrivacySettings = r.FormValue("privacy_settings")
 	// Extract the user from the session
 	userPosting, err := s.UserFromSession(r.FormValue("session"))

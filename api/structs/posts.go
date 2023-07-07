@@ -4,6 +4,8 @@ import (
 	"errors"
 	"regexp"
 	db "social_network_api/db"
+	"strconv"
+	"strings"
 )
 
 // PrivacySettings is a comma separated list of user ids for the users that can see the post
@@ -11,7 +13,7 @@ type NewPost struct {
 	Title           string `json:"title"`
 	Content         string `json:"content"`
 	Image           string `json:"image"`
-	Privacy         string `json:"privacy"`
+	Privacy         int    `json:"privacy"`
 	PrivacySettings string `json:"privacy_settings"`
 	UserID          int    `json:"user_id"`
 	GroupID         int    `json:"group_id"`
@@ -34,8 +36,29 @@ func (p *NewPost) Validate() error {
 	if p.Title == "" {
 		return errors.New("post title cannot be empty")
 	}
+	if len(p.Title) > 100 {
+		return errors.New("post title cannot be longer than 100 characters")
+	}
 	if p.Content == "" {
 		return errors.New("post content cannot be empty")
+	}
+	if len(p.Content) > 1000 {
+		return errors.New("post content cannot be longer than 1000 characters")
+	}
+	if p.Privacy != 0 && p.Privacy != 1 && p.Privacy != 2 {
+		return errors.New("invalid privacy setting")
+	}
+	if p.Privacy == 2 && p.PrivacySettings == "" {
+		return errors.New("privacy settings cannot be empty")
+	}
+	if p.Privacy == 2 {
+		var privacySettings = strings.Split(p.PrivacySettings, ",")
+		for _, v := range privacySettings {
+			var _, err = strconv.Atoi(v)
+			if err != nil {
+				return errors.New("invalid privacy settings")
+			}
+		}
 	}
 	var imageRegEx = regexp.MustCompile(`^data:image\/(png|jpg|jpeg);base64,([a-zA-Z0-9+/=]+)$`)
 	if !imageRegEx.MatchString(p.Image) {
