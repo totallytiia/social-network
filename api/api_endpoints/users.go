@@ -54,6 +54,17 @@ func RegisterUser(w http.ResponseWriter, r *http.Request) {
 		w.Write(badReqJSON)
 		return
 	}
+	var userLogin s.User
+	userLogin.Email = user.Email
+	err = userLogin.Login(user.Password)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		badReqJSON, _ := json.Marshal(s.ErrorResponse{Errors: "There was an error logging in the user", Details: err.Error()})
+		w.Write(badReqJSON)
+		return
+	}
+	cookie := http.Cookie{Name: "session", Value: userLogin.Session.SessionID, Path: "/", Expires: time.Now().Add(24 * time.Hour * 7)}
+	http.SetCookie(w, &cookie)
 	w.WriteHeader(http.StatusOK)
 	var okJSON, _ = json.Marshal(s.OKResponse{Message: "User registered successfully"})
 	w.Write(okJSON)

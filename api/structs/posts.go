@@ -52,3 +52,19 @@ func (p *NewPost) Create() (int, error) {
 	var id, _ = res.LastInsertId()
 	return int(id), nil
 }
+
+func (p *Post) Get() error {
+	var err = db.DB.QueryRow("SELECT user_id, group_id, title, content, image, privacy, privacy_settings, created_at, updated_at FROM posts WHERE id = ?", p.ID).Scan(&p.UserID, &p.GroupID, &p.Title, &p.Content, &p.Image, &p.Privacy, &p.PrivacySettings, &p.CreatedAt, &p.UpdatedAt)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (p *Post) Delete() error {
+	var _, err = db.DB.Exec("DELETE FROM posts WHERE id = ?", p.ID)
+	if err != nil {
+		return err
+	}
+	return nil
+}

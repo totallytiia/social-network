@@ -34,8 +34,8 @@ func CreatePost(w http.ResponseWriter, r *http.Request) {
 	// Extract the user from the session
 	userPosting, err := s.UserFromSession(r.FormValue("session"))
 	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		badReqJSON, _ := json.Marshal(s.ErrorResponse{Errors: "There was an error with your request", Details: err.Error()})
+		w.WriteHeader(http.StatusUnauthorized)
+		badReqJSON, _ := json.Marshal(s.ErrorResponse{Errors: "Unauthorized request", Details: "Invalid session"})
 		w.Write(badReqJSON)
 		return
 	}
@@ -61,7 +61,59 @@ func CreatePost(w http.ResponseWriter, r *http.Request) {
 		w.Write(badReqJSON)
 		return
 	}
-	var postJSON, _ = json.Marshal(s.Post{ID: id, UserID: post.UserID, GroupID: post.GroupID, Title: post.Title, Content: post.Content, Image: post.Image, Privacy: post.Privacy, PrivacySettings: post.PrivacySettings})
+	var postJSON, _ = json.Marshal(s.Post{ID: id})
 	w.WriteHeader(http.StatusCreated)
 	w.Write(postJSON)
+}
+
+func DeletePost(w http.ResponseWriter, r *http.Request) {
+	v, user := ValidateCookie(w, r)
+	if !v {
+		http.Error(w, "Unauthorized", http.StatusUnauthorized)
+	}
+	if r.Method != "POST" {
+		w.WriteHeader(http.StatusMethodNotAllowed)
+		var badReqMethodJSON, _ = json.Marshal(s.ErrorResponse{Errors: "There was an error with your request", Details: "Method not allowed"})
+		w.Write(badReqMethodJSON)
+		return
+	}
+	// Extract the Form data from the request
+	var err = r.ParseMultipartForm(2000)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		badReqJSON, _ := json.Marshal(s.ErrorResponse{Errors: "There was an error with your request", Details: err.Error()})
+		w.Write(badReqJSON)
+		return
+	}
+	var post s.Post
+	postID, err := strconv.Atoi(r.FormValue("post_id"))
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		badReqJSON, _ := json.Marshal(s.ErrorResponse{Errors: "There was an error with your request", Details: "Invalid post ID"})
+		w.Write(badReqJSON)
+		return
+	}
+	post.ID = postID
+	err = post.Get()
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		badReqJSON, _ := json.Marshal(s.ErrorResponse{Errors: "There was an error deleting the post", Details: err.Error()})
+		w.Write(badReqJSON)
+		return
+	}
+	if post.UserID != user.ID {
+		w.WriteHeader(http.StatusUnauthorized)
+		badReqJSON, _ := json.Marshal(s.ErrorResponse{Errors: "There was an error deleting the post", Details: "Unauthorized"})
+		w.Write(badReqJSON)
+		return
+	}
+	err = post.Delete()
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		badReqJSON, _ := json.Marshal(s.ErrorResponse{Errors: "There was an error deleting the post", Details: err.Error()})
+		w.Write(badReqJSON)
+		return
+	}
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte("Post deleted"))
 }
