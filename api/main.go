@@ -26,6 +26,7 @@ func main() {
 
 	// Routes definition
 	http.HandleFunc("/api/", api)
+	http.HandleFunc("/ws/", ws)
 
 	log.Println("Starting server at", srv.Addr)
 	fmt.Println("Starting server at", srv.Addr)
