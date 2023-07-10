@@ -148,7 +148,7 @@ func (u NewUser) Register() error {
 	return nil
 }
 
-func (u User) Login(password string) error {
+func (u *User) Login(password string) error {
 	var query = "SELECT id, password FROM users WHERE email = ?"
 	var hashedPassword string
 	db.DB.QueryRow(query, u.Email).Scan(&u.ID, &hashedPassword)
@@ -170,8 +170,9 @@ func (u User) Login(password string) error {
 	if err != nil {
 		return err
 	}
+	u.Session = session
 	// Add the user to the list of logged in users
-	Users[u.ID] = u
+	Users[u.ID] = *u
 	return nil
 }
 

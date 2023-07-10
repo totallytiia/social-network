@@ -121,5 +121,38 @@ func DeletePost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	w.WriteHeader(http.StatusOK)
-	w.Write([]byte("Post deleted"))
+	successJSON, _ := json.Marshal(s.OKResponse{Message: "Post deleted"})
+	w.Write(successJSON)
+}
+
+func GetPost(w http.ResponseWriter, r *http.Request) {
+	v, _ := ValidateCookie(w, r)
+	if !v {
+		http.Error(w, "Unauthorized", http.StatusUnauthorized)
+	}
+	if r.Method != "GET" {
+		w.WriteHeader(http.StatusMethodNotAllowed)
+		var badReqMethodJSON, _ = json.Marshal(s.ErrorResponse{Errors: "There was an error with your request", Details: "Method not allowed"})
+		w.Write(badReqMethodJSON)
+		return
+	}
+	var post s.Post
+	postID, err := strconv.Atoi(r.FormValue("post_id"))
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		badReqJSON, _ := json.Marshal(s.ErrorResponse{Errors: "There was an error with your request", Details: "Invalid post ID"})
+		w.Write(badReqJSON)
+		return
+	}
+	post.ID = postID
+	err = post.Get()
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		badReqJSON, _ := json.Marshal(s.ErrorResponse{Errors: "There was an error getting the post", Details: err.Error()})
+		w.Write(badReqJSON)
+		return
+	}
+	var postJSON, _ = json.Marshal(post)
+	w.WriteHeader(http.StatusOK)
+	w.Write(postJSON)
 }

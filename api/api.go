@@ -48,7 +48,7 @@ func api(w http.ResponseWriter, r *http.Request) {
 		case "update":
 			// updatePost(w, r)
 		case "delete":
-			// deletePost(w, r)
+			ep.DeletePost(w, r)
 		case "get":
 			// getPost(w, r)
 		case "getall":
