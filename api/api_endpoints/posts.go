@@ -125,7 +125,83 @@ func DeletePost(w http.ResponseWriter, r *http.Request) {
 	w.Write(successJSON)
 }
 
-func GetPost(w http.ResponseWriter, r *http.Request) {
+// func GetPost(w http.ResponseWriter, r *http.Request) {
+// 	v, _ := ValidateCookie(w, r)
+// 	if !v {
+// 		http.Error(w, "Unauthorized", http.StatusUnauthorized)
+// 	}
+// 	if r.Method != "GET" {
+// 		w.WriteHeader(http.StatusMethodNotAllowed)
+// 		var badReqMethodJSON, _ = json.Marshal(s.ErrorResponse{Errors: "There was an error with your request", Details: "Method not allowed"})
+// 		w.Write(badReqMethodJSON)
+// 		return
+// 	}
+// 	var post s.Post
+// 	postID, err := strconv.Atoi(r.FormValue("post_id"))
+// 	if err != nil {
+// 		w.WriteHeader(http.StatusBadRequest)
+// 		badReqJSON, _ := json.Marshal(s.ErrorResponse{Errors: "There was an error with your request", Details: "Invalid post ID"})
+// 		w.Write(badReqJSON)
+// 		return
+// 	}
+// 	post.ID = postID
+// 	err = post.Get()
+// 	if err != nil {
+// 		w.WriteHeader(http.StatusInternalServerError)
+// 		badReqJSON, _ := json.Marshal(s.ErrorResponse{Errors: "There was an error getting the post", Details: err.Error()})
+// 		w.Write(badReqJSON)
+// 		return
+// 	}
+// 	var postJSON, _ = json.Marshal(post)
+// 	w.WriteHeader(http.StatusOK)
+// 	w.Write(postJSON)
+// }
+
+// func GetPosts(w http.ResponseWriter, r *http.Request) {
+// 	v, _ := ValidateCookie(w, r)
+// 	if !v {
+// 		http.Error(w, "Unauthorized", http.StatusUnauthorized)
+// 	}
+// 	if r.Method != "GET" {
+// 		w.WriteHeader(http.StatusMethodNotAllowed)
+// 		var badReqMethodJSON, _ = json.Marshal(s.ErrorResponse{Errors: "There was an error with your request", Details: "Method not allowed"})
+// 		w.Write(badReqMethodJSON)
+// 		return
+// 	}
+// 	var post s.Post
+// 	if r.FormValue("group_id") != "" {
+// 		groupID, err := strconv.Atoi(r.FormValue("group_id"))
+// 		if err != nil {
+// 			w.WriteHeader(http.StatusBadRequest)
+// 			badReqJSON, _ := json.Marshal(s.ErrorResponse{Errors: "There was an error with your request", Details: "Invalid group ID"})
+// 			w.Write(badReqJSON)
+// 			return
+// 		}
+// 		post.GroupID = groupID
+// 	}
+// 	if r.FormValue("user_id") != "" {
+// 		userID, err := strconv.Atoi(r.FormValue("user_id"))
+// 		if err != nil {
+// 			w.WriteHeader(http.StatusBadRequest)
+// 			badReqJSON, _ := json.Marshal(s.ErrorResponse{Errors: "There was an error with your request", Details: "Invalid user ID"})
+// 			w.Write(badReqJSON)
+// 			return
+// 		}
+// 		post.UserID = userID
+// 	}
+// 	posts, err := post.GetPosts()
+// 	if err != nil {
+// 		w.WriteHeader(http.StatusInternalServerError)
+// 		badReqJSON, _ := json.Marshal(s.ErrorResponse{Errors: "There was an error getting the posts", Details: err.Error()})
+// 		w.Write(badReqJSON)
+// 		return
+// 	}
+// 	var postsJSON, _ = json.Marshal(posts)
+// 	w.WriteHeader(http.StatusOK)
+// 	w.Write(postsJSON)
+// }
+
+func GetPosts(w http.ResponseWriter, r *http.Request) {
 	v, _ := ValidateCookie(w, r)
 	if !v {
 		http.Error(w, "Unauthorized", http.StatusUnauthorized)
@@ -138,21 +214,48 @@ func GetPost(w http.ResponseWriter, r *http.Request) {
 	}
 	var post s.Post
 	postID, err := strconv.Atoi(r.FormValue("post_id"))
-	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		badReqJSON, _ := json.Marshal(s.ErrorResponse{Errors: "There was an error with your request", Details: "Invalid post ID"})
-		w.Write(badReqJSON)
+	if err == nil {
+		post.ID = postID
+		err = post.Get()
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			badReqJSON, _ := json.Marshal(s.ErrorResponse{Errors: "There was an error getting the post", Details: err.Error()})
+			w.Write(badReqJSON)
+			return
+		}
+		var postJSON, _ = json.Marshal(post)
+		w.WriteHeader(http.StatusOK)
+		w.Write(postJSON)
 		return
 	}
-	post.ID = postID
-	err = post.Get()
+	if r.FormValue("group_id") != "" {
+		groupID, err := strconv.Atoi(r.FormValue("group_id"))
+		if err != nil {
+			w.WriteHeader(http.StatusBadRequest)
+			badReqJSON, _ := json.Marshal(s.ErrorResponse{Errors: "There was an error with your request", Details: "Invalid group ID"})
+			w.Write(badReqJSON)
+			return
+		}
+		post.GroupID = groupID
+	}
+	if r.FormValue("user_id") != "" {
+		userID, err := strconv.Atoi(r.FormValue("user_id"))
+		if err != nil {
+			w.WriteHeader(http.StatusBadRequest)
+			badReqJSON, _ := json.Marshal(s.ErrorResponse{Errors: "There was an error with your request", Details: "Invalid user ID"})
+			w.Write(badReqJSON)
+			return
+		}
+		post.UserID = userID
+	}
+	posts, err := post.GetPosts()
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
-		badReqJSON, _ := json.Marshal(s.ErrorResponse{Errors: "There was an error getting the post", Details: err.Error()})
+		badReqJSON, _ := json.Marshal(s.ErrorResponse{Errors: "There was an error getting the posts", Details: err.Error()})
 		w.Write(badReqJSON)
 		return
 	}
-	var postJSON, _ = json.Marshal(post)
+	var postsJSON, _ = json.Marshal(posts)
 	w.WriteHeader(http.StatusOK)
-	w.Write(postJSON)
+	w.Write(postsJSON)
 }

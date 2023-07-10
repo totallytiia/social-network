@@ -91,3 +91,20 @@ func (p *Post) Delete() error {
 	}
 	return nil
 }
+
+func (p *Post) GetPosts() ([]Post, error) {
+	var rows, err = db.DB.Query("SELECT id, user_id, group_id, title, content, image, privacy, privacy_settings, created_at, updated_at FROM posts WHERE user_id = ? OR group_id = ? ORDER BY created_at DESC", p.UserID, p.GroupID)
+	if err != nil {
+		return nil, err
+	}
+	var posts []Post
+	for rows.Next() {
+		var post Post
+		err = rows.Scan(&post.ID, &post.UserID, &post.GroupID, &post.Title, &post.Content, &post.Image, &post.Privacy, &post.PrivacySettings, &post.CreatedAt, &post.UpdatedAt)
+		if err != nil {
+			return nil, err
+		}
+		posts = append(posts, post)
+	}
+	return posts, nil
+}

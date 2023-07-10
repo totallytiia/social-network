@@ -50,9 +50,7 @@ func api(w http.ResponseWriter, r *http.Request) {
 		case "delete":
 			ep.DeletePost(w, r)
 		case "get":
-			// getPost(w, r)
-		case "getall":
-			// getAllPosts(w, r)
+			ep.GetPosts(w, r)
 		default:
 			http.NotFound(w, r)
 			return
