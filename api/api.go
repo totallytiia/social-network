@@ -18,6 +18,7 @@ func api(w http.ResponseWriter, r *http.Request) {
 		w.Write(badReqJSON)
 		return
 	}
+	// Switch on first part after /api/
 	switch reqUrl[0] {
 	case "users":
 		if len(reqUrl) == 1 {
@@ -48,7 +49,7 @@ func api(w http.ResponseWriter, r *http.Request) {
 		case "create":
 			ep.CreatePost(w, r)
 		case "update":
-			// updatePost(w, r)
+			ep.UpdatePost(w, r)
 		case "delete":
 			ep.DeletePost(w, r)
 		case "get":
