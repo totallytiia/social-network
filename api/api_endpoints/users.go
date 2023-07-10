@@ -111,6 +111,77 @@ func LoginUser(w http.ResponseWriter, r *http.Request) {
 	w.Write(okJSON)
 }
 
+func UpdateUser(w http.ResponseWriter, r *http.Request) {
+	v, u := ValidateCookie(w, r)
+	if !v {
+		w.WriteHeader(http.StatusUnauthorized)
+		badReqJSON, _ := json.Marshal(s.ErrorResponse{Errors: "There was an error with your request", Details: "Invalid session"})
+		w.Write(badReqJSON)
+		return
+	}
+	if r.Method != "POST" {
+		w.WriteHeader(http.StatusMethodNotAllowed)
+		var badReqMethodJSON, _ = json.Marshal(s.ErrorResponse{Errors: "There was an error with your request", Details: "Method not allowed"})
+		w.Write(badReqMethodJSON)
+		return
+	}
+	// Extract the Form data from the request
+	var err = r.ParseMultipartForm(1000)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		badReqJSON, _ := json.Marshal(s.ErrorResponse{Errors: "There was an error with your request", Details: err.Error()})
+		w.Write(badReqJSON)
+		return
+	}
+
+	if err != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		badReqJSON, _ := json.Marshal(s.ErrorResponse{Errors: "There was an error with your request", Details: err.Error()})
+		w.Write(badReqJSON)
+		return
+	}
+	var testUser s.NewUser
+	testUser.Nickname = r.FormValue("nickname")
+	testUser.FName = r.FormValue("fname")
+	testUser.LName = r.FormValue("lname")
+	testUser.Email = r.FormValue("email")
+	testUser.DoB = r.FormValue("date_of_birth")
+	testUser.Avatar = r.FormValue("avatar")
+	testUser.AboutMe = r.FormValue("about_me")
+	testUser.Private, err = strconv.ParseBool(r.FormValue("private"))
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		badReqJSON, _ := json.Marshal(s.ErrorResponse{Errors: "There was an error with your request", Details: err.Error()})
+		w.Write(badReqJSON)
+		return
+	}
+	err = testUser.Validate()
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		badReqJSON, _ := json.Marshal(s.ErrorResponse{Errors: "There was an error with your request", Details: err.Error()})
+		w.Write(badReqJSON)
+		return
+	}
+	u.Nickname = testUser.Nickname
+	u.FName = testUser.FName
+	u.LName = testUser.LName
+	u.Email = testUser.Email
+	u.DoB = testUser.DoB
+	u.Avatar = testUser.Avatar
+	u.AboutMe = testUser.AboutMe
+	u.Private = testUser.Private
+	err = u.Update()
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		badReqJSON, _ := json.Marshal(s.ErrorResponse{Errors: "There was an error updating the user", Details: err.Error()})
+		w.Write(badReqJSON)
+		return
+	}
+	w.WriteHeader(http.StatusOK)
+	var okJSON, _ = json.Marshal(s.OKResponse{Message: "User updated successfully"})
+	w.Write(okJSON)
+}
+
 func LogoutUser(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "POST" {
 		w.WriteHeader(http.StatusMethodNotAllowed)

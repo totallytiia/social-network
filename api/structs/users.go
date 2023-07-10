@@ -85,7 +85,8 @@ func (u NewUser) Validate() error {
 	// if !passwordReqEx.MatchString(u.Password) {
 	// 	return errors.New("invalid password")
 	// }
-	if len(u.Password) < 8 {
+	// Validate the password using simple checks
+	if len(u.Password) < 8 || !strings.ContainsAny(u.Password, "!?£$€%&()[]{}/\\") || strings.ToLower(u.Password) == u.Password || strings.ToUpper(u.Password) == u.Password || strings.ContainsAny(u.Password, "0123456789") {
 		return errors.New("invalid password")
 	}
 	// Validate the date of birth using regex

@@ -2,7 +2,7 @@
 
 API documentation for the Social Network API.
 
-All endpoints are prefixed with `/api/`.
+All endpoints are prefixed with `/api`.
 
 All `POST` endpoints require a Body of form-data or multipart/form-data. (See [Postman](https://www.getpostman.com/) for testing)
 
@@ -61,8 +61,17 @@ All endpoints except `/users/register` and `/users/login` require a valid sessio
 
 #### Response example
 
+(OK)
 ```json
 {
     "message": "User logged in successfully"
+}
+```
+
+(ERROR)
+```json
+{
+    "errors": "There was an error with your request",
+    "details": "Invalid email or password"
 }
 ```

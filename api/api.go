@@ -30,6 +30,8 @@ func api(w http.ResponseWriter, r *http.Request) {
 			ep.RegisterUser(w, r)
 		case "login":
 			ep.LoginUser(w, r)
+		case "update":
+			ep.UpdateUser(w, r)
 		case "logout":
 			ep.LogoutUser(w, r)
 		default:
@@ -51,6 +53,41 @@ func api(w http.ResponseWriter, r *http.Request) {
 			ep.DeletePost(w, r)
 		case "get":
 			ep.GetPosts(w, r)
+		default:
+			http.NotFound(w, r)
+			return
+		}
+	case "groups":
+		if len(reqUrl) == 1 {
+			w.WriteHeader(http.StatusBadRequest)
+			w.Write(badReqJSON)
+			return
+		}
+		switch reqUrl[1] {
+		case "create":
+			// createGroup(w, r)
+		case "update":
+			// updateGroup(w, r)
+		case "delete":
+			// deleteGroup(w, r)
+		case "get":
+			// getGroup(w, r)
+		case "getall":
+			// getAllGroups(w, r)
+		case "join":
+			// joinGroup(w, r)
+		case "leave":
+			// leaveGroup(w, r)
+		case "invite":
+			// inviteToGroup(w, r)
+		case "accept":
+			// acceptGroupInvite(w, r)
+		case "decline":
+			// declineGroupInvite(w, r)
+		case "members":
+			// getGroupMembers(w, r)
+		case "posts":
+			// getGroupPosts(w, r)
 		default:
 			http.NotFound(w, r)
 			return
