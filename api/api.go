@@ -103,13 +103,11 @@ func api(w http.ResponseWriter, r *http.Request) {
 		case "create":
 			ep.CreateComment(w, r)
 		case "update":
-			// updateComment(w, r)
+			ep.UpdateComment(w, r)
 		case "delete":
 			// deleteComment(w, r)
-		case "get":
-			// getComment(w, r)
 		case "getall":
-			// getAllComments(w, r)
+			ep.GetComments(w, r)
 		default:
 			http.NotFound(w, r)
 			return

@@ -248,9 +248,24 @@ func GetPosts(w http.ResponseWriter, r *http.Request) {
 			w.Write(badReqJSON)
 			return
 		}
+		post.Comments, err = s.GetComments(post.ID)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			badReqJSON, _ := json.Marshal(s.ErrorResponse{Errors: "There was an error getting the comments", Details: err.Error()})
+			w.Write(badReqJSON)
+			return
+		}
 		var postJSON, _ = json.Marshal(post)
 		w.WriteHeader(http.StatusOK)
 		w.Write(postJSON)
+		return
+	}
+	if len(r.FormValue("group_id")) == 0 && len(r.FormValue("user_id")) == 0 {
+		BadRequest(w, r, "You must provide a group ID or a user ID")
+		return
+	}
+	if len(r.FormValue("group_id")) > 0 && len(r.FormValue("user_id")) > 0 {
+		BadRequest(w, r, "You must provide a group ID or a user ID, not both")
 		return
 	}
 	if r.FormValue("group_id") != "" {
@@ -275,6 +290,15 @@ func GetPosts(w http.ResponseWriter, r *http.Request) {
 		badReqJSON, _ := json.Marshal(s.ErrorResponse{Errors: "There was an error getting the posts", Details: err.Error()})
 		w.Write(badReqJSON)
 		return
+	}
+	for post := range posts {
+		posts[post].Comments, err = s.GetComments(posts[post].ID)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			badReqJSON, _ := json.Marshal(s.ErrorResponse{Errors: "There was an error getting the comments", Details: err.Error()})
+			w.Write(badReqJSON)
+			return
+		}
 	}
 	var postsJSON, _ = json.Marshal(posts)
 	w.WriteHeader(http.StatusOK)

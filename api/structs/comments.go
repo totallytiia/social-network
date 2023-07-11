@@ -38,3 +38,37 @@ func (c *NewComment) Create() (int, error) {
 	var id, _ = res.LastInsertId()
 	return int(id), nil
 }
+
+func GetComments(postID int) ([]Comment, error) {
+	var rows, err = db.DB.Query("SELECT id, user_id, post_id, content, created_at, updated_at FROM comments WHERE post_id = ?", postID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var comments []Comment
+	for rows.Next() {
+		var comment Comment
+		err = rows.Scan(&comment.ID, &comment.UserID, &comment.PostID, &comment.Content, &comment.CreatedAt, &comment.UpdatedAt)
+		if err != nil {
+			return nil, err
+		}
+		comments = append(comments, comment)
+	}
+	return comments, nil
+}
+
+func (c *Comment) Update() error {
+	var _, err = db.DB.Exec("UPDATE comments SET content = ? WHERE id = ?", c.Content, c.ID)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (c *Comment) Delete() error {
+	var _, err = db.DB.Exec("DELETE FROM comments WHERE id = ?", c.ID)
+	if err != nil {
+		return err
+	}
+	return nil
+}

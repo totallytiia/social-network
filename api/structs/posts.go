@@ -20,16 +20,17 @@ type NewPost struct {
 }
 
 type Post struct {
-	ID              int    `json:"id"`
-	UserID          int    `json:"user_id"`
-	GroupID         int    `json:"group_id"`
-	Title           string `json:"title"`
-	Content         string `json:"content"`
-	Image           string `json:"image"`
-	Privacy         string `json:"privacy"`
-	PrivacySettings string `json:"privacy_settings"`
-	CreatedAt       string `json:"created_at"`
-	UpdatedAt       string `json:"updated_at"`
+	ID              int       `json:"id"`
+	UserID          int       `json:"user_id"`
+	GroupID         int       `json:"group_id"`
+	Title           string    `json:"title"`
+	Content         string    `json:"content"`
+	Image           string    `json:"image"`
+	Privacy         string    `json:"privacy"`
+	PrivacySettings string    `json:"privacy_settings"`
+	CreatedAt       string    `json:"created_at"`
+	UpdatedAt       string    `json:"updated_at"`
+	Comments        []Comment `json:"comments"`
 }
 
 func (p *NewPost) Validate() error {
