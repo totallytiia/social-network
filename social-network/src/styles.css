@@ -1,3 +1,26 @@
 @import 'tailwindcss/base';
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
+
+@layer components {
+	h3 {
+		@apply text-xl text-center font-bold ml-2 mb-2;
+	}
+	input {;
+		@apply border rounded-lg py-2 px-2 bg-white border-none placeholder-gray-400 text-sm;
+	}
+	label {
+		@apply block uppercase tracking-wide text-xs font-bold mb-2 ;
+		
+	}
+	input[type="date"] {
+		@apply text-gray-400;
+	}
+	.btn-custom {
+		@apply text-black 
+		hover:bg-blue-200 bg-blue-100 py-2 px-3 rounded-full;
+	}
+	.bg-custom {
+		@apply bg-gradient-to-t from-white from-90%  to-orange-100 to-100%;
+	}
+}
