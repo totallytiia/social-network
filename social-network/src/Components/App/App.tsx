@@ -1,7 +1,7 @@
 import { useState, createContext } from 'react';
 
 import Page from '../Page/Page';
-import './styles.css';
+import '../../styles.css';
 import { BrowserRouter } from 'react-router-dom';
 
 interface ApiUserContextInterface {
