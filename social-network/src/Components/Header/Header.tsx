@@ -5,7 +5,7 @@ import { Searchbar } from './Searchbar';
 export default function Header() {
     const [isNavOpen, setIsNavOpen] = useState(false);
     return (
-        <header className="HEADER bg-white sticky top-0 shadow-lg">
+        <header className="HEADER bg-white sticky top-0 shadow-lg z-50">
             <nav className="NAVIGATION grid grid-cols-3 gap-3 items-center px-2 py-2 mx-2">
                 <div className="LOGO">
                     <h1 className="LOGO-TEXT text-black text-2xl font-bold">
@@ -55,7 +55,7 @@ export default function Header() {
                         <NavLink href="/" text="+" />
                     </div>
                     <div>
-                        <NavLink href="/" text="fulscreen-chat" />
+                        <NavLink href="/" text="fullscreen-chat" />
                     </div>
                     <div>
                         <NavLink href="/" text="Nofitications" />
