@@ -101,7 +101,7 @@ func api(w http.ResponseWriter, r *http.Request) {
 		}
 		switch reqUrl[1] {
 		case "create":
-			// createComment(w, r)
+			ep.CreateComment(w, r)
 		case "update":
 			// updateComment(w, r)
 		case "delete":

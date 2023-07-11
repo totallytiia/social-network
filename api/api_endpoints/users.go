@@ -11,17 +11,13 @@ import (
 
 func RegisterUser(w http.ResponseWriter, r *http.Request) {
 	if r.Method != "POST" {
-		w.WriteHeader(http.StatusMethodNotAllowed)
-		var badReqMethodJSON, _ = json.Marshal(s.ErrorResponse{Errors: "There was an error with your request", Details: "Method not allowed"})
-		w.Write(badReqMethodJSON)
+		MethodNotAllowed(w, r)
 		return
 	}
 	// Extract the Form data from the request
 	var err = r.ParseMultipartForm(1000)
 	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		badReqJSON, _ := json.Marshal(s.ErrorResponse{Errors: "There was an error with your request", Details: err.Error()})
-		w.Write(badReqJSON)
+		BadRequest(w, r, err.Error())
 		return
 	}
 	var user s.NewUser
@@ -35,16 +31,12 @@ func RegisterUser(w http.ResponseWriter, r *http.Request) {
 	user.AboutMe = r.FormValue("about_me")
 	user.Private, err = strconv.ParseBool(r.FormValue("private"))
 	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		badReqJSON, _ := json.Marshal(s.ErrorResponse{Errors: "There was an error with your request", Details: err.Error()})
-		w.Write(badReqJSON)
+		BadRequest(w, r, err.Error())
 		return
 	}
 	err = user.Validate()
 	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		badReqJSON, _ := json.Marshal(s.ErrorResponse{Errors: "There was an error with your request", Details: err.Error()})
-		w.Write(badReqJSON)
+		BadRequest(w, r, err.Error())
 		return
 	}
 	err = user.Register()
@@ -72,17 +64,13 @@ func RegisterUser(w http.ResponseWriter, r *http.Request) {
 
 func LoginUser(w http.ResponseWriter, r *http.Request) {
 	if r.Method != "POST" {
-		w.WriteHeader(http.StatusMethodNotAllowed)
-		var badReqMethodJSON, _ = json.Marshal(s.ErrorResponse{Errors: "There was an error with your request", Details: "Method not allowed"})
-		w.Write(badReqMethodJSON)
+		MethodNotAllowed(w, r)
 		return
 	}
 	// Extract the Form data from the request
 	var err = r.ParseMultipartForm(512)
 	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		badReqJSON, _ := json.Marshal(s.ErrorResponse{Errors: "There was an error with your request", Details: err.Error()})
-		w.Write(badReqJSON)
+		BadRequest(w, r, err.Error())
 		return
 	}
 	var user s.User
@@ -91,9 +79,7 @@ func LoginUser(w http.ResponseWriter, r *http.Request) {
 	// Base64 decode the password
 	decodedPass, err := base64.StdEncoding.DecodeString(pass)
 	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		badReqJSON, _ := json.Marshal(s.ErrorResponse{Errors: "There was an error with your request", Details: err.Error()})
-		w.Write(badReqJSON)
+		BadRequest(w, r, err.Error())
 		return
 	}
 	err = user.Login(string(decodedPass))
@@ -120,24 +106,13 @@ func UpdateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	if r.Method != "POST" {
-		w.WriteHeader(http.StatusMethodNotAllowed)
-		var badReqMethodJSON, _ = json.Marshal(s.ErrorResponse{Errors: "There was an error with your request", Details: "Method not allowed"})
-		w.Write(badReqMethodJSON)
+		MethodNotAllowed(w, r)
 		return
 	}
 	// Extract the Form data from the request
 	var err = r.ParseMultipartForm(1000)
 	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		badReqJSON, _ := json.Marshal(s.ErrorResponse{Errors: "There was an error with your request", Details: err.Error()})
-		w.Write(badReqJSON)
-		return
-	}
-
-	if err != nil {
-		w.WriteHeader(http.StatusUnauthorized)
-		badReqJSON, _ := json.Marshal(s.ErrorResponse{Errors: "There was an error with your request", Details: err.Error()})
-		w.Write(badReqJSON)
+		BadRequest(w, r, err.Error())
 		return
 	}
 	var testUser s.NewUser
@@ -150,16 +125,12 @@ func UpdateUser(w http.ResponseWriter, r *http.Request) {
 	testUser.AboutMe = r.FormValue("about_me")
 	testUser.Private, err = strconv.ParseBool(r.FormValue("private"))
 	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		badReqJSON, _ := json.Marshal(s.ErrorResponse{Errors: "There was an error with your request", Details: err.Error()})
-		w.Write(badReqJSON)
+		BadRequest(w, r, err.Error())
 		return
 	}
 	err = testUser.Validate()
 	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		badReqJSON, _ := json.Marshal(s.ErrorResponse{Errors: "There was an error with your request", Details: err.Error()})
-		w.Write(badReqJSON)
+		BadRequest(w, r, err.Error())
 		return
 	}
 	u.Nickname = testUser.Nickname
@@ -183,17 +154,13 @@ func UpdateUser(w http.ResponseWriter, r *http.Request) {
 }
 
 func LogoutUser(w http.ResponseWriter, r *http.Request) {
-	if r.Method == "POST" {
-		w.WriteHeader(http.StatusMethodNotAllowed)
-		var badReqMethodJSON, _ = json.Marshal(s.ErrorResponse{Errors: "There was an error with your request", Details: "Method not allowed"})
-		w.Write(badReqMethodJSON)
+	if r.Method != "GET" {
+		MethodNotAllowed(w, r)
 		return
 	}
 	var sessionCookie, err = r.Cookie("session")
 	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		badReqJSON, _ := json.Marshal(s.ErrorResponse{Errors: "There was an error with your request", Details: err.Error()})
-		w.Write(badReqJSON)
+		BadRequest(w, r, err.Error())
 		return
 	}
 	var user s.User = s.User{Session: s.Session{SessionID: sessionCookie.Value}}

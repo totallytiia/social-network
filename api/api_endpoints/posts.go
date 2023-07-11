@@ -8,21 +8,18 @@ import (
 )
 
 func CreatePost(w http.ResponseWriter, r *http.Request) {
-	if v, _ := ValidateCookie(w, r); !v {
+	v, u := ValidateCookie(w, r)
+	if !v {
 		http.Error(w, "Unauthorized", http.StatusUnauthorized)
 	}
 	if r.Method != "POST" {
-		w.WriteHeader(http.StatusMethodNotAllowed)
-		var badReqMethodJSON, _ = json.Marshal(s.ErrorResponse{Errors: "There was an error with your request", Details: "Method not allowed"})
-		w.Write(badReqMethodJSON)
+		MethodNotAllowed(w, r)
 		return
 	}
 	// Extract the Form data from the request
 	var err = r.ParseMultipartForm(2000)
 	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		badReqJSON, _ := json.Marshal(s.ErrorResponse{Errors: "There was an error with your request", Details: err.Error()})
-		w.Write(badReqJSON)
+		BadRequest(w, r, err.Error())
 		return
 	}
 	var post s.NewPost
@@ -31,33 +28,20 @@ func CreatePost(w http.ResponseWriter, r *http.Request) {
 	post.Image = r.FormValue("image")
 	post.Privacy, err = strconv.Atoi(r.FormValue("privacy"))
 	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		badReqJSON, _ := json.Marshal(s.ErrorResponse{Errors: "There was an error with your request", Details: "Invalid privacy setting"})
-		w.Write(badReqJSON)
+		BadRequest(w, r, "Invalid privacy setting")
 		return
 	}
 	post.PrivacySettings = r.FormValue("privacy_settings")
 	// Extract the user from the session
-	userPosting, err := s.UserFromSession(r.FormValue("session"))
-	if err != nil {
-		w.WriteHeader(http.StatusUnauthorized)
-		badReqJSON, _ := json.Marshal(s.ErrorResponse{Errors: "Unauthorized request", Details: "Invalid session"})
-		w.Write(badReqJSON)
-		return
-	}
-	post.UserID = userPosting.ID
+	post.UserID = u.ID
 	post.GroupID, err = strconv.Atoi(r.FormValue("group_id"))
 	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		badReqJSON, _ := json.Marshal(s.ErrorResponse{Errors: "There was an error with your request", Details: "Invlaid group ID"})
-		w.Write(badReqJSON)
+		BadRequest(w, r, "Invalid group ID")
 		return
 	}
 	err = post.Validate()
 	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		badReqJSON, _ := json.Marshal(s.ErrorResponse{Errors: "There was an error with your request", Details: err.Error()})
-		w.Write(badReqJSON)
+		BadRequest(w, r, err.Error())
 		return
 	}
 	id, err := post.Create()
@@ -78,25 +62,19 @@ func DeletePost(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Unauthorized", http.StatusUnauthorized)
 	}
 	if r.Method != "POST" {
-		w.WriteHeader(http.StatusMethodNotAllowed)
-		var badReqMethodJSON, _ = json.Marshal(s.ErrorResponse{Errors: "There was an error with your request", Details: "Method not allowed"})
-		w.Write(badReqMethodJSON)
+		MethodNotAllowed(w, r)
 		return
 	}
 	// Extract the Form data from the request
 	var err = r.ParseMultipartForm(2000)
 	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		badReqJSON, _ := json.Marshal(s.ErrorResponse{Errors: "There was an error with your request", Details: err.Error()})
-		w.Write(badReqJSON)
+		BadRequest(w, r, err.Error())
 		return
 	}
 	var post s.Post
 	postID, err := strconv.Atoi(r.FormValue("post_id"))
 	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		badReqJSON, _ := json.Marshal(s.ErrorResponse{Errors: "There was an error with your request", Details: "Invalid post ID"})
-		w.Write(badReqJSON)
+		BadRequest(w, r, "Invalid post ID")
 		return
 	}
 	post.ID = postID
@@ -131,25 +109,19 @@ func UpdatePost(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Unauthorized", http.StatusUnauthorized)
 	}
 	if r.Method != "POST" {
-		w.WriteHeader(http.StatusMethodNotAllowed)
-		var badReqMethodJSON, _ = json.Marshal(s.ErrorResponse{Errors: "There was an error with your request", Details: "Method not allowed"})
-		w.Write(badReqMethodJSON)
+		MethodNotAllowed(w, r)
 		return
 	}
 	// Extract the Form data from the request
 	var err = r.ParseMultipartForm(2000)
 	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		badReqJSON, _ := json.Marshal(s.ErrorResponse{Errors: "There was an error with your request", Details: err.Error()})
-		w.Write(badReqJSON)
+		BadRequest(w, r, err.Error())
 		return
 	}
 	var post s.Post
 	postID, err := strconv.Atoi(r.FormValue("post_id"))
 	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		badReqJSON, _ := json.Marshal(s.ErrorResponse{Errors: "There was an error with your request", Details: "Invalid post ID"})
-		w.Write(badReqJSON)
+		BadRequest(w, r, "Invalid post ID")
 		return
 	}
 	post.ID = postID
@@ -262,9 +234,7 @@ func GetPosts(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Unauthorized", http.StatusUnauthorized)
 	}
 	if r.Method != "GET" {
-		w.WriteHeader(http.StatusMethodNotAllowed)
-		var badReqMethodJSON, _ = json.Marshal(s.ErrorResponse{Errors: "There was an error with your request", Details: "Method not allowed"})
-		w.Write(badReqMethodJSON)
+		MethodNotAllowed(w, r)
 		return
 	}
 	var post s.Post
@@ -286,9 +256,7 @@ func GetPosts(w http.ResponseWriter, r *http.Request) {
 	if r.FormValue("group_id") != "" {
 		groupID, err := strconv.Atoi(r.FormValue("group_id"))
 		if err != nil {
-			w.WriteHeader(http.StatusBadRequest)
-			badReqJSON, _ := json.Marshal(s.ErrorResponse{Errors: "There was an error with your request", Details: "Invalid group ID"})
-			w.Write(badReqJSON)
+			BadRequest(w, r, "Invalid group ID")
 			return
 		}
 		post.GroupID = groupID
@@ -296,9 +264,7 @@ func GetPosts(w http.ResponseWriter, r *http.Request) {
 	if r.FormValue("user_id") != "" {
 		userID, err := strconv.Atoi(r.FormValue("user_id"))
 		if err != nil {
-			w.WriteHeader(http.StatusBadRequest)
-			badReqJSON, _ := json.Marshal(s.ErrorResponse{Errors: "There was an error with your request", Details: "Invalid user ID"})
-			w.Write(badReqJSON)
+			BadRequest(w, r, "Invalid user ID")
 			return
 		}
 		post.UserID = userID
