@@ -10,7 +10,7 @@ All endpoints return JSON.
 
 All and/or most responses are based on the same format.
 
-(OK)
+(OK) 200-299
 ```json
 {
     "message": "Post created successfully",
@@ -18,7 +18,7 @@ All and/or most responses are based on the same format.
 }
 ```
 
-(ERROR)
+(ERROR) 400-599
 ```json
 {
     "errors": "There was an error with your request",
@@ -86,7 +86,7 @@ All endpoints except `/users/register` and `/users/login` require a valid sessio
 
 #### Response example
 
-(OK)
+200 (OK)
 ```json
 {
     "message": "User registered successfully"
@@ -94,7 +94,7 @@ All endpoints except `/users/register` and `/users/login` require a valid sessio
 ```
 It will also set a session cookie for the registered user making them "logged in".
 
-(ERROR)
+400 || 500 (ERROR)
 ```json
 {
     "errors": "There was an error with your request",
@@ -115,7 +115,7 @@ It will also set a session cookie for the registered user making them "logged in
 
 #### Response example
 
-(OK)
+200 (OK)
 ```json
 {
     "message": "User logged in successfully"

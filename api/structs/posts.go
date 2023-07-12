@@ -101,8 +101,20 @@ func (p *Post) Delete() error {
 	return nil
 }
 
-func (p *Post) GetPosts() ([]Post, error) {
-	var rows, err = db.DB.Query("SELECT id, user_id, group_id, title, content, image, privacy, privacy_settings, created_at, updated_at FROM posts WHERE user_id = ? OR group_id = ? ORDER BY created_at DESC", p.UserID, p.GroupID)
+func GetPosts(IDs map[string]any) ([]Post, error) {
+	if IDs["user_id"] == nil && IDs["group_id"] == nil {
+		return nil, errors.New("invalid input")
+	}
+	if IDs["user_id"] != nil && IDs["group_id"] != nil {
+		return nil, errors.New("invalid input")
+	}
+	if IDs["user_id"] == nil {
+		IDs["user_id"] = -1
+	}
+	if IDs["group_id"] == nil {
+		IDs["group_id"] = -1
+	}
+	var rows, err = db.DB.Query("SELECT id, user_id, group_id, title, content, image, privacy, privacy_settings, created_at, updated_at FROM posts WHERE user_id = ? OR group_id = ? ORDER BY created_at DESC", IDs["user_id"], IDs["group_id"])
 	if err != nil {
 		return nil, err
 	}

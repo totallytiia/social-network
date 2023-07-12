@@ -152,39 +152,6 @@ func UpdatePost(w http.ResponseWriter, r *http.Request) {
 	w.Write(successJSON)
 }
 
-// func GetPost(w http.ResponseWriter, r *http.Request) {
-// 	v, _ := ValidateCookie(w, r)
-// 	if !v {
-// 		http.Error(w, "Unauthorized", http.StatusUnauthorized)
-// 	}
-// 	if r.Method != "GET" {
-// 		w.WriteHeader(http.StatusMethodNotAllowed)
-// 		var badReqMethodJSON, _ = json.Marshal(s.ErrorResponse{Errors: "There was an error with your request", Details: "Method not allowed"})
-// 		w.Write(badReqMethodJSON)
-// 		return
-// 	}
-// 	var post s.Post
-// 	postID, err := strconv.Atoi(r.FormValue("post_id"))
-// 	if err != nil {
-// 		w.WriteHeader(http.StatusBadRequest)
-// 		badReqJSON, _ := json.Marshal(s.ErrorResponse{Errors: "There was an error with your request", Details: "Invalid post ID"})
-// 		w.Write(badReqJSON)
-// 		return
-// 	}
-// 	post.ID = postID
-// 	err = post.Get()
-// 	if err != nil {
-// 		w.WriteHeader(http.StatusInternalServerError)
-// 		badReqJSON, _ := json.Marshal(s.ErrorResponse{Errors: "There was an error getting the post", Details: err.Error()})
-// 		w.Write(badReqJSON)
-// 		return
-// 	}
-// 	var postJSON, _ = json.Marshal(post)
-// 	w.WriteHeader(http.StatusOK)
-// 	w.Write(postJSON)
-// }
-
-// func GetPosts(w http.ResponseWriter, r *http.Request) {
 // 	v, _ := ValidateCookie(w, r)
 // 	if !v {
 // 		http.Error(w, "Unauthorized", http.StatusUnauthorized)
@@ -268,13 +235,14 @@ func GetPosts(w http.ResponseWriter, r *http.Request) {
 		BadRequest(w, r, "You must provide a group ID or a user ID, not both")
 		return
 	}
+	IDs := make(map[string]any)
 	if r.FormValue("group_id") != "" {
 		groupID, err := strconv.Atoi(r.FormValue("group_id"))
 		if err != nil {
 			BadRequest(w, r, "Invalid group ID")
 			return
 		}
-		post.GroupID = groupID
+		IDs["group_id"] = groupID
 	}
 	if r.FormValue("user_id") != "" {
 		userID, err := strconv.Atoi(r.FormValue("user_id"))
@@ -282,10 +250,14 @@ func GetPosts(w http.ResponseWriter, r *http.Request) {
 			BadRequest(w, r, "Invalid user ID")
 			return
 		}
-		post.UserID = userID
+		IDs["user_id"] = userID
 	}
-	posts, err := post.GetPosts()
+	posts, err := s.GetPosts(IDs)
 	if err != nil {
+		if err.Error() == "invalid input" {
+			BadRequest(w, r, "Invalid user ID or group ID")
+			return
+		}
 		w.WriteHeader(http.StatusInternalServerError)
 		badReqJSON, _ := json.Marshal(s.ErrorResponse{Errors: "There was an error getting the posts", Details: err.Error()})
 		w.Write(badReqJSON)
