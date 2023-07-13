@@ -41,7 +41,7 @@ export default function Profile() {
 					</div>
 
 					<div className="mt-10 text-center border-b pb-12">
-						<h1 className="text-4xl font-medium text-gray-700">FULL NAME<span className="text-gray-500"></span></h1>
+						<h1 className="text-4xl font-medium text-gray-700">FULL NAME, NICKNAME<span className="text-gray-500"></span></h1>
 						<p className="text-gray-600 mt-3">ABOUT</p>
 
 						<p className="mt-8 text-gray-500">EMAIL</p>

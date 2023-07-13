@@ -6,10 +6,8 @@ export default function Login() {
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
 
-	const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-		e.preventDefault();
-		console.log(email);
-	}
+
+
 
 	return (
 		<>
@@ -20,13 +18,13 @@ export default function Login() {
 						<p className="font-semibold text-black text-center ">Log in to your account here!</p>
 					</div>
 					<form className="flex flex-col space-y-4 mt-5">
-						<input type="text" placeholder="Username/Email" id="usernameEmail" className=""></input>
-						<input type="text" placeholder="Password" id="password " className=""></input>
+						<input type="email" onChange={(e) => { setEmail(e.target.value) }} placeholder="Email" id="Email" className=""></input>
+						<input type="password" onChange={(e) => { setPassword(e.target.value) }} placeholder="Password" id="password " className=""></input>
 						<button className="btn-custom font-semibold">Submit</button>
 						<button className='text-sm text-gray-500'>Don't have an account? Register here.</button>
 					</form>
 				</div>
-			</div>
+			</div >
 		</>
 	)
 }
