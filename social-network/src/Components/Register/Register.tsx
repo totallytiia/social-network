@@ -46,9 +46,12 @@ export default function Register() {
                 if (value.length < 2 || value.length > 18) {
                     console.log('error');
                     e.target.classList.add('border-red-500', 'border-2', 'border-solid');
+                    // remove hidden class from error message id="fNameErrorMsg"
                     e.target.parentElement?.querySelector('button')?.setAttribute('disabled', 'true');
+                    document.getElementById('fNameErrorMsg')!.classList.remove('hidden');
                     return
                 }
+                document.getElementById('fNameErrorMsg')!.classList.add('hidden');
                 e.target.parentElement?.querySelector('button')?.setAttribute('disabled', 'false');
                 e.target.classList.remove('border-red-500', 'border-2', 'border-solid');
                 break;
@@ -57,49 +60,70 @@ export default function Register() {
                     console.log('error');
                     e.target.classList.add('border-red-500', 'border-2', 'border-solid');
                     e.target.parentElement?.querySelector('button')?.setAttribute('disabled', 'true');
+                    document.getElementById('lNameErrorMsg')!.classList.remove('hidden');
                     return
                 }
                 e.target.parentElement?.querySelector('button')?.setAttribute('disabled', 'false');
                 e.target.classList.remove('border-red-500', 'border-2', 'border-solid');
+                document.getElementById('lNameErrorMsg')!.classList.add('hidden');
                 break;
             case 'email':
-                if (!/^[^ ]+@[^ ]+.[a-z]{2,3}$/g.test(e.target.value)) {
+                if (!/^[^ ]+@[^ ]+.[a-z]{2,3}$/g.test(value)) {
                     e.target.classList.add('border-red-500', 'border-2', 'border-solid');
                     e.target.parentElement?.querySelector('button')?.setAttribute('disabled', 'true');
+                    document.getElementById('emailErrorMsg')!.classList.remove('hidden');
                     return
                 }
                 e.target.parentElement?.querySelector('button')?.setAttribute('disabled', 'false');
                 e.target.classList.remove('border-red-500', 'border-2', 'border-solid');
+                document.getElementById('emailErrorMsg')!.classList.add('hidden');
                 break;
             case 'dob':
-            // if (+e.target.value < 18) {
-            //     age.cL().add('invalid');
-            //     ageError.cL().remove('hidden');
-            //     registerButton.disabled = true;
-            // } else {
-            //     age.cL().remove('invalid');
-            //     ageError.cL().add('hidden');
-            //     registerButton.disabled = false;
-            // }
+                const today: Date = new Date();
+                const birthdate: Date = new Date(value);
+                const age: number =
+                    today.getFullYear() -
+                    birthdate.getFullYear() -
+                    (today.getMonth() < birthdate.getMonth() ||
+                        (today.getMonth() === birthdate.getMonth() && today.getDate() < birthdate.getDate()) ? 1 : 0);
+                if (age < 18) {
+                    e.target.classList.add('border-red-500', 'border-2', 'border-solid');
+                    e.target.parentElement?.querySelector('button')?.setAttribute('disabled', 'true');
+                    document.getElementById('dobErrorMsg')!.classList.remove('hidden');
+                    return
+                }
+                e.target.parentElement?.querySelector('button')?.setAttribute('disabled', 'false');
+                e.target.classList.remove('border-red-500', 'border-2', 'border-solid');
+                document.getElementById('dobErrorMsg')!.classList.add('hidden');
+                break;
             case 'password':
-            // let formatSpecial = /[`!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/;
-            // let formatVersal = /[A-Z]/;
-            // if (
-            //     formatSpecial.test(e.target.value) === false ||
-            //     formatVersal.test(e.target.value) === false ||
-            //     e.target.value.length < 8
-            // ) {
-            //     pass.cL().add('invalid');
-            //     passwordError.cL().remove('hidden');
-            //     registerButton.disabled = true;
-            // } else if (e.target.value !== pass.value) {
-            // } else {
-            //     pass.cL().remove('invalid');
-            //     passwordError.cL().add('hidden');
-            //     registerButton.disabled = false;
-            // }
+                let formatSpecial = /[`!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/;
+                let formatVersal = /[A-Z]/;
+                if (
+                    formatSpecial.test(value) === false ||
+                    formatVersal.test(value) === false ||
+                    value.length < 8
+                ) {
+                    e.target.classList.add('border-red-500', 'border-2', 'border-solid');
+                    e.target.parentElement?.querySelector('button')?.setAttribute('disabled', 'true');
+                    document.getElementById('pwErrorMsg')!.classList.remove('hidden');
+                    return;
+                }
+                e.target.parentElement?.querySelector('button')?.setAttribute('disabled', 'false');
+                e.target.classList.remove('border-red-500', 'border-2', 'border-solid');
+                document.getElementById('pwErrorMsg')!.classList.add('hidden');
+                break;
             case 'confirmPassword':
-            // PASSWORDS MATCH
+                if (value !== formData.register.password) {
+                    e.target.classList.add('border-red-500', 'border-2', 'border-solid');
+                    e.target.parentElement?.querySelector('button')?.setAttribute('disabled', 'true');
+                    document.getElementById('pw2ErrorMsg')!.classList.remove('hidden');
+                    return;
+                }
+                e.target.parentElement?.querySelector('button')?.setAttribute('disabled', 'false');
+                e.target.classList.remove('border-red-500', 'border-2', 'border-solid');
+                document.getElementById('pw2ErrorMsg')!.classList.add('hidden');
+                break;
         }
 
         console.log(target.name, value);
@@ -143,13 +167,16 @@ export default function Register() {
             method: 'POST',
             body: FD,
         });
+        console.log(response.status);
         if (response.status === 200) {
             console.log('success');
             // show home page
 
         } else {
             console.log('error');
+            console.log(response);
             // show error message
+            console.log(FD);
         }
     };
 
@@ -186,6 +213,7 @@ export default function Register() {
                             name="fName"
                             onChange={(e) => formHandleChangeInput(e)}
                         ></input>
+                        <p id="fNameErrorMsg" className='hidden text-xs !mt-1 ml-2 mb-1'>Needs to be at least 2 characters.</p>
                         <input
                             type="text"
                             placeholder="Last name"
@@ -193,6 +221,7 @@ export default function Register() {
                             name="lName"
                             onChange={(e) => formHandleChangeInput(e)}
                         ></input>
+                        <p id="lNameErrorMsg" className='hidden text-xs !mt-1 ml-2 mb-1'>Needs to be at least 2 characters.</p>
                         <input
                             type="text"
                             placeholder="Email"
@@ -200,6 +229,7 @@ export default function Register() {
                             className=""
                             onChange={(e) => formHandleChangeInput(e)}
                         ></input>
+                        <p id="emailErrorMsg" className='hidden text-xs !mt-1 ml-2 mb-1'>Not valid email.</p>
                         <input
                             type="text"
                             placeholder="Nickname (optional)"
@@ -214,6 +244,7 @@ export default function Register() {
                             name="dob"
                             onChange={(e) => formHandleChangeInput(e)}
                         ></input>
+                        <p id="dobErrorMsg" className='hidden text-xs !mt-1 ml-2 mb-1'>You need to be at least 18 years old.</p>
                         <textarea
                             placeholder="About me (optional)"
                             className="rounded-lg p-2 text-sm"
@@ -227,6 +258,7 @@ export default function Register() {
                             name="password"
                             onChange={(e) => formHandleChangeInput(e)}
                         ></input>
+                        <p id="pwErrorMsg" className='hidden text-xs !mt-1 ml-2 mb-1'>Password has to be at least 8 characters, 1 uppercase, 1 lowercase, 1 digit and 1 special character.</p>
                         <input
                             type="text"
                             placeholder="Confirm password"
@@ -234,6 +266,7 @@ export default function Register() {
                             name="confirmPassword"
                             onChange={(e) => formHandleChangeInput(e)}
                         ></input>
+                        <p id="pw2ErrorMsg" className='hidden text-xs !mt-1 ml-2 mb-1'>Passwords don't match, try again.</p>
                         <input type="submit" value="Register" className="btn-custom font-semibold">
                         </input>
                         <button className="text-sm text-gray-500">
