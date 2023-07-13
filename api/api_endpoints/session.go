@@ -22,5 +22,4 @@ func ValidateSession(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusUnauthorized)
 	errorJson, _ := json.Marshal(s.ErrorResponse{Errors: "Invalid cookie"})
 	w.Write(errorJson)
-	return
 }

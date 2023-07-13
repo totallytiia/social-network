@@ -117,3 +117,46 @@ func UpdateComment(w http.ResponseWriter, r *http.Request) {
 	var respJSON, _ = json.Marshal(s.OKResponse{Message: "Comment updated", Details: commentID})
 	w.Write(respJSON)
 }
+
+func DeleteComment(w http.ResponseWriter, r *http.Request) {
+	v, u := ValidateCookie(w, r)
+	if !v {
+		http.Error(w, "Unauthorized", http.StatusUnauthorized)
+	}
+	if r.Method != "POST" {
+		MethodNotAllowed(w, r)
+		return
+	}
+	var err = r.ParseMultipartForm(2000)
+	if err != nil {
+		BadRequest(w, r, err.Error())
+		return
+	}
+	commentID, err := strconv.Atoi(r.FormValue("comment_id"))
+	if err != nil {
+		BadRequest(w, r, "Invalid comment_id")
+		return
+	}
+	var comment = s.Comment{
+		ID: commentID,
+	}
+	err = comment.Get()
+	if err != nil {
+		BadRequest(w, r, err.Error())
+		return
+	}
+	if comment.UserID != u.ID {
+		http.Error(w, "Unauthorized", http.StatusUnauthorized)
+		return
+	}
+	err = comment.Delete()
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		badReqJSON, _ := json.Marshal(s.ErrorResponse{Errors: "There was an error with your request", Details: err.Error()})
+		w.Write(badReqJSON)
+		return
+	}
+	w.WriteHeader(http.StatusOK)
+	var respJSON, _ = json.Marshal(s.OKResponse{Message: "Comment deleted", Details: commentID})
+	w.Write(respJSON)
+}

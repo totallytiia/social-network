@@ -57,6 +57,14 @@ func GetComments(postID int) ([]Comment, error) {
 	return comments, nil
 }
 
+func (c *Comment) Get() error {
+	var err = db.DB.QueryRow("SELECT id, user_id, post_id, content, created_at, updated_at FROM comments WHERE id = ?", c.ID).Scan(&c.ID, &c.UserID, &c.PostID, &c.Content, &c.CreatedAt, &c.UpdatedAt)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 func (c *Comment) Update() error {
 	var _, err = db.DB.Exec("UPDATE comments SET content = ? WHERE id = ?", c.Content, c.ID)
 	if err != nil {

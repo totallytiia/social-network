@@ -1,0 +1,19 @@
+# WIP
+services:
+  api:
+    build: ./api/
+    ports:
+    - "8080:8080"
+    networks:
+      - backend
+    volumes:
+      - ./api:/app
+  web:
+    build: ./social-network/
+    ports:
+    - "3000:3000"
+    networks:
+      - backend
+      - frontend
+    volumes:
+      - ./social-network:/app

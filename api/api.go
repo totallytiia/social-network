@@ -8,10 +8,8 @@ import (
 	"strings"
 )
 
-// Create a JSON response for bad requests
-var badReqJSON, _ = json.Marshal(s.ErrorResponse{Errors: "Bad request"})
-
 func api(w http.ResponseWriter, r *http.Request) {
+	var badReqJSON, _ = json.Marshal(s.ErrorResponse{Errors: "Bad request"})
 	reqUrl := strings.Split(r.URL.Path[len("/api/"):], "/")
 	if len(reqUrl) == 0 {
 		w.WriteHeader(http.StatusBadRequest)
@@ -105,7 +103,7 @@ func api(w http.ResponseWriter, r *http.Request) {
 		case "update":
 			ep.UpdateComment(w, r)
 		case "delete":
-			// deleteComment(w, r)
+			ep.DeleteComment(w, r)
 		case "getall":
 			ep.GetComments(w, r)
 		default:
