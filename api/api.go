@@ -127,6 +127,8 @@ func api(w http.ResponseWriter, r *http.Request) {
 			http.NotFound(w, r)
 			return
 		}
+	case "validate":
+		ep.ValidateSession(w, r)
 	default:
 		http.NotFound(w, r)
 		return

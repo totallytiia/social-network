@@ -37,29 +37,31 @@ All and/or most responses are based on the same format.
     - [Login a user \[/users/login\] \[POST\]](#login-a-user-userslogin-post)
       - [Request example](#request-example-1)
       - [Response example](#response-example-1)
-    - [Logout a user \[/users/logout\] \[GET\]](#logout-a-user-userslogout-get)
+    - [Validate session cookie \[/validate\] \[GET\]](#validate-session-cookie-validate-get)
       - [Response example](#response-example-2)
+    - [Logout a user \[/users/logout\] \[GET\]](#logout-a-user-userslogout-get)
+      - [Response example](#response-example-3)
     - [Update a user \[/users/update\] \[POST\]](#update-a-user-usersupdate-post)
       - [Request example](#request-example-2)
-      - [Response example](#response-example-3)
-    - [Get a user \[/users/{id}\] \[GET\]](#get-a-user-usersid-get)
       - [Response example](#response-example-4)
+    - [Get a user \[/users/{id}\] \[GET\]](#get-a-user-usersid-get)
+      - [Response example](#response-example-5)
   - [Posts](#posts)
     - [Create a post \[/posts/create\] \[POST\]](#create-a-post-postscreate-post)
       - [Request example](#request-example-3)
-      - [Response example](#response-example-5)
+      - [Response example](#response-example-6)
     - [Update a post \[/posts/update\] \[POST\]](#update-a-post-postsupdate-post)
       - [Request example](#request-example-4)
-      - [Response example](#response-example-6)
+      - [Response example](#response-example-7)
     - [Delete a post \[/posts/delete\] \[POST\]](#delete-a-post-postsdelete-post)
       - [Request example](#request-example-5)
-      - [Response example](#response-example-7)
-    - [Get a post \[/posts/get?post\_id=10\] \[GET\]](#get-a-post-postsgetpost_id10-get)
       - [Response example](#response-example-8)
-    - [Get all posts (user) \[/posts/get?user\_id=69\] \[GET\]](#get-all-posts-user-postsgetuser_id69-get)
+    - [Get a post \[/posts/get?post\_id=10\] \[GET\]](#get-a-post-postsgetpost_id10-get)
       - [Response example](#response-example-9)
-    - [Get all posts (group) \[/posts/get?group\_id=10\] \[GET\]](#get-all-posts-group-postsgetgroup_id10-get)
+    - [Get all posts (user) \[/posts/get?user\_id=69\] \[GET\]](#get-all-posts-user-postsgetuser_id69-get)
       - [Response example](#response-example-10)
+    - [Get all posts (group) \[/posts/get?group\_id=10\] \[GET\]](#get-all-posts-group-postsgetgroup_id10-get)
+      - [Response example](#response-example-11)
 
 ## Authentication
 
@@ -127,6 +129,25 @@ It will also set a session cookie for the registered user making them "logged in
 {
     "errors": "There was an error with your request",
     "details": "Invalid email or password"
+}
+```
+
+### Validate session cookie [/validate] [GET]
+
+#### Response example
+
+200 (OK)
+```json
+{
+    "message": "Session is valid"
+}
+```
+
+401 (ERROR)
+```json
+{
+    "errors": "There was an error with your request",
+    "details": "Invalid session"
 }
 ```
 
