@@ -10,7 +10,7 @@ All endpoints return JSON.
 
 All and/or most responses are based on the same format.
 
-(OK) 200-299
+(OK) **200**-**299**
 ```json
 {
     "message": "Post created successfully",
@@ -18,7 +18,7 @@ All and/or most responses are based on the same format.
 }
 ```
 
-(ERROR) 400-599
+(ERROR) **400**-**599**
 ```json
 {
     "errors": "There was an error with your request",
@@ -44,7 +44,7 @@ All and/or most responses are based on the same format.
     - [Update a user \[/users/update\] \[POST\]](#update-a-user-usersupdate-post)
       - [Request example](#request-example-2)
       - [Response example](#response-example-4)
-    - [Get a user \[/users/{id}\] \[GET\]](#get-a-user-usersid-get)
+    - [Get a user (WIP) \[/users/{id}\] \[GET\]](#get-a-user-wip-usersid-get)
       - [Response example](#response-example-5)
   - [Posts](#posts)
     - [Create a post \[/posts/create\] \[POST\]](#create-a-post-postscreate-post)
@@ -88,7 +88,7 @@ All endpoints except `/users/register` and `/users/login` require a valid sessio
 
 #### Response example
 
-200 (OK)
+**200** (OK)
 ```json
 {
     "message": "User registered successfully"
@@ -96,13 +96,15 @@ All endpoints except `/users/register` and `/users/login` require a valid sessio
 ```
 It will also set a session cookie for the registered user making them "logged in".
 
-400 || 500 (ERROR)
+**400** || **500** (ERROR)
 ```json
 {
     "errors": "There was an error with your request",
     "details": "User already exists"
 }
 ```
+
+---
 
 ### Login a user [/users/login] [POST]
 
@@ -117,14 +119,14 @@ It will also set a session cookie for the registered user making them "logged in
 
 #### Response example
 
-200 (OK)
+**200** (OK)
 ```json
 {
     "message": "User logged in successfully"
 }
 ```
 
-(ERROR)
+**400** || **401** (ERROR)
 ```json
 {
     "errors": "There was an error with your request",
@@ -132,30 +134,35 @@ It will also set a session cookie for the registered user making them "logged in
 }
 ```
 
+---
+
 ### Validate session cookie [/validate] [GET]
 
 #### Response example
 
-200 (OK)
+**200** (OK)
 ```json
 {
     "message": "Session is valid"
 }
 ```
 
-401 (ERROR)
+**401** (ERROR)
 ```json
 {
-    "errors": "There was an error with your request",
-    "details": "Invalid session"
+    "errors": "Invalid session",
 }
 ```
+
+---
 
 ### Logout a user [/users/logout] [GET]
 
 #### Response example
 
 Redirects to `/`
+
+---
 
 ### Update a user [/users/update] [POST]
 
@@ -176,14 +183,14 @@ Redirects to `/`
 
 #### Response example
 
-(OK)
+**200** (OK)
 ```json
 {
     "message": "User updated successfully"
 }
 ```
 
-(ERROR)
+**400** || **500** (ERROR)
 ```json
 {
     "errors": "There was an error with your request",
@@ -191,11 +198,13 @@ Redirects to `/`
 }
 ```
 
-### Get a user [/users/{id}] [GET]
+---
+
+### Get a user (WIP) [/users/{id}] [GET]
 
 #### Response example
 
-(OK)
+**200** (OK)
 ```json
 {
     "id": "10",
@@ -210,7 +219,7 @@ Redirects to `/`
 }
 ```
 
-(ERROR)
+**400** || **500** (ERROR)
 ```json
 {
     "errors": "There was an error with your request",
@@ -237,7 +246,7 @@ Redirects to `/`
 
 #### Response example
 
-(OK)
+**201** (OK)
 ```json
 {
     "message": "Post created successfully",
@@ -245,13 +254,15 @@ Redirects to `/`
 }
 ```
 
-(ERROR)
+**400** || **401** || **500** (ERROR)
 ```json
 {
     "errors": "There was an error with your request",
     "details": "Invalid image"
 }
 ```
+
+---
 
 ### Update a post [/posts/update] [POST]
 
@@ -271,20 +282,22 @@ Redirects to `/`
 
 #### Response example
 
-(OK)
+**200** (OK)
 ```json
 {
     "message": "Post updated successfully"
 }
 ```
 
-(ERROR)
+**400** || **401** || **500** (ERROR)
 ```json
 {
     "errors": "There was an error with your request",
     "details": "Invalid privacy settings"
 }
 ```
+
+---
 
 ### Delete a post [/posts/delete] [POST]
 
@@ -298,14 +311,14 @@ Redirects to `/`
 
 #### Response example
 
-(OK)
+**200** (OK)
 ```json
 {
     "message": "Post deleted successfully"
 }
 ```
 
-(ERROR)
+**400** || **401** || **500** (ERROR)
 ```json
 {
     "errors": "There was an error with your request",
@@ -317,7 +330,7 @@ Redirects to `/`
 
 #### Response example
 
-(OK)
+**200** (OK)
 ```json
 {
     "id": "10",
@@ -330,7 +343,7 @@ Redirects to `/`
 }
 ```
 
-(ERROR)
+**400** || **401** || **500** (ERROR)
 ```json
 {
     "errors": "There was an error with your request",
