@@ -90,15 +90,15 @@ func (u NewUser) Validate() error {
 		return errors.New("invalid password")
 	}
 	// Validate the date of birth using regex
-	var dobReqEx = regexp.MustCompile(`^\d{2}-\d{2}-\d{4}$`)
+	var dobReqEx = regexp.MustCompile(`^\d{4}-\d{2}-\d{2}$`)
 	if !dobReqEx.MatchString(u.DoB) {
 		return errors.New("invalid date of birth")
 	}
 	// Check if dob is at least 18 years ago
 	var dobSplit = strings.Split(u.DoB, "-")
-	var dobYear, _ = strconv.Atoi(dobSplit[2])
+	var dobYear, _ = strconv.Atoi(dobSplit[0])
 	var dobMonth, _ = strconv.Atoi(dobSplit[1])
-	var dobDay, _ = strconv.Atoi(dobSplit[0])
+	var dobDay, _ = strconv.Atoi(dobSplit[2])
 	var dob = time.Date(dobYear, time.Month(dobMonth), dobDay, 0, 0, 0, 0, time.UTC)
 	var eighteenYearsAgo = time.Now().AddDate(-18, 0, 0)
 	if dob.After(eighteenYearsAgo) {
@@ -106,7 +106,7 @@ func (u NewUser) Validate() error {
 	}
 	// Validate the nickname using regex
 	var nicknameReqEx = regexp.MustCompile(`^[a-zA-Z0-9._%+\-]{3,}$`)
-	if !nicknameReqEx.MatchString(u.Nickname) {
+	if !nicknameReqEx.MatchString(u.Nickname) && u.Nickname != "" {
 		return errors.New("invalid nickname")
 	}
 	// Validate the avatar blob using regex

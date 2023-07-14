@@ -17,6 +17,7 @@ interface iForm extends iFormKeys {
         about: string;
         password: string;
         confirmPassword: string;
+        private: string;
     };
 }
 
@@ -32,6 +33,7 @@ export default function Register() {
             about: '',
             password: '',
             confirmPassword: '',
+            private: 'false',
         },
     } as iForm);
 
@@ -43,7 +45,7 @@ export default function Register() {
         const form = e.target.parentElement?.attributes.getNamedItem('name')
             ?.value as string;
         const target = e.target;
-        const value = target.value;
+        var value = target.value;
         // VALIDATE VALUE, WHAT TARGET IS, ETC
         switch (target.name) {
             case 'fName':
@@ -221,10 +223,11 @@ export default function Register() {
                 );
                 document.getElementById('pw2ErrorMsg')!.classList.add('hidden');
                 break;
+            case 'private':
+                value = (e.target as any).checked;
         }
 
         console.log(target.name, value);
-
         const name = target.name;
         const formCopy = formData;
         formCopy[form][name] = value;
@@ -270,13 +273,14 @@ export default function Register() {
         console.log(formData);
         const FD = new FormData();
         FD.append('avatar', formData.register.avatar as string);
-        FD.append('fName', formData.register.fName as string);
-        FD.append('lName', formData.register.lName as string);
+        FD.append('fname', formData.register.fName as string);
+        FD.append('lname', formData.register.lName as string);
         FD.append('email', formData.register.email as string);
         FD.append('nickname', formData.register.nickname as string);
-        FD.append('dob', formData.register.dob as string);
+        FD.append('date_of_birth', formData.register.dob as string);
         FD.append('about', formData.register.about as string);
         FD.append('password', formData.register.password as string);
+        FD.append('private', formData.register.private as string);
 
         const response = await fetch(
             'http://localhost:8080/api/users/register',
@@ -321,6 +325,7 @@ export default function Register() {
                                         id="avatarDisplay"
                                         src=""
                                         className="absolute border-none"
+                                        alt=""
                                     />
                                     <svg
                                         xmlns="http://www.w3.org/2000/svg"
