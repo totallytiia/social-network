@@ -3,6 +3,7 @@ package endpoints
 import (
 	"encoding/base64"
 	"encoding/json"
+	"fmt"
 	"net/http"
 	s "social_network_api/structs"
 	"strconv"
@@ -55,10 +56,11 @@ func RegisterUser(w http.ResponseWriter, r *http.Request) {
 		w.Write(badReqJSON)
 		return
 	}
-	cookie := http.Cookie{Name: "session", Value: userLogin.Session.SessionID, Path: "/", Expires: time.Now().Add(24 * time.Hour * 7)}
+	w.Header().Add("access-control-expose-headers", "Set-Cookie")
+	cookie := http.Cookie{Name: "session", Value: userLogin.Session.SessionID, Path: "/", Expires: time.Now().Add(24 * time.Hour * 7), HttpOnly: false}
 	http.SetCookie(w, &cookie)
 	w.WriteHeader(http.StatusOK)
-	var okJSON, _ = json.Marshal(s.OKResponse{Message: "User registered successfully"})
+	var okJSON, _ = json.Marshal(s.OKResponse{Message: "User registered successfully", Details: userLogin.ID})
 	w.Write(okJSON)
 }
 
@@ -90,10 +92,11 @@ func LoginUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	// Set the cookie
-	cookie := http.Cookie{Name: "session", Value: user.Session.SessionID, Path: "/", Expires: time.Now().Add(24 * time.Hour * 7)}
+	cookie := http.Cookie{Name: "session", Value: user.Session.SessionID, Path: "/", Domain: "localhost", Expires: time.Now().Add(24 * time.Hour * 7), HttpOnly: false}
 	http.SetCookie(w, &cookie)
+	fmt.Println(cookie)
 	w.WriteHeader(http.StatusOK)
-	var okJSON, _ = json.Marshal(s.OKResponse{Message: "User logged in successfully"})
+	var okJSON, _ = json.Marshal(s.OKResponse{Message: "User logged in successfully", Details: user.ID})
 	w.Write(okJSON)
 }
 

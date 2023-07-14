@@ -1,0 +1,9 @@
+{
+    "name": "Social Network",
+    "short_name": "Social Network",
+    "theme_color": "#ffffff",
+    "background_color": "#ffffff",
+    "display": "standalone",
+    "start_url": "/",
+    "scope": "."
+}

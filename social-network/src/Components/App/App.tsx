@@ -24,26 +24,28 @@ export const UserContext = createContext({} as UserContextType);
 
 function App() {
     const [userData, setUserData] = useState({} as ApiUserContextInterface);
-    var isAuthenticated = false;
-    async function checkAuth() {
-        const response = await fetch('http://localhost:8080/api/validate', {
-            method: 'GET',
-        });
-        const data = await response.json();
-        if (!data.errors) {
-            isAuthenticated = true;
-        }
-    }
-    checkAuth();
-    if (!isAuthenticated) {
+    // var isAuthenticated = false;
+    // async function checkAuth() {
+    //     const response = await fetch('http://localhost:8080/api/validate', {
+    //         method: 'GET',
+    //     });
+    //     const data = await response.json();
+    //     if (!data.errors) {
+    //         isAuthenticated = true;
+    //     }
+    // }
+    // checkAuth();
+    /*if (!isAuthenticated) {
         return (
             <>
                 <BrowserRouter>
-                    <SignInOrRegister></SignInOrRegister>
+                    <UserContext.Provider value={{ userData, setUserData }}>
+                        <SignInOrRegister></SignInOrRegister>
+                    </UserContext.Provider>
                 </BrowserRouter>
             </>
         );
-    }
+    }*/
     return (
         <>
             <BrowserRouter>
