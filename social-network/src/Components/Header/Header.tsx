@@ -7,7 +7,7 @@ export default function Header() {
     return (
         <header className="HEADER bg-white sticky top-0 shadow-lg z-50">
             <nav className="NAVIGATION grid grid-cols-3 gap-3 items-center px-2 py-2 mx-2">
-                <div className="LOGO">
+                <div onClick={() => window.location.href = "/"} className="LOGO">
                     <h1 className="LOGO-TEXT text-black text-2xl font-bold">
                         LOGO
                     </h1>
@@ -51,20 +51,20 @@ export default function Header() {
                     </div>
                 </section>
                 <div className="flex space-x-2 text-xs justify-end DESKTOP-MENU hidden lg:flex">
-                    <div>
-                        <NavLink href="/" text="+" />
+                    <div onClick={() => window.location.href = "/"}>
+                        <NavLink text="+" />
                     </div>
-                    <div>
-                        <NavLink href="/" text="fullscreen-chat" />
+                    <div onClick={() => window.location.href = "/"}>
+                        <NavLink text="fullscreen-chat" />
                     </div>
-                    <div>
-                        <NavLink href="/" text="Nofitications" />
+                    <div onClick={() => window.location.href = "/"}>
+                        <NavLink text="Nofitications" />
                     </div>
-                    <div>
-                        <NavLink href="/" text="Groups" />
+                    <div onClick={() => window.location.href = "/"}>
+                        <NavLink text="Groups" />
                     </div>
-                    <div>
-                        <NavLink href="/" text="Profile" />
+                    <div onClick={() => window.location.href = "/profile"}>
+                        <NavLink text="Profile" />
                     </div>
                 </div>
             </nav>
