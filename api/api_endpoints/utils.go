@@ -9,6 +9,9 @@ import (
 
 func ValidateCookie(w http.ResponseWriter, r *http.Request) (bool, s.User) {
 	var cookie, err = r.Cookie("session")
+	if err != nil {
+		return false, s.User{}
+	}
 	if cookie.Expires.Before(time.Now()) {
 		return false, s.User{}
 	}
