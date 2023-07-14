@@ -80,7 +80,7 @@ All endpoints except `/users/register` and `/users/login` require a valid sessio
     "lname": "Doe",
     "password": "test",
     "email": "test@test.ax",
-    "date_of_birth": "19-09-1999",
+    "date_of_birth": "19-09-1999",  
     "avatar": "(image blob)",
     "about_me": "I am a test user",
     "private": "false",
