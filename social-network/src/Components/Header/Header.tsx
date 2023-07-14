@@ -42,11 +42,11 @@ export default function Header() {
                             </svg>
                         </div>
                         <div className="NAVIGATION-MOBILE-OPEN flex flex-col items-center justify-between min-h-[250px]">
-                            <button className='text-2xl font-extrabold'><link href="/" />Make a post</button>
-                            <button className='text-2xl font-extrabold'><link href="/" />Chat</button>
-                            <button className='text-2xl font-extrabold'><link href="/" />Notifications</button>
-                            <button className='text-2xl font-extrabold'><link href="/" />Groups</button>
-                            <button className='text-2xl font-extrabold'><link href="/profile" />Profile</button>
+                            <button onClick={() => window.location.href = "/"} className='text-2xl font-extrabold'>Make a post</button>
+                            <button onClick={() => window.location.href = "/"} className='text-2xl font-extrabold'>Chat</button>
+                            <button onClick={() => window.location.href = "/"} className='text-2xl font-extrabold'>Notifications</button>
+                            <button onClick={() => window.location.href = "/"} className='text-2xl font-extrabold'>Groups</button>
+                            <button onClick={() => window.location.href = "/profile"} className='text-2xl font-extrabold'>Profile</button>
                         </div>
                     </div>
                 </section>
