@@ -16,6 +16,10 @@ func api(w http.ResponseWriter, r *http.Request) {
 		w.Write(badReqJSON)
 		return
 	}
+	// Write CORS headers
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PATCH, DELETE")
+	w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With")
 	// Switch on first part after /api/
 	switch reqUrl[0] {
 	case "users":
