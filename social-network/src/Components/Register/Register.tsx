@@ -47,34 +47,34 @@ export default function Register() {
                     console.log('error');
                     e.target.classList.add('border-red-500', 'border-2', 'border-solid');
                     // remove hidden class from error message id="fNameErrorMsg"
-                    e.target.parentElement?.querySelector('button')?.setAttribute('disabled', 'true');
+                    document.getElementById('submitBtn')?.setAttribute('disabled', 'true');
                     document.getElementById('fNameErrorMsg')!.classList.remove('hidden');
                     return
                 }
                 document.getElementById('fNameErrorMsg')!.classList.add('hidden');
-                e.target.parentElement?.querySelector('button')?.setAttribute('disabled', 'false');
+                document.getElementById('submitBtn')?.setAttribute('disabled', 'false');
                 e.target.classList.remove('border-red-500', 'border-2', 'border-solid');
                 break;
             case 'lName':
                 if (value.length < 2 || value.length > 20) {
                     console.log('error');
                     e.target.classList.add('border-red-500', 'border-2', 'border-solid');
-                    e.target.parentElement?.querySelector('button')?.setAttribute('disabled', 'true');
+                    document.getElementById('submitBtn')?.setAttribute('disabled', 'true');
                     document.getElementById('lNameErrorMsg')!.classList.remove('hidden');
                     return
                 }
-                e.target.parentElement?.querySelector('button')?.setAttribute('disabled', 'false');
+                document.getElementById('submitBtn')?.setAttribute('disabled', 'false');
                 e.target.classList.remove('border-red-500', 'border-2', 'border-solid');
                 document.getElementById('lNameErrorMsg')!.classList.add('hidden');
                 break;
             case 'email':
                 if (!/^[^ ]+@[^ ]+.[a-z]{2,3}$/g.test(value)) {
                     e.target.classList.add('border-red-500', 'border-2', 'border-solid');
-                    e.target.parentElement?.querySelector('button')?.setAttribute('disabled', 'true');
+                    document.getElementById('submitBtn')?.setAttribute('disabled', 'true');
                     document.getElementById('emailErrorMsg')!.classList.remove('hidden');
                     return
                 }
-                e.target.parentElement?.querySelector('button')?.setAttribute('disabled', 'false');
+                document.getElementById('submitBtn')?.setAttribute('disabled', 'false');
                 e.target.classList.remove('border-red-500', 'border-2', 'border-solid');
                 document.getElementById('emailErrorMsg')!.classList.add('hidden');
                 break;
@@ -88,11 +88,11 @@ export default function Register() {
                         (today.getMonth() === birthdate.getMonth() && today.getDate() < birthdate.getDate()) ? 1 : 0);
                 if (age < 18) {
                     e.target.classList.add('border-red-500', 'border-2', 'border-solid');
-                    e.target.parentElement?.querySelector('button')?.setAttribute('disabled', 'true');
+                    document.getElementById('submitBtn')?.setAttribute('disabled', 'true');
                     document.getElementById('dobErrorMsg')!.classList.remove('hidden');
                     return
                 }
-                e.target.parentElement?.querySelector('button')?.setAttribute('disabled', 'false');
+                document.getElementById('submitBtn')?.setAttribute('disabled', 'false');
                 e.target.classList.remove('border-red-500', 'border-2', 'border-solid');
                 document.getElementById('dobErrorMsg')!.classList.add('hidden');
                 break;
@@ -105,22 +105,22 @@ export default function Register() {
                     value.length < 8
                 ) {
                     e.target.classList.add('border-red-500', 'border-2', 'border-solid');
-                    e.target.parentElement?.querySelector('button')?.setAttribute('disabled', 'true');
+                    document.getElementById('submitBtn')?.setAttribute('disabled', 'true');
                     document.getElementById('pwErrorMsg')!.classList.remove('hidden');
                     return;
                 }
-                e.target.parentElement?.querySelector('button')?.setAttribute('disabled', 'false');
+                document.getElementById('submitBtn')?.setAttribute('disabled', 'false');
                 e.target.classList.remove('border-red-500', 'border-2', 'border-solid');
                 document.getElementById('pwErrorMsg')!.classList.add('hidden');
                 break;
             case 'confirmPassword':
                 if (value !== formData.register.password) {
                     e.target.classList.add('border-red-500', 'border-2', 'border-solid');
-                    e.target.parentElement?.querySelector('button')?.setAttribute('disabled', 'true');
+                    document.getElementById('submitBtn')?.setAttribute('disabled', 'true');
                     document.getElementById('pw2ErrorMsg')!.classList.remove('hidden');
                     return;
                 }
-                e.target.parentElement?.querySelector('button')?.setAttribute('disabled', 'false');
+                document.getElementById('submitBtn')?.setAttribute('disabled', 'false');
                 e.target.classList.remove('border-red-500', 'border-2', 'border-solid');
                 document.getElementById('pw2ErrorMsg')!.classList.add('hidden');
                 break;
@@ -153,6 +153,7 @@ export default function Register() {
 
     const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        console.log(formData);
         const FD = new FormData();
         FD.append('avatar', formData.register.avatar as string);
         FD.append('fName', formData.register.fName as string);
@@ -195,6 +196,7 @@ export default function Register() {
                     </div>
                     <form onSubmit={handleFormSubmit} className="flex flex-col space-y-4 mt-5" name="register">
                         <div className="flex justify-center align-center flex-col">
+                            {/* IMG UPLOAD HERE */}
                             <label htmlFor='imgUpload'>
                                 <div className='h-24 w-24 flex justify-center mx-auto relative border-dashed border-2 border-gray-300 rounded-full'>
                                     <img id="avatarDisplay" src="" className="absolute border-none" />
@@ -212,6 +214,7 @@ export default function Register() {
                             className=""
                             name="fName"
                             onChange={(e) => formHandleChangeInput(e)}
+                            required
                         ></input>
                         <p id="fNameErrorMsg" className='hidden text-xs !mt-1 ml-2 mb-1'>Needs to be at least 2 characters.</p>
                         <input
@@ -220,6 +223,7 @@ export default function Register() {
                             className=""
                             name="lName"
                             onChange={(e) => formHandleChangeInput(e)}
+                            required
                         ></input>
                         <p id="lNameErrorMsg" className='hidden text-xs !mt-1 ml-2 mb-1'>Needs to be at least 2 characters.</p>
                         <input
@@ -228,6 +232,7 @@ export default function Register() {
                             name="email"
                             className=""
                             onChange={(e) => formHandleChangeInput(e)}
+                            required
                         ></input>
                         <p id="emailErrorMsg" className='hidden text-xs !mt-1 ml-2 mb-1'>Not valid email.</p>
                         <input
@@ -243,6 +248,7 @@ export default function Register() {
                             className=""
                             name="dob"
                             onChange={(e) => formHandleChangeInput(e)}
+                            required
                         ></input>
                         <p id="dobErrorMsg" className='hidden text-xs !mt-1 ml-2 mb-1'>You need to be at least 18 years old.</p>
                         <textarea
@@ -257,6 +263,7 @@ export default function Register() {
                             className=""
                             name="password"
                             onChange={(e) => formHandleChangeInput(e)}
+                            required
                         ></input>
                         <p id="pwErrorMsg" className='hidden text-xs !mt-1 ml-2 mb-1'>Password has to be at least 8 characters, 1 uppercase, 1 lowercase, 1 digit and 1 special character.</p>
                         <input
@@ -265,9 +272,10 @@ export default function Register() {
                             className=""
                             name="confirmPassword"
                             onChange={(e) => formHandleChangeInput(e)}
+                            required
                         ></input>
                         <p id="pw2ErrorMsg" className='hidden text-xs !mt-1 ml-2 mb-1'>Passwords don't match, try again.</p>
-                        <input type="submit" value="Register" className="btn-custom font-semibold">
+                        <input type="submit" id="submitBtn" value="Register" className="btn-custom font-semibold">
                         </input>
                         <button className="text-sm text-gray-500">
                             Already have an account? Login here.
