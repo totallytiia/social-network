@@ -19,7 +19,7 @@ func api(w http.ResponseWriter, r *http.Request) {
 	}
 	fmt.Println(reqUrl)
 	// Write CORS headers
-	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Origin", "http://localhost:3000")
 	w.Header().Set("Access-Control-Allow-Methods", "GET, POST")
 	w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Access-Control-Allow-Headers, X-Requested-With, Cookie")
 	// Switch on first part after /api/

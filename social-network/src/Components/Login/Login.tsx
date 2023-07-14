@@ -13,6 +13,7 @@ export default function Login() {
         const res = await fetch('http://localhost:8080/api/users/login', {
             method: 'POST',
             body: FD,
+            credentials: 'include',
         });
         const data = await res.json();
         if (data.errors) {

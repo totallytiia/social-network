@@ -1,4 +1,4 @@
-import { useState, createContext } from 'react';
+import { useState, createContext, useEffect } from 'react';
 
 import Page from '../Page/Page';
 import '../../styles.css';
@@ -24,18 +24,22 @@ export const UserContext = createContext({} as UserContextType);
 
 function App() {
     const [userData, setUserData] = useState({} as ApiUserContextInterface);
-    // var isAuthenticated = false;
-    // async function checkAuth() {
-    //     const response = await fetch('http://localhost:8080/api/validate', {
-    //         method: 'GET',
-    //     });
-    //     const data = await response.json();
-    //     if (!data.errors) {
-    //         isAuthenticated = true;
-    //     }
-    // }
-    // checkAuth();
-    /*if (!isAuthenticated) {
+    var isAuthenticated = false;
+
+    useEffect(() => {
+        async function checkAuth() {
+            const response = await fetch('http://localhost:8080/api/validate', {
+                method: 'GET',
+                credentials: 'include',
+            });
+            const data = await response.json();
+            if (!data.errors) {
+                isAuthenticated = true;
+            }
+        }
+        checkAuth();
+    }, [isAuthenticated]);
+    if (!isAuthenticated) {
         return (
             <>
                 <BrowserRouter>
@@ -45,7 +49,7 @@ function App() {
                 </BrowserRouter>
             </>
         );
-    }*/
+    }
     return (
         <>
             <BrowserRouter>

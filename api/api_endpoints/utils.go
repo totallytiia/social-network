@@ -2,9 +2,9 @@ package endpoints
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 	s "social_network_api/structs"
-	"time"
 )
 
 func ValidateCookie(w http.ResponseWriter, r *http.Request) (bool, s.User) {
@@ -12,13 +12,16 @@ func ValidateCookie(w http.ResponseWriter, r *http.Request) (bool, s.User) {
 	if err != nil {
 		return false, s.User{}
 	}
-	if cookie.Expires.Before(time.Now()) {
-		return false, s.User{}
-	}
+	// fmt.Println(cookie)
+	// if cookie.Expires.Before(time.Now()) {
+	// 	return false, s.User{}
+	// }
 	if err != nil {
 		return false, s.User{}
 	}
 	user, err := s.UserFromSession(cookie.Value)
+	fmt.Println(user)
+	fmt.Println(err)
 	if err != nil {
 		return false, s.User{}
 	}

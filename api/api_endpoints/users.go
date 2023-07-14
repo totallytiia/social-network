@@ -3,7 +3,6 @@ package endpoints
 import (
 	"encoding/base64"
 	"encoding/json"
-	"fmt"
 	"net/http"
 	s "social_network_api/structs"
 	"strconv"
@@ -92,9 +91,10 @@ func LoginUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	// Set the cookie
+	w.Header().Add("access-control-expose-headers", "Set-Cookie")
+	w.Header().Add("Access-Control-Allow-Credentials", "true")
 	cookie := http.Cookie{Name: "session", Value: user.Session.SessionID, Path: "/", Domain: "localhost", Expires: time.Now().Add(24 * time.Hour * 7), HttpOnly: false}
 	http.SetCookie(w, &cookie)
-	fmt.Println(cookie)
 	w.WriteHeader(http.StatusOK)
 	var okJSON, _ = json.Marshal(s.OKResponse{Message: "User logged in successfully", Details: user.ID})
 	w.Write(okJSON)
