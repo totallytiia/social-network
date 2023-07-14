@@ -139,8 +139,8 @@ export default function Register() {
                     today.getFullYear() -
                     birthdate.getFullYear() -
                     (today.getMonth() < birthdate.getMonth() ||
-                    (today.getMonth() === birthdate.getMonth() &&
-                        today.getDate() < birthdate.getDate())
+                        (today.getMonth() === birthdate.getMonth() &&
+                            today.getDate() < birthdate.getDate())
                         ? 1
                         : 0);
                 if (age < 18) {
@@ -450,22 +450,25 @@ export default function Register() {
                         >
                             Passwords don't match, try again.
                         </p>
-                        <label htmlFor="private">Private Account</label>
-                        <input
-                            type="checkbox"
-                            name="private"
-                            onChange={(e) => formHandleChangeInput(e)}
-                        />
+                        <div className='flex flex-row ml-2'>
+                            <label className="mb-0 font-normal" htmlFor="private">Private Account</label>
+                            <input
+                                className='ml-2'
+                                type="checkbox"
+                                name="private"
+                                onChange={(e) => formHandleChangeInput(e)}
+                            />
+                        </div>
                         <input
                             type="submit"
                             id="submitBtn"
                             value="Register"
                             className="btn-custom font-semibold"
                         ></input>
-                        <button className="text-sm text-gray-500">
-                            Already have an account? Login here.
-                        </button>
                     </form>
+                    <button onClick={() => window.location.href = "/login"} className="text-sm text-gray-500 mt-3">
+                        Already have an account? Login here.
+                    </button>
                 </div>
             </div>
         </>

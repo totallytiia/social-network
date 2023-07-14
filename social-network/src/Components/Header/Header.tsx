@@ -42,11 +42,11 @@ export default function Header() {
                             </svg>
                         </div>
                         <div className="NAVIGATION-MOBILE-OPEN flex flex-col items-center justify-between min-h-[250px]">
-                            <NavLink href="/" text="New post" />
-                            <NavLink href="/" text="Chat" />
-                            <NavLink href="/" text="Nofitications" />
-                            <NavLink href="/" text="Groups" />
-                            <NavLink href="/" text="Profile" />
+                            <button className='text-2xl font-extrabold'><link href="/" />Make a post</button>
+                            <button className='text-2xl font-extrabold'><link href="/" />Chat</button>
+                            <button className='text-2xl font-extrabold'><link href="/" />Notifications</button>
+                            <button className='text-2xl font-extrabold'><link href="/" />Groups</button>
+                            <button className='text-2xl font-extrabold'><link href="/profile" />Profile</button>
                         </div>
                     </div>
                 </section>
@@ -79,7 +79,7 @@ export default function Header() {
         height: 100vh;
         top: 0;
         left: 0;
-        background: white;
+        background-color: rgb(255 237 213);
         z-index: 10;
         display: flex;
         flex-direction: column;

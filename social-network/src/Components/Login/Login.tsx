@@ -21,8 +21,8 @@ export default function Login() {
 						<input type="email" onChange={(e) => { setEmail(e.target.value) }} placeholder="Email" id="Email" className=""></input>
 						<input type="password" onChange={(e) => { setPassword(e.target.value) }} placeholder="Password" id="password " className=""></input>
 						<button className="btn-custom font-semibold">Submit</button>
-						<button className='text-sm text-gray-500'>Don't have an account? Register here.</button>
 					</form>
+					<button onClick={() => window.location.href = "/register"} className='text-sm text-gray-500 mt-3'>Don't have an account? Register here.</button>
 				</div>
 			</div >
 		</>
