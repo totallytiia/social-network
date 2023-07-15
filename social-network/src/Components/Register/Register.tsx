@@ -421,7 +421,7 @@ export default function Register() {
                             onChange={(e) => formHandleChangeInput(e)}
                         ></textarea>
                         <input
-                            type="text"
+                            type="password"
                             placeholder="Password"
                             className=""
                             name="password"
@@ -437,7 +437,7 @@ export default function Register() {
                             character.
                         </p>
                         <input
-                            type="text"
+                            type="password"
                             placeholder="Confirm password"
                             className=""
                             name="confirmPassword"
