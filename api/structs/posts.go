@@ -10,27 +10,27 @@ import (
 
 // PrivacySettings is a comma separated list of user ids for the users that can see the post
 type NewPost struct {
-	Title           string `json:"title"`
-	Content         string `json:"content"`
-	Image           string `json:"image"`
-	Privacy         int    `json:"privacy"`
-	PrivacySettings string `json:"privacy_settings"`
-	UserID          int    `json:"user_id"`
-	GroupID         int    `json:"group_id"`
+	Title           string      `json:"title"`
+	Content         string      `json:"content"`
+	Image           string      `json:"image"`
+	Privacy         int         `json:"privacy"`
+	PrivacySettings string      `json:"privacy_settings"`
+	UserID          int         `json:"user_id"`
+	GroupID         interface{} `json:"group_id"`
 }
 
 type Post struct {
-	ID              int       `json:"id"`
-	UserID          int       `json:"user_id"`
-	GroupID         int       `json:"group_id"`
-	Title           string    `json:"title"`
-	Content         string    `json:"content"`
-	Image           string    `json:"image"`
-	Privacy         string    `json:"privacy"`
-	PrivacySettings string    `json:"privacy_settings"`
-	CreatedAt       string    `json:"created_at"`
-	UpdatedAt       string    `json:"updated_at"`
-	Comments        []Comment `json:"comments"`
+	ID              int         `json:"id"`
+	UserID          int         `json:"user_id"`
+	GroupID         interface{} `json:"group_id"`
+	Title           string      `json:"title"`
+	Content         string      `json:"content"`
+	Image           string      `json:"image"`
+	Privacy         string      `json:"privacy"`
+	PrivacySettings string      `json:"privacy_settings"`
+	CreatedAt       string      `json:"created_at"`
+	UpdatedAt       string      `json:"updated_at"`
+	Comments        []Comment   `json:"comments"`
 }
 
 func (p *NewPost) Validate() error {
@@ -62,7 +62,7 @@ func (p *NewPost) Validate() error {
 		}
 	}
 	var imageRegEx = regexp.MustCompile(`^data:image\/(png|jpg|jpeg);base64,([a-zA-Z0-9+/=]+)$`)
-	if !imageRegEx.MatchString(p.Image) {
+	if !imageRegEx.MatchString(p.Image) && p.Image != "" {
 		return errors.New("invalid image")
 	}
 	return nil

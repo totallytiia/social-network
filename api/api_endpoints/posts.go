@@ -34,10 +34,14 @@ func CreatePost(w http.ResponseWriter, r *http.Request) {
 	post.PrivacySettings = r.FormValue("privacy_settings")
 	// Extract the user from the session
 	post.UserID = u.ID
-	post.GroupID, err = strconv.Atoi(r.FormValue("group_id"))
-	if err != nil {
-		BadRequest(w, r, "Invalid group ID")
-		return
+	if r.FormValue("group_id") != "" {
+		post.GroupID, err = strconv.Atoi(r.FormValue("group_id"))
+		if err != nil {
+			BadRequest(w, r, "Invalid group ID")
+			return
+		}
+	} else {
+		post.GroupID = nil
 	}
 	err = post.Validate()
 	if err != nil {

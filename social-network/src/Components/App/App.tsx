@@ -24,7 +24,7 @@ export const UserContext = createContext({} as UserContextType);
 
 function App() {
     const [userData, setUserData] = useState({} as ApiUserContextInterface);
-    var isAuthenticated = false;
+    const [isAuthenticated, setAuthenticated] = useState(false);
 
     useEffect(() => {
         async function checkAuth() {
@@ -34,11 +34,11 @@ function App() {
             });
             const data = await response.json();
             if (!data.errors) {
-                isAuthenticated = true;
+                setAuthenticated(true);
             }
         }
         checkAuth();
-    }, [isAuthenticated]);
+    }, [userData]);
     if (!isAuthenticated) {
         return (
             <>
