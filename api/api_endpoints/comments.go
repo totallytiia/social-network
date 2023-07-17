@@ -29,7 +29,7 @@ func CreateComment(w http.ResponseWriter, r *http.Request) {
 	var comment = s.NewComment{
 		UserID:  u.ID,
 		PostID:  postID,
-		Content: r.FormValue("content"),
+		Comment: r.FormValue("comment"),
 	}
 	err = comment.Validate()
 	if err != nil {
@@ -94,7 +94,7 @@ func UpdateComment(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	var testComment = s.NewComment{
-		Content: r.FormValue("content"),
+		Comment: r.FormValue("comment"),
 	}
 	err = testComment.Validate()
 	if err != nil {
@@ -104,7 +104,7 @@ func UpdateComment(w http.ResponseWriter, r *http.Request) {
 	var comment = s.Comment{
 		ID:      commentID,
 		UserID:  u.ID,
-		Content: r.FormValue("content"),
+		Comment: r.FormValue("comment"),
 	}
 	err = comment.Update()
 	if err != nil {

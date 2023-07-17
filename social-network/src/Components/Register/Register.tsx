@@ -139,8 +139,8 @@ export default function Register() {
                     today.getFullYear() -
                     birthdate.getFullYear() -
                     (today.getMonth() < birthdate.getMonth() ||
-                        (today.getMonth() === birthdate.getMonth() &&
-                            today.getDate() < birthdate.getDate())
+                    (today.getMonth() === birthdate.getMonth() &&
+                        today.getDate() < birthdate.getDate())
                         ? 1
                         : 0);
                 if (age < 18) {
@@ -168,6 +168,7 @@ export default function Register() {
                 document.getElementById('dobErrorMsg')!.classList.add('hidden');
                 break;
             case 'password':
+                // eslint-disable-next-line
                 let formatSpecial = /[`!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/;
                 let formatVersal = /[A-Z]/;
                 if (
@@ -226,8 +227,6 @@ export default function Register() {
             case 'private':
                 value = (e.target as any).checked;
         }
-
-        console.log(target.name, value);
         const name = target.name;
         const formCopy = formData;
         formCopy[form][name] = value;
@@ -450,10 +449,15 @@ export default function Register() {
                         >
                             Passwords don't match, try again.
                         </p>
-                        <div className='flex flex-row ml-2'>
-                            <label className="mb-0 font-normal" htmlFor="private">Private Account</label>
+                        <div className="flex flex-row ml-2">
+                            <label
+                                className="mb-0 font-normal"
+                                htmlFor="private"
+                            >
+                                Private Account
+                            </label>
                             <input
-                                className='ml-2'
+                                className="ml-2"
                                 type="checkbox"
                                 name="private"
                                 onChange={(e) => formHandleChangeInput(e)}
@@ -466,7 +470,10 @@ export default function Register() {
                             className="btn-custom font-semibold"
                         ></input>
                     </form>
-                    <button onClick={() => window.location.href = "/login"} className="text-sm text-gray-500 mt-3">
+                    <button
+                        onClick={() => (window.location.href = '/login')}
+                        className="text-sm text-gray-500 mt-3"
+                    >
                         Already have an account? Login here.
                     </button>
                 </div>

@@ -96,7 +96,7 @@ export default function Header() {
                         </div>
                     </div>
                 </section>
-                <div className="flex space-x-2 text-xs justify-end DESKTOP-MENU hidden lg:flex">
+                <div className="space-x-2 text-xs justify-end DESKTOP-MENU hidden lg:flex">
                     <div onClick={() => (window.location.href = '/')}>
                         <NavLink text="+" />
                     </div>
