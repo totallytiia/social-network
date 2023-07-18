@@ -7,7 +7,6 @@ import (
 )
 
 func ValidateSession(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Access-Control-Allow-Credentials", "true")
 	v, _ := ValidateCookie(w, r)
 	if v {
 		w.WriteHeader(http.StatusOK)

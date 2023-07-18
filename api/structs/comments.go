@@ -9,7 +9,7 @@ type Comment struct {
 	ID        int    `json:"id"`
 	UserID    int    `json:"user_id"`
 	PostID    int    `json:"post_id"`
-	Content   string `json:"content"`
+	Comment   string `json:"comment"`
 	CreatedAt string `json:"created_at"`
 	UpdatedAt string `json:"updated_at"`
 }
@@ -17,21 +17,21 @@ type Comment struct {
 type NewComment struct {
 	UserID  int    `json:"user_id"`
 	PostID  int    `json:"post_id"`
-	Content string `json:"content"`
+	Comment string `json:"comment"`
 }
 
 func (c *NewComment) Validate() error {
-	if c.Content == "" {
-		return errors.New("comment content cannot be empty")
+	if c.Comment == "" {
+		return errors.New("comment comment cannot be empty")
 	}
-	if len(c.Content) > 1000 {
-		return errors.New("comment content cannot be longer than 1000 characters")
+	if len(c.Comment) > 1000 {
+		return errors.New("comment comment cannot be longer than 1000 characters")
 	}
 	return nil
 }
 
 func (c *NewComment) Create() (int, error) {
-	var res, err = db.DB.Exec("INSERT INTO comments (user_id, post_id, content) VALUES (?, ?, ?)", c.UserID, c.PostID, c.Content)
+	var res, err = db.DB.Exec("INSERT INTO comments (user_id, post_id, comment) VALUES (?, ?, ?)", c.UserID, c.PostID, c.Comment)
 	if err != nil {
 		return 0, err
 	}
@@ -40,7 +40,7 @@ func (c *NewComment) Create() (int, error) {
 }
 
 func GetComments(postID int) ([]Comment, error) {
-	var rows, err = db.DB.Query("SELECT id, user_id, post_id, content, created_at, updated_at FROM comments WHERE post_id = ?", postID)
+	var rows, err = db.DB.Query("SELECT id, user_id, post_id, comment, created_at, updated_at FROM comments WHERE post_id = ?", postID)
 	if err != nil {
 		return nil, err
 	}
@@ -48,7 +48,7 @@ func GetComments(postID int) ([]Comment, error) {
 	var comments []Comment
 	for rows.Next() {
 		var comment Comment
-		err = rows.Scan(&comment.ID, &comment.UserID, &comment.PostID, &comment.Content, &comment.CreatedAt, &comment.UpdatedAt)
+		err = rows.Scan(&comment.ID, &comment.UserID, &comment.PostID, &comment.Comment, &comment.CreatedAt, &comment.UpdatedAt)
 		if err != nil {
 			return nil, err
 		}
@@ -58,7 +58,7 @@ func GetComments(postID int) ([]Comment, error) {
 }
 
 func (c *Comment) Get() error {
-	var err = db.DB.QueryRow("SELECT id, user_id, post_id, content, created_at, updated_at FROM comments WHERE id = ?", c.ID).Scan(&c.ID, &c.UserID, &c.PostID, &c.Content, &c.CreatedAt, &c.UpdatedAt)
+	var err = db.DB.QueryRow("SELECT id, user_id, post_id, comment, created_at, updated_at FROM comments WHERE id = ?", c.ID).Scan(&c.ID, &c.UserID, &c.PostID, &c.Comment, &c.CreatedAt, &c.UpdatedAt)
 	if err != nil {
 		return err
 	}
@@ -66,7 +66,7 @@ func (c *Comment) Get() error {
 }
 
 func (c *Comment) Update() error {
-	var _, err = db.DB.Exec("UPDATE comments SET content = ? WHERE id = ?", c.Content, c.ID)
+	var _, err = db.DB.Exec("UPDATE comments SET comment = ? WHERE id = ?", c.Comment, c.ID)
 	if err != nil {
 		return err
 	}

@@ -34,10 +34,14 @@ func CreatePost(w http.ResponseWriter, r *http.Request) {
 	post.PrivacySettings = r.FormValue("privacy_settings")
 	// Extract the user from the session
 	post.UserID = u.ID
-	post.GroupID, err = strconv.Atoi(r.FormValue("group_id"))
-	if err != nil {
-		BadRequest(w, r, "Invalid group ID")
-		return
+	if r.FormValue("group_id") != "" {
+		post.GroupID, err = strconv.Atoi(r.FormValue("group_id"))
+		if err != nil {
+			BadRequest(w, r, "Invalid group ID")
+			return
+		}
+	} else {
+		post.GroupID = nil
 	}
 	err = post.Validate()
 	if err != nil {
@@ -227,6 +231,8 @@ func GetPosts(w http.ResponseWriter, r *http.Request) {
 		w.Write(postJSON)
 		return
 	}
+	// TODO: Add pagination
+	// TODO: Make empty request possible, fetch posts from useres you follow
 	if len(r.FormValue("group_id")) == 0 && len(r.FormValue("user_id")) == 0 {
 		BadRequest(w, r, "You must provide a group ID or a user ID")
 		return
@@ -263,8 +269,13 @@ func GetPosts(w http.ResponseWriter, r *http.Request) {
 		w.Write(badReqJSON)
 		return
 	}
-	for post := range posts {
-		posts[post].Comments, err = s.GetComments(posts[post].ID)
+	if (len(posts.Posts)) == 0 {
+		w.WriteHeader(http.StatusNoContent)
+		w.Write([]byte("{}"))
+		return
+	}
+	for post := range posts.Posts {
+		posts.Posts[post].Comments, err = s.GetComments(posts.Posts[post].ID)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			badReqJSON, _ := json.Marshal(s.ErrorResponse{Errors: "There was an error getting the comments", Details: err.Error()})

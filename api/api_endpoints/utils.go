@@ -2,7 +2,6 @@ package endpoints
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 	s "social_network_api/structs"
 )
@@ -20,8 +19,6 @@ func ValidateCookie(w http.ResponseWriter, r *http.Request) (bool, s.User) {
 		return false, s.User{}
 	}
 	user, err := s.UserFromSession(cookie.Value)
-	fmt.Println(user)
-	fmt.Println(err)
 	if err != nil {
 		return false, s.User{}
 	}

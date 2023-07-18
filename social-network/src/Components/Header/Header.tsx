@@ -4,10 +4,23 @@ import { Searchbar } from './Searchbar';
 
 export default function Header() {
     const [isNavOpen, setIsNavOpen] = useState(false);
+    async function Logout() {
+        const res = await fetch('http://localhost:8080/api/users/logout', {
+            method: 'GET',
+            credentials: 'include',
+        });
+        const data = await res.json();
+        if (!data.errors) {
+            window.location.href = '/';
+        }
+    }
     return (
         <header className="HEADER bg-white sticky top-0 shadow-lg z-50">
             <nav className="NAVIGATION grid grid-cols-3 gap-3 items-center px-2 py-2 mx-2">
-                <div onClick={() => window.location.href = "/"} className="LOGO">
+                <div
+                    onClick={() => (window.location.href = '/')}
+                    className="LOGO"
+                >
                     <h1 className="LOGO-TEXT text-black text-2xl font-bold">
                         LOGO
                     </h1>
@@ -42,29 +55,65 @@ export default function Header() {
                             </svg>
                         </div>
                         <div className="NAVIGATION-MOBILE-OPEN flex flex-col items-center justify-between min-h-[250px]">
-                            <button onClick={() => window.location.href = "/"} className='text-2xl font-extrabold'>Make a post</button>
-                            <button onClick={() => window.location.href = "/"} className='text-2xl font-extrabold'>Chat</button>
-                            <button onClick={() => window.location.href = "/"} className='text-2xl font-extrabold'>Notifications</button>
-                            <button onClick={() => window.location.href = "/"} className='text-2xl font-extrabold'>Groups</button>
-                            <button onClick={() => window.location.href = "/profile"} className='text-2xl font-extrabold'>Profile</button>
+                            <button
+                                onClick={() => (window.location.href = '/')}
+                                className="text-2xl font-extrabold"
+                            >
+                                Make a post
+                            </button>
+                            <button
+                                onClick={() => (window.location.href = '/')}
+                                className="text-2xl font-extrabold"
+                            >
+                                Chat
+                            </button>
+                            <button
+                                onClick={() => (window.location.href = '/')}
+                                className="text-2xl font-extrabold"
+                            >
+                                Notifications
+                            </button>
+                            <button
+                                onClick={() => (window.location.href = '/')}
+                                className="text-2xl font-extrabold"
+                            >
+                                Groups
+                            </button>
+                            <button
+                                onClick={() =>
+                                    (window.location.href = '/profile')
+                                }
+                                className="text-2xl font-extrabold"
+                            >
+                                Profile
+                            </button>
+                            <button
+                                onClick={Logout}
+                                className="text-2xl font-extrabold"
+                            >
+                                Logout
+                            </button>
                         </div>
                     </div>
                 </section>
-                <div className="flex space-x-2 text-xs justify-end DESKTOP-MENU hidden lg:flex">
-                    <div onClick={() => window.location.href = "/"}>
+                <div className="space-x-2 text-xs justify-end DESKTOP-MENU hidden lg:flex">
+                    <div onClick={() => (window.location.href = '/')}>
                         <NavLink text="+" />
                     </div>
-                    <div onClick={() => window.location.href = "/"}>
+                    <div onClick={() => (window.location.href = '/')}>
                         <NavLink text="fullscreen-chat" />
                     </div>
-                    <div onClick={() => window.location.href = "/"}>
+                    <div onClick={() => (window.location.href = '/')}>
                         <NavLink text="Nofitications" />
                     </div>
-                    <div onClick={() => window.location.href = "/"}>
+                    <div onClick={() => (window.location.href = '/')}>
                         <NavLink text="Groups" />
                     </div>
-                    <div onClick={() => window.location.href = "/profile"}>
+                    <div onClick={() => (window.location.href = '/profile')}>
                         <NavLink text="Profile" />
+                    </div>
+                    <div onClick={Logout}>
+                        <NavLink text="Logout" />
                     </div>
                 </div>
             </nav>

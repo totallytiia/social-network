@@ -10,27 +10,31 @@ import (
 
 // PrivacySettings is a comma separated list of user ids for the users that can see the post
 type NewPost struct {
-	Title           string `json:"title"`
-	Content         string `json:"content"`
-	Image           string `json:"image"`
-	Privacy         int    `json:"privacy"`
-	PrivacySettings string `json:"privacy_settings"`
-	UserID          int    `json:"user_id"`
-	GroupID         int    `json:"group_id"`
+	Title           string      `json:"title"`
+	Content         string      `json:"content"`
+	Image           string      `json:"image"`
+	Privacy         int         `json:"privacy"`
+	PrivacySettings string      `json:"privacy_settings"`
+	UserID          int         `json:"user_id"`
+	GroupID         interface{} `json:"group_id"`
 }
 
 type Post struct {
-	ID              int       `json:"id"`
-	UserID          int       `json:"user_id"`
-	GroupID         int       `json:"group_id"`
-	Title           string    `json:"title"`
-	Content         string    `json:"content"`
-	Image           string    `json:"image"`
-	Privacy         string    `json:"privacy"`
-	PrivacySettings string    `json:"privacy_settings"`
-	CreatedAt       string    `json:"created_at"`
-	UpdatedAt       string    `json:"updated_at"`
-	Comments        []Comment `json:"comments"`
+	ID              int         `json:"id"`
+	UserID          int         `json:"user_id"`
+	GroupID         interface{} `json:"group_id"`
+	Title           string      `json:"title"`
+	Content         string      `json:"content"`
+	Image           string      `json:"image"`
+	Privacy         string      `json:"privacy"`
+	PrivacySettings string      `json:"privacy_settings"`
+	CreatedAt       string      `json:"created_at"`
+	UpdatedAt       string      `json:"updated_at"`
+	Comments        []Comment   `json:"comments"`
+}
+
+type Posts struct {
+	Posts []Post `json:"posts"`
 }
 
 func (p *NewPost) Validate() error {
@@ -62,7 +66,7 @@ func (p *NewPost) Validate() error {
 		}
 	}
 	var imageRegEx = regexp.MustCompile(`^data:image\/(png|jpg|jpeg);base64,([a-zA-Z0-9+/=]+)$`)
-	if !imageRegEx.MatchString(p.Image) {
+	if !imageRegEx.MatchString(p.Image) && p.Image != "" {
 		return errors.New("invalid image")
 	}
 	return nil
@@ -101,12 +105,12 @@ func (p *Post) Delete() error {
 	return nil
 }
 
-func GetPosts(IDs map[string]any) ([]Post, error) {
+func GetPosts(IDs map[string]any) (Posts, error) {
 	if IDs["user_id"] == nil && IDs["group_id"] == nil {
-		return nil, errors.New("invalid input")
+		return Posts{}, errors.New("invalid input")
 	}
 	if IDs["user_id"] != nil && IDs["group_id"] != nil {
-		return nil, errors.New("invalid input")
+		return Posts{}, errors.New("invalid input")
 	}
 	if IDs["user_id"] == nil {
 		IDs["user_id"] = -1
@@ -114,18 +118,21 @@ func GetPosts(IDs map[string]any) ([]Post, error) {
 	if IDs["group_id"] == nil {
 		IDs["group_id"] = -1
 	}
+	// TODO: Add pagination
+	// TODO: Add privacy settings, return only posts that the user can see
+	// TODO: Also return author name
 	var rows, err = db.DB.Query("SELECT id, user_id, group_id, title, content, image, privacy, privacy_settings, created_at, updated_at FROM posts WHERE user_id = ? OR group_id = ? ORDER BY created_at DESC", IDs["user_id"], IDs["group_id"])
 	if err != nil {
-		return nil, err
+		return Posts{}, err
 	}
-	var posts []Post
+	var posts Posts
 	for rows.Next() {
 		var post Post
 		err = rows.Scan(&post.ID, &post.UserID, &post.GroupID, &post.Title, &post.Content, &post.Image, &post.Privacy, &post.PrivacySettings, &post.CreatedAt, &post.UpdatedAt)
 		if err != nil {
-			return nil, err
+			return Posts{}, err
 		}
-		posts = append(posts, post)
+		posts.Posts = append(posts.Posts, post)
 	}
 	return posts, nil
 }

@@ -92,7 +92,6 @@ func LoginUser(w http.ResponseWriter, r *http.Request) {
 	}
 	// Set the cookie
 	w.Header().Add("access-control-expose-headers", "Set-Cookie")
-	w.Header().Add("Access-Control-Allow-Credentials", "true")
 	cookie := http.Cookie{Name: "session", Value: user.Session.SessionID, Path: "/", Domain: "localhost", Expires: time.Now().Add(24 * time.Hour * 7), HttpOnly: false}
 	http.SetCookie(w, &cookie)
 	w.WriteHeader(http.StatusOK)
@@ -166,7 +165,11 @@ func LogoutUser(w http.ResponseWriter, r *http.Request) {
 		BadRequest(w, r, err.Error())
 		return
 	}
-	var user s.User = s.User{Session: s.Session{SessionID: sessionCookie.Value}}
+	user, err := s.UserFromSession(sessionCookie.Value)
+	if err != nil {
+		BadRequest(w, r, err.Error())
+		return
+	}
 	err = user.Logout()
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
@@ -177,5 +180,7 @@ func LogoutUser(w http.ResponseWriter, r *http.Request) {
 	// Set the cookie
 	cookie := http.Cookie{Name: "session", Value: "", Path: "/"}
 	http.SetCookie(w, &cookie)
-	http.Redirect(w, r, "/", http.StatusMovedPermanently)
+	w.WriteHeader(http.StatusOK)
+	var okJSON, _ = json.Marshal(s.OKResponse{Message: "User logged out successfully"})
+	w.Write(okJSON)
 }
