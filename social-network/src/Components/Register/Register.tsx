@@ -292,6 +292,7 @@ export default function Register() {
         console.log(response.status);
         if (response.status === 200) {
             console.log('success');
+            window.location.href = '/login';
             // show home page
         } else {
             console.log('error');

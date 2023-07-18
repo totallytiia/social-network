@@ -20,6 +20,7 @@ export default function Login() {
             console.log(data.errors, data.details);
         }
         setUserData({ id: data.details as number });
+        window.location.href = '/';
     }
 
     return (

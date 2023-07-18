@@ -18,13 +18,14 @@ interface ApiUserContextInterface {
 interface UserContextType {
     userData: ApiUserContextInterface;
     setUserData: Function;
+    setIsAuthenticated: Function;
 }
 
 export const UserContext = createContext({} as UserContextType);
 
 function App() {
     const [userData, setUserData] = useState({} as ApiUserContextInterface);
-    var isAuthenticated = false;
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
 
     useEffect(() => {
         async function checkAuth() {
@@ -34,7 +35,7 @@ function App() {
             });
             const data = await response.json();
             if (!data.errors) {
-                isAuthenticated = true;
+                setIsAuthenticated(true);
             }
         }
         checkAuth();
@@ -43,7 +44,7 @@ function App() {
         return (
             <>
                 <BrowserRouter>
-                    <UserContext.Provider value={{ userData, setUserData }}>
+                    <UserContext.Provider value={{ userData, setUserData, setIsAuthenticated }}>
                         <SignInOrRegister></SignInOrRegister>
                     </UserContext.Provider>
                 </BrowserRouter>
@@ -53,7 +54,7 @@ function App() {
     return (
         <>
             <BrowserRouter>
-                <UserContext.Provider value={{ userData, setUserData }}>
+                <UserContext.Provider value={{ userData, setUserData, setIsAuthenticated }}>
                     <Page></Page>
                 </UserContext.Provider>
             </BrowserRouter>
