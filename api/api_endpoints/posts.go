@@ -27,6 +27,7 @@ func CreatePost(w http.ResponseWriter, r *http.Request) {
 	post.Content = r.FormValue("content")
 	post.Image = r.FormValue("image")
 	post.Privacy, err = strconv.Atoi(r.FormValue("privacy"))
+	post.CreatedAt = r.FormValue("created_at")
 	if err != nil {
 		BadRequest(w, r, "Invalid privacy setting")
 		return
@@ -55,7 +56,7 @@ func CreatePost(w http.ResponseWriter, r *http.Request) {
 		w.Write(badReqJSON)
 		return
 	}
-	var postJSON, _ = json.Marshal(s.Post{ID: id})
+	var postJSON, _ = json.Marshal(s.Post{ID: id, Title: post.Title, Content: post.Content, Image: post.Image, PrivacySettings: post.PrivacySettings, CreatedAt: post.CreatedAt, UserID: post.UserID, GroupID: post.GroupID})
 	w.WriteHeader(http.StatusCreated)
 	w.Write(postJSON)
 }

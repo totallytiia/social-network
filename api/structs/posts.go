@@ -15,6 +15,7 @@ type NewPost struct {
 	Image           string      `json:"image"`
 	Privacy         int         `json:"privacy"`
 	PrivacySettings string      `json:"privacy_settings"`
+	CreatedAt       string      `json:"created_at"`
 	UserID          int         `json:"user_id"`
 	GroupID         interface{} `json:"group_id"`
 }
