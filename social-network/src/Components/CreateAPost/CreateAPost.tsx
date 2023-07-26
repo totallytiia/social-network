@@ -37,6 +37,7 @@ export default function CreateAPost(props: any) {
 		FD.append('content', postData.post.content as string);
 		FD.append('image', postData.post.imgUpload as string);
 		FD.append('privacy', postData.post.privacy as number);
+
 		FD.append('privacy_settings', '' as string);
 
 		const response = await fetch('http://localhost:8080/api/posts/create', {
