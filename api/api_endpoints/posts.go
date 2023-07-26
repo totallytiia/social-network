@@ -232,12 +232,6 @@ func GetPosts(w http.ResponseWriter, r *http.Request) {
 		w.Write(postJSON)
 		return
 	}
-	// TODO: Add pagination
-	// TODO: Make empty request possible, fetch posts from useres you follow
-	// if len(r.FormValue("group_id")) == 0 && len(r.FormValue("user_id")) == 0 {
-	// 	BadRequest(w, r, "You must provide a group ID or a user ID")
-	// 	return
-	// }
 	if len(r.FormValue("group_id")) > 0 && len(r.FormValue("user_id")) > 0 {
 		BadRequest(w, r, "You must provide a group ID or a user ID, not both")
 		return

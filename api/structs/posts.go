@@ -111,9 +111,6 @@ func (p *Post) Delete() error {
 }
 
 func GetPosts(IDs map[string]any, index, userFetching int) (Posts, error) {
-	// if IDs["user_id"] == nil && IDs["group_id"] == nil {
-	// 	return Posts{}, errors.New("invalid input")
-	// }
 	if IDs["user_id"] != nil && IDs["group_id"] != nil {
 		return Posts{}, errors.New("invalid input")
 	}
@@ -123,14 +120,13 @@ func GetPosts(IDs map[string]any, index, userFetching int) (Posts, error) {
 	if IDs["group_id"] == nil {
 		IDs["group_id"] = -1
 	}
-	// TODO: Add privacy settings, return only posts that the user can see
 	var rows, err = db.DB.Query(`
 	SELECT p.id, p.user_id, u.fname, u.nickname, u.lname, u.avatar, p.group_id, p.title, p.content, p.image, p.privacy, p.privacy_settings, p.created_at, p.updated_at 
 	FROM posts p 
 	INNER JOIN users u on p.user_id = u.id 
-	WHERE ((user_id = ? OR group_id = ? OR IIF(? == -1 AND ? == -1, true, false)) AND ((p.privacy = '0') OR (p.privacy = '1' AND p.user_id IN (SELECT f.friend_id FROM friends f where f.user_id = ?)) OR (p.privacy = '2' AND p.privacy_settings LIKE ?))) OR p.user_id = ?
+	WHERE ((user_id = ? OR group_id = ? OR IIF(? == -1 AND ? == -1, true, false)) AND ((p.privacy = '0') OR (p.privacy = '1' AND p.user_id IN (SELECT f.friend_id FROM friends f where f.user_id = ?)) OR (p.privacy = '2' AND p.privacy_settings LIKE ?))) OR (p.user_id = ? AND IIF(? == -1 AND ? == -1, true, false))
 	ORDER BY p.created_at DESC LIMIT 20 OFFSET 20*?
-	`, IDs["user_id"], IDs["group_id"], IDs["user_id"], IDs["group_id"], userFetching, "%"+strconv.Itoa(userFetching)+",%", userFetching, index)
+	`, IDs["user_id"], IDs["group_id"], IDs["user_id"], IDs["group_id"], userFetching, "%"+strconv.Itoa(userFetching)+",%", userFetching, IDs["user_id"], IDs["group_id"], index)
 	if err != nil {
 		return Posts{}, err
 	}

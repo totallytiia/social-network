@@ -20,7 +20,7 @@ export default function Posts() {
     const [posts, setPosts] = useState([] as IPost[]);
     useEffect(() => {
         async function getPosts() {
-            const url = 'http://localhost:8080/api/posts/get?group_id=33';
+            const url = 'http://localhost:8080/api/posts/get';
             const res = await fetch(url, {
                 method: 'GET',
                 credentials: 'include',
