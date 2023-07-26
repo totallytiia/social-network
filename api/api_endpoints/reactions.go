@@ -1,0 +1,84 @@
+package endpoints
+
+import (
+	"encoding/json"
+	"net/http"
+	s "social_network_api/structs"
+	"strconv"
+)
+
+func AddReaction(w http.ResponseWriter, r *http.Request) {
+	v, u := ValidateCookie(w, r)
+	if !v {
+		http.Error(w, "Unauthorized", http.StatusUnauthorized)
+	}
+	if r.Method != "POST" {
+		MethodNotAllowed(w, r)
+		return
+	}
+	// Extract the Form data from the request
+	var err = r.ParseMultipartForm(512)
+	if err != nil {
+		BadRequest(w, r, err.Error())
+		return
+	}
+	var reaction s.Reaction
+	reaction.PostID = r.FormValue("post_id")
+	reaction.CommentID = r.FormValue("comment_id")
+	reaction.Value, err = strconv.Atoi(r.FormValue("value"))
+	if err != nil {
+		BadRequest(w, r, "Invalid value")
+		return
+	}
+	reaction.UserID = u.ID
+	err = reaction.Validate()
+	if err != nil {
+		BadRequest(w, r, err.Error())
+		return
+	}
+	err = reaction.Create()
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		badReqJSON, _ := json.Marshal(s.ErrorResponse{Errors: "There was an error creating the reaction", Details: err.Error()})
+		w.Write(badReqJSON)
+		return
+	}
+	w.WriteHeader(http.StatusCreated)
+	w.Write([]byte("{}"))
+}
+
+func RemoveReaction(w http.ResponseWriter, r *http.Request) {
+	v, u := ValidateCookie(w, r)
+	if !v {
+		http.Error(w, "Unauthorized", http.StatusUnauthorized)
+	}
+	if r.Method != "POST" {
+		MethodNotAllowed(w, r)
+		return
+	}
+	// Extract the Form data from the request
+	var err = r.ParseMultipartForm(512)
+	if err != nil {
+		BadRequest(w, r, err.Error())
+		return
+	}
+	var reaction s.Reaction
+	reaction.PostID = r.FormValue("post_id")
+	reaction.CommentID = r.FormValue("comment_id")
+	reaction.UserID = u.ID
+	reaction.Value = 0
+	err = reaction.Validate()
+	if err != nil {
+		BadRequest(w, r, err.Error())
+		return
+	}
+	err = reaction.Remove()
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		badReqJSON, _ := json.Marshal(s.ErrorResponse{Errors: "There was an error removing the reaction", Details: err.Error()})
+		w.Write(badReqJSON)
+		return
+	}
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte("{}"))
+}

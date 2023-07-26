@@ -127,9 +127,9 @@ func api(w http.ResponseWriter, r *http.Request) {
 		}
 		switch reqUrl[1] {
 		case "like":
-			// like(w, r)
+			ep.AddReaction(w, r)
 		case "unlike":
-			// unlike(w, r)
+			ep.RemoveReaction(w, r)
 		default:
 			http.NotFound(w, r)
 			return
