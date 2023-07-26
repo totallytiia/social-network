@@ -11,8 +11,9 @@ interface iForm extends iFormKeys {
 	post: {
 		title: string;
 		content: string;
-		privacy: number;
 		imgUpload: string;
+		privacy: string;
+		privacy_settings: string;
 	};
 }
 
@@ -24,8 +25,9 @@ export default function CreateAPost(props: any) {
 		post: {
 			title: '',
 			content: '',
-			privacy: 0,
+			privacy: '',
 			imgUpload: '',
+			privacy_settings: '',
 		},
 	} as iForm);
 
@@ -36,8 +38,7 @@ export default function CreateAPost(props: any) {
 		FD.append('title', postData.post.title as string);
 		FD.append('content', postData.post.content as string);
 		FD.append('image', postData.post.imgUpload as string);
-		FD.append('privacy', postData.post.privacy as number);
-
+		FD.append('privacy', postData.post.privacy.toString() as string);
 		FD.append('privacy_settings', '' as string);
 
 		const response = await fetch('http://localhost:8080/api/posts/create', {
