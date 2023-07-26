@@ -37,8 +37,24 @@ function App() {
                 setAuthenticated(true);
             }
         }
+        async function getUserData() {
+            const response = await fetch(
+                'http://localhost:8080/api/users/get',
+                {
+                    method: 'GET',
+                    credentials: 'include',
+                }
+            );
+            const data = await response.json();
+            if (!data.errors) {
+                setUserData(data);
+            }
+        }
+        if (isAuthenticated) {
+            getUserData();
+        }
         checkAuth();
-    }, [userData]);
+    }, [isAuthenticated]);
     if (!isAuthenticated) {
         return (
             <>
