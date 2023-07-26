@@ -13,6 +13,7 @@ interface ApiUserContextInterface {
     nickname: string;
     email: string;
     about: string;
+    avatar: string;
 }
 
 interface UserContextType {

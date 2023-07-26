@@ -74,7 +74,7 @@ export default function CommentsSection(props: any) {
 
 	return (
 		<>
-			<div className="ml-8 mr-6 my-2">
+			<div className="ml-8 mr-8 my-2">
 				{/* get all comments  */}
 				{props.comments !== null ? props.comments.map((comment: any) => (
 					<Comment key={comment.id} comment={comment} />
