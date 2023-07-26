@@ -1,10 +1,8 @@
-import React, { useState, useContext } from 'react';
-import { UserContext } from '../App/App';
+import React, { useState } from 'react';
 
 export default function Login() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const { setUserData } = useContext(UserContext);
     async function handleFormSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
         const FD = new FormData();
@@ -19,7 +17,6 @@ export default function Login() {
         if (data.errors) {
             console.log(data.errors, data.details);
         }
-        setUserData({ id: data.details as number });
         window.location.href = '/';
     }
 

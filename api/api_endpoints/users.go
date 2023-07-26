@@ -184,3 +184,24 @@ func LogoutUser(w http.ResponseWriter, r *http.Request) {
 	var okJSON, _ = json.Marshal(s.OKResponse{Message: "User logged out successfully"})
 	w.Write(okJSON)
 }
+
+func GetUser(w http.ResponseWriter, r *http.Request) {
+	if r.Method != "GET" {
+		MethodNotAllowed(w, r)
+		return
+	}
+	var sessionCookie, err = r.Cookie("session")
+	if err != nil {
+		BadRequest(w, r, err.Error())
+		return
+	}
+	user, err := s.UserFromSession(sessionCookie.Value)
+	if err != nil {
+		BadRequest(w, r, err.Error())
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	var userJSON, _ = json.Marshal(user)
+	w.Write(userJSON)
+}

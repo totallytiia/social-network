@@ -2,6 +2,7 @@ package structs
 
 import (
 	"errors"
+	"fmt"
 	"log"
 	"regexp"
 	db "social_network_api/db"
@@ -30,18 +31,18 @@ type NewUser struct {
 
 // Used when getting a user
 type User struct {
-	ID        int    `json:"id"`
-	Email     string `json:"email"`
-	FName     string `json:"fname"`
-	LName     string `json:"lname"`
-	DoB       string `json:"date_of_birth"`
-	Nickname  string `json:"nickname"`
-	Avatar    string `json:"avatar"`
-	AboutMe   string `json:"about_me"`
-	CreatedAt string `json:"created_at"`
-	UpdatedAt string `json:"updated_at"`
-	Private   bool   `json:"private"`
-	Session   Session
+	ID        int     `json:"id"`
+	Email     string  `json:"email"`
+	FName     string  `json:"fname"`
+	LName     string  `json:"lname"`
+	DoB       string  `json:"date_of_birth"`
+	Nickname  string  `json:"nickname"`
+	Avatar    string  `json:"avatar"`
+	AboutMe   string  `json:"about_me"`
+	CreatedAt string  `json:"created_at"`
+	UpdatedAt string  `json:"updated_at"`
+	Private   bool    `json:"private"`
+	Session   Session `json:"-"`
 }
 
 type Session struct {
@@ -183,12 +184,13 @@ func (u User) Logout() error {
 }
 
 // Get a user from the database
-func (u User) Get() error {
+func (u *User) Get() error {
 	var query = "SELECT id, email, fname, lname, dob, nickname, avatar, about, created_at, updated_at, private FROM users WHERE id = ?"
 	err := db.DB.QueryRow(query, u.ID).Scan(&u.ID, &u.Email, &u.FName, &u.LName, &u.DoB, &u.Nickname, &u.Avatar, &u.AboutMe, &u.CreatedAt, &u.UpdatedAt, &u.Private)
 	if err != nil {
 		return err
 	}
+	fmt.Println(u)
 	return nil
 }
 
