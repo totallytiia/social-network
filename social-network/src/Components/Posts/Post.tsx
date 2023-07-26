@@ -5,6 +5,10 @@ interface PostProps {
     post: {
         id: number;
         user_id: number;
+        user_fname: string;
+        user_lname: string;
+        user_nickname: string;
+        user_avatar: string;
         group_id: number;
         title: string;
         content: string;
@@ -25,9 +29,11 @@ export default function Post({ post, deletePost }: PostProps) {
             <div className="mt-4 mx-6 mb-0 p-6 bg-blue-50 rounded-xl">
                 <div className="flex justify-between">
                     <div className="flex">
-                        <div className="h-10 w-10 rounded-full bg-black"></div>
+                        <div className="h-10 w-10 overflow-hidden rounded-full bg-black">
+                            <img className="" src={post.user_avatar} alt="" />
+                        </div>
                         <div className="ml-2">
-                            <h1 className="text-sm font-bold">{post.user_id}</h1>
+                            <h1 className="text-sm font-bold">{post.user_fname + " " + post.user_lname}</h1>
                             <p className="text-xs">{post.created_at}</p>
                         </div>
                     </div>

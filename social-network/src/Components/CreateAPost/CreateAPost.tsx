@@ -42,6 +42,11 @@ export default function CreateAPost(props: any) {
 			body: FD,
 		});
 
+		(document.getElementById('title') as HTMLInputElement).value = '';
+		(document.getElementById('content') as HTMLInputElement).value = '';
+		(document.getElementById('group_id') as HTMLInputElement).value = '';
+		(document.getElementById('imgUpload') as HTMLInputElement).value = '';
+
 		if (response.status === 201) {
 			console.log('Post created!');
 			// Send await response.json() to the parent
@@ -61,28 +66,20 @@ export default function CreateAPost(props: any) {
 		const reader = new FileReader();
 		reader.onloadend = () => {
 			const postCopy = postData;
-			postCopy.register.avatar = reader.result as string;
+			postData.post.imgUpload = reader.result as string;
 			setpostData(postCopy);
 			document
-				.getElementById('avatarDisplay')!
-				.setAttribute('src', postData.register.avatar as string);
+				.getElementById('imgUpload')!
+				.setAttribute('src', postData.post.imgUpload as string);
 			document
-				.getElementById('avatarDisplay')!
-				.parentElement!.classList.remove(
-					'border-dashed',
-					'border-2',
-					'border-gray-300'
+				.getElementById('svgUpload')!
+				.classList.add(
+					'hidden'
 				);
 			document
-				.getElementById('avatarDisplay')!
-				.classList.add(
-					'h-24',
-					'w-24',
-					'rounded-full',
-					'overflow-hidden',
-					'object-cover',
-					'shadow-lg',
-					'shadow'
+				.getElementById('uploadedImg')!
+				.classList.remove(
+					'hidden'
 				);
 		};
 		reader.readAsDataURL(file as Blob);
@@ -140,17 +137,18 @@ export default function CreateAPost(props: any) {
 					></input>
 					<label
 						htmlFor="imgUpload"
-						className="my-auto cursor-pointer"
+						className="my-auto relative cursor-pointer"
 					>
 						<img
-							id=""
-							src=""
-							className="absolute border-none"
+							id="uploadedImg"
+							src={postData.post.imgUpload}
+							className=" hidden border-none w-8 h-8 rounded-full object-cover shadow-lg shadow"
 							alt=""
 						/>
 						<svg
 							xmlns="http://www.w3.org/2000/svg"
 							fill="none"
+							id="svgUpload"
 							viewBox="0 0 24 24"
 							strokeWidth={1.5}
 							stroke="currentColor"
