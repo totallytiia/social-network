@@ -15,16 +15,16 @@ type Reaction struct {
 
 func (r *Reaction) Validate() error {
 	var err error
-	if r.PostID == nil && r.CommentID == nil {
+	if r.PostID == "" && r.CommentID == "" {
 		return errors.New("you must provide a post id or a comment id")
 	}
-	if r.PostID != nil && r.CommentID != nil {
+	if r.PostID != "" && r.CommentID != "" {
 		return errors.New("you must provide a post id or a comment id, not both")
 	}
 	if r.Value != 1 && r.Value != -1 {
 		return errors.New("invalid value")
 	}
-	if r.PostID != nil {
+	if r.PostID != "" {
 		var p Post
 		p.ID, err = strconv.Atoi(r.PostID.(string))
 		if err != nil {
@@ -39,7 +39,7 @@ func (r *Reaction) Validate() error {
 			return errors.New("you cannot react to your own post")
 		}
 	}
-	if r.CommentID != nil {
+	if r.CommentID != "" {
 		var c Comment
 		var err error
 		c.ID, err = strconv.Atoi(r.CommentID.(string))

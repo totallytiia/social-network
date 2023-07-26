@@ -204,6 +204,7 @@ func GetPosts(w http.ResponseWriter, r *http.Request) {
 	v, u := ValidateCookie(w, r)
 	if !v {
 		http.Error(w, "Unauthorized", http.StatusUnauthorized)
+		return
 	}
 	if r.Method != "GET" {
 		MethodNotAllowed(w, r)

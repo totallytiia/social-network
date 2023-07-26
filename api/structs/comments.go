@@ -16,6 +16,8 @@ type Comment struct {
 	Comment      string `json:"comment"`
 	CreatedAt    string `json:"created_at"`
 	UpdatedAt    string `json:"updated_at"`
+	Likes        int    `json:"likes"`
+	Dislikes     int    `json:"dislikes"`
 }
 
 type NewComment struct {
@@ -49,7 +51,7 @@ func (c *NewComment) Create() (int, error) {
 
 func GetComments(postID int) ([]Comment, error) {
 	var rows, err = db.DB.Query(`
-	SELECT c.id, c.user_id, u.fname, u.lname, u.nickname, u.avatar, c.post_id, c.comment, c.created_at, c.updated_at
+	SELECT c.id, c.user_id, u.fname, u.lname, u.nickname, u.avatar, c.post_id, c.comment, c.created_at, c.updated_at, (SELECT COUNT(*) FROM reactions r WHERE r.comment_id = c.id AND r.value = 1) AS likes, (SELECT COUNT(*) FROM reactions r WHERE r.comment_id = c.id AND r.value = -1) AS dislikes
 	FROM comments c
 	INNER JOIN users u ON c.user_id = u.id
 	WHERE c.post_id = ?`, postID)
@@ -60,7 +62,7 @@ func GetComments(postID int) ([]Comment, error) {
 	var comments []Comment
 	for rows.Next() {
 		var comment Comment
-		err = rows.Scan(&comment.ID, &comment.UserID, &comment.UserFName, &comment.UserLName, &comment.UserNickname, &comment.UserAvatar, &comment.PostID, &comment.Comment, &comment.CreatedAt, &comment.UpdatedAt)
+		err = rows.Scan(&comment.ID, &comment.UserID, &comment.UserFName, &comment.UserLName, &comment.UserNickname, &comment.UserAvatar, &comment.PostID, &comment.Comment, &comment.CreatedAt, &comment.UpdatedAt, &comment.Likes, &comment.Dislikes)
 		if err != nil {
 			return nil, err
 		}
