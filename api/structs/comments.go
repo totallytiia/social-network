@@ -48,7 +48,11 @@ func (c *NewComment) Create() (int, error) {
 }
 
 func GetComments(postID int) ([]Comment, error) {
-	var rows, err = db.DB.Query("SELECT c.id, c.user_id, u.fname, u.lname, u.nickname, u.avatar c.post_id, c.comment, c.created_at, c.updated_at FROM comments c INNER JOIN users u ON c.user_id = u.id WHERE c.post_id = ?", postID)
+	var rows, err = db.DB.Query(`
+	SELECT c.id, c.user_id, u.fname, u.lname, u.nickname, u.avatar, c.post_id, c.comment, c.created_at, c.updated_at
+	FROM comments c
+	INNER JOIN users u ON c.user_id = u.id
+	WHERE c.post_id = ?`, postID)
 	if err != nil {
 		return nil, err
 	}
