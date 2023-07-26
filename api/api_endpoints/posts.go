@@ -23,7 +23,6 @@ func CreatePost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	var post s.NewPost
-	post.Title = r.FormValue("title")
 	post.Content = r.FormValue("content")
 	post.Image = r.FormValue("image")
 	post.Privacy, err = strconv.Atoi(r.FormValue("privacy"))
@@ -56,7 +55,7 @@ func CreatePost(w http.ResponseWriter, r *http.Request) {
 		w.Write(badReqJSON)
 		return
 	}
-	var postJSON, _ = json.Marshal(s.Post{ID: id, Title: post.Title, Content: post.Content, Image: post.Image, PrivacySettings: post.PrivacySettings, CreatedAt: post.CreatedAt, UserID: post.UserID, GroupID: post.GroupID})
+	var postJSON, _ = json.Marshal(s.Post{ID: id, Content: post.Content, Image: post.Image, PrivacySettings: post.PrivacySettings, CreatedAt: post.CreatedAt, UserID: post.UserID, GroupID: post.GroupID})
 	w.WriteHeader(http.StatusCreated)
 	w.Write(postJSON)
 }
@@ -143,7 +142,6 @@ func UpdatePost(w http.ResponseWriter, r *http.Request) {
 		w.Write(badReqJSON)
 		return
 	}
-	post.Title = r.FormValue("title")
 	post.Content = r.FormValue("content")
 	err = post.Update()
 	if err != nil {

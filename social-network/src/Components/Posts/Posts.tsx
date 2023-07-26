@@ -14,6 +14,8 @@ interface IPost {
     content: string;
     created_at: string;
     updated_at: string;
+    likes: number;
+    comments: number;
 }
 
 export default function Posts() {

@@ -10,7 +10,6 @@ import (
 
 // PrivacySettings is a comma separated list of user ids for the users that can see the post
 type NewPost struct {
-	Title           string      `json:"title"`
 	Content         string      `json:"content"`
 	Image           string      `json:"image"`
 	Privacy         int         `json:"privacy"`
@@ -28,7 +27,6 @@ type Post struct {
 	UserNickname    string      `json:"user_nickname"`
 	UserAvatar      string      `json:"user_avatar"`
 	GroupID         interface{} `json:"group_id"`
-	Title           string      `json:"title"`
 	Content         string      `json:"content"`
 	Image           string      `json:"image"`
 	Privacy         string      `json:"privacy"`
@@ -45,12 +43,6 @@ type Posts struct {
 }
 
 func (p *NewPost) Validate() error {
-	if p.Title == "" {
-		return errors.New("post title cannot be empty")
-	}
-	if len(p.Title) > 100 {
-		return errors.New("post title cannot be longer than 100 characters")
-	}
 	if p.Content == "" {
 		return errors.New("post content cannot be empty")
 	}
@@ -80,7 +72,7 @@ func (p *NewPost) Validate() error {
 }
 
 func (p *NewPost) Create() (int, error) {
-	var res, err = db.DB.Exec("INSERT INTO posts (user_id, group_id, title, content, image, privacy, privacy_settings) VALUES (?, ?, ?, ?, ?, ?, ?)", p.UserID, p.GroupID, p.Title, p.Content, p.Image, p.Privacy, p.PrivacySettings)
+	var res, err = db.DB.Exec("INSERT INTO posts (user_id, group_id, content, image, privacy, privacy_settings) VALUES (?, ?, ?, ?, ?, ?)", p.UserID, p.GroupID, p.Content, p.Image, p.Privacy, p.PrivacySettings)
 	if err != nil {
 		return 0, err
 	}
@@ -89,7 +81,7 @@ func (p *NewPost) Create() (int, error) {
 }
 
 func (p *Post) Update() error {
-	var _, err = db.DB.Exec("UPDATE posts SET title = ?, content = ?, image = ?, privacy = ?, privacy_settings = ? WHERE id = ?", p.Title, p.Content, p.Image, p.Privacy, p.PrivacySettings, p.ID)
+	var _, err = db.DB.Exec("UPDATE posts SET, content = ?, image = ?, privacy = ?, privacy_settings = ? WHERE id = ?", p.Content, p.Image, p.Privacy, p.PrivacySettings, p.ID)
 	if err != nil {
 		return err
 	}
@@ -97,7 +89,7 @@ func (p *Post) Update() error {
 }
 
 func (p *Post) Get() error {
-	var err = db.DB.QueryRow("SELECT user_id, group_id, title, content, image, privacy, privacy_settings, created_at, updated_at, (SELECT COUNT(*) FROM reactions r WHERE r.post_id = id AND r.value = 1) AS likes, (SELECT COUNT(*) FROM reactions r WHERE r.post_id = id AND r.value = -1) AS dislikes FROM posts WHERE id = ?", p.ID).Scan(&p.UserID, &p.GroupID, &p.Title, &p.Content, &p.Image, &p.Privacy, &p.PrivacySettings, &p.CreatedAt, &p.UpdatedAt, &p.Likes, &p.Dislikes)
+	var err = db.DB.QueryRow("SELECT user_id, group_id, content, image, privacy, privacy_settings, created_at, updated_at, (SELECT COUNT(*) FROM reactions r WHERE r.post_id = id AND r.value = 1) AS likes, (SELECT COUNT(*) FROM reactions r WHERE r.post_id = id AND r.value = -1) AS dislikes FROM posts WHERE id = ?", p.ID).Scan(&p.UserID, &p.GroupID, &p.Content, &p.Image, &p.Privacy, &p.PrivacySettings, &p.CreatedAt, &p.UpdatedAt, &p.Likes, &p.Dislikes)
 	if err != nil {
 		return err
 	}
@@ -125,7 +117,7 @@ func GetPosts(IDs map[string]any, index, userFetching int) (Posts, error) {
 	var rows, err = db.DB.Query(`
 	WITH const(ind, uid, gid, ufetching)  AS (SELECT ?, ?, ?, ?)
 
-	SELECT p.id, p.user_id, u.fname, u.nickname, u.lname, u.avatar, p.group_id, p.title, p.content, p.image, p.privacy, p.privacy_settings, p.created_at, p.updated_at, (SELECT COUNT(*) FROM reactions r WHERE r.post_id = p.id AND r.value = 1) AS likes, (SELECT COUNT(*) FROM reactions r WHERE r.post_id = p.id AND r.value = -1) AS dislikes 
+	SELECT p.id, p.user_id, u.fname, u.nickname, u.lname, u.avatar, p.group_id, p.content, p.image, p.privacy, p.privacy_settings, p.created_at, p.updated_at, (SELECT COUNT(*) FROM reactions r WHERE r.post_id = p.id AND r.value = 1) AS likes, (SELECT COUNT(*) FROM reactions r WHERE r.post_id = p.id AND r.value = -1) AS dislikes 
 	FROM posts p 
 	INNER JOIN users u on p.user_id = u.id 
 	CROSS JOIN const
@@ -138,7 +130,7 @@ func GetPosts(IDs map[string]any, index, userFetching int) (Posts, error) {
 	var posts Posts
 	for rows.Next() {
 		var post Post
-		err = rows.Scan(&post.ID, &post.UserID, &post.UserFName, &post.UserNickname, &post.UserLName, &post.UserAvatar, &post.GroupID, &post.Title, &post.Content, &post.Image, &post.Privacy, &post.PrivacySettings, &post.CreatedAt, &post.UpdatedAt, &post.Likes, &post.Dislikes)
+		err = rows.Scan(&post.ID, &post.UserID, &post.UserFName, &post.UserNickname, &post.UserLName, &post.UserAvatar, &post.GroupID, &post.Content, &post.Image, &post.Privacy, &post.PrivacySettings, &post.CreatedAt, &post.UpdatedAt, &post.Likes, &post.Dislikes)
 		if err != nil {
 			return Posts{}, err
 		}
