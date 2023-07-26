@@ -11,7 +11,7 @@ interface iForm extends iFormKeys {
 	post: {
 		title: string;
 		content: string;
-		group: string;
+		privacy: number;
 		imgUpload: string;
 	};
 }
@@ -24,7 +24,7 @@ export default function CreateAPost(props: any) {
 		post: {
 			title: '',
 			content: '',
-			group: '',
+			privacy: 0,
 			imgUpload: '',
 		},
 	} as iForm);
@@ -35,9 +35,8 @@ export default function CreateAPost(props: any) {
 		const FD = new FormData();
 		FD.append('title', postData.post.title as string);
 		FD.append('content', postData.post.content as string);
-		FD.append('group_id', postData.post.group as string);
 		FD.append('image', postData.post.imgUpload as string);
-		FD.append('privacy', '0' as string);
+		FD.append('privacy', postData.post.privacy as number);
 		FD.append('privacy_settings', '' as string);
 
 		const response = await fetch('http://localhost:8080/api/posts/create', {
@@ -140,12 +139,12 @@ export default function CreateAPost(props: any) {
 									onChange={(e) => {
 										console.log(e.target.value);
 										const postCopy = postData;
-										postCopy.post.group = e.target.value;
+										postCopy.post.privacy = e.target.value;
 										setpostData(postCopy);
 									}}>
-									<option value="1">Public</option>
+									<option value="0">Public</option>
 									<option value="2">Semi-private</option>
-									<option value="2">Private</option>
+									<option value="1">Private</option>
 								</select>
 								<label
 									htmlFor="imgUpload"
