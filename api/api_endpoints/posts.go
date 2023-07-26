@@ -201,7 +201,7 @@ func UpdatePost(w http.ResponseWriter, r *http.Request) {
 // }
 
 func GetPosts(w http.ResponseWriter, r *http.Request) {
-	v, _ := ValidateCookie(w, r)
+	v, u := ValidateCookie(w, r)
 	if !v {
 		http.Error(w, "Unauthorized", http.StatusUnauthorized)
 	}
@@ -234,10 +234,10 @@ func GetPosts(w http.ResponseWriter, r *http.Request) {
 	}
 	// TODO: Add pagination
 	// TODO: Make empty request possible, fetch posts from useres you follow
-	if len(r.FormValue("group_id")) == 0 && len(r.FormValue("user_id")) == 0 {
-		BadRequest(w, r, "You must provide a group ID or a user ID")
-		return
-	}
+	// if len(r.FormValue("group_id")) == 0 && len(r.FormValue("user_id")) == 0 {
+	// 	BadRequest(w, r, "You must provide a group ID or a user ID")
+	// 	return
+	// }
 	if len(r.FormValue("group_id")) > 0 && len(r.FormValue("user_id")) > 0 {
 		BadRequest(w, r, "You must provide a group ID or a user ID, not both")
 		return
@@ -259,7 +259,17 @@ func GetPosts(w http.ResponseWriter, r *http.Request) {
 		}
 		IDs["user_id"] = userID
 	}
-	posts, err := s.GetPosts(IDs)
+	var index int
+	if r.FormValue("index") == "" {
+		index = 0
+	} else {
+		index, err = strconv.Atoi(r.FormValue("index"))
+		if err != nil {
+			BadRequest(w, r, "Invalid index")
+			return
+		}
+	}
+	posts, err := s.GetPosts(IDs, index, u.ID)
 	if err != nil {
 		if err.Error() == "invalid input" {
 			BadRequest(w, r, "Invalid user ID or group ID")
