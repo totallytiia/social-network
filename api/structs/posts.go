@@ -121,12 +121,15 @@ func GetPosts(IDs map[string]any, index, userFetching int) (Posts, error) {
 		IDs["group_id"] = -1
 	}
 	var rows, err = db.DB.Query(`
+	WITH const(ind, uid, gid, ufetching)  AS (SELECT ?, ?, ?, ?)
+
 	SELECT p.id, p.user_id, u.fname, u.nickname, u.lname, u.avatar, p.group_id, p.title, p.content, p.image, p.privacy, p.privacy_settings, p.created_at, p.updated_at 
 	FROM posts p 
 	INNER JOIN users u on p.user_id = u.id 
-	WHERE ((user_id = ? OR group_id = ? OR IIF(? == -1 AND ? == -1, true, false)) AND ((p.privacy = '0') OR (p.privacy = '1' AND p.user_id IN (SELECT f.friend_id FROM friends f where f.user_id = ?)) OR (p.privacy = '2' AND p.privacy_settings LIKE ?))) OR (p.user_id = ? AND IIF(? == -1 AND ? == -1, true, false))
-	ORDER BY p.created_at DESC LIMIT 20 OFFSET 20*?
-	`, IDs["user_id"], IDs["group_id"], IDs["user_id"], IDs["group_id"], userFetching, "%"+strconv.Itoa(userFetching)+",%", userFetching, IDs["user_id"], IDs["group_id"], index)
+	CROSS JOIN const
+	WHERE ((user_id = const.uid OR group_id = const.gid OR IIF(const.uid == -1 AND const.gid == -1, true, false)) AND ((p.privacy = '0') OR (p.privacy = '1' AND p.user_id IN (SELECT f.friend_id FROM friends f where f.user_id = const.ufetching)) OR (p.privacy = '2' AND p.privacy_settings LIKE '%'||const.ufetching||'%'))) OR (p.user_id = const.ufetching AND IIF(const.uid == -1 AND const.gid == -1, true, false))
+	ORDER BY p.created_at DESC LIMIT 20 OFFSET 20*(SELECT ind FROM const)
+	`, index, IDs["user_id"], IDs["group_id"], userFetching)
 	if err != nil {
 		return Posts{}, err
 	}
