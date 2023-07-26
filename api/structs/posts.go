@@ -128,9 +128,9 @@ func GetPosts(IDs map[string]any, index, userFetching int) (Posts, error) {
 	SELECT p.id, p.user_id, u.fname, u.nickname, u.lname, u.avatar, p.group_id, p.title, p.content, p.image, p.privacy, p.privacy_settings, p.created_at, p.updated_at 
 	FROM posts p 
 	INNER JOIN users u on p.user_id = u.id 
-	WHERE ((user_id = ? OR group_id = ? OR IIF(? == '-1' AND ? == '-1', true, false)) AND (p.privacy = 0 OR (p.privacy = 1 AND p.user_id IN (SELECT f.friend_id FROM friends f where f.user_id = ?)) OR (p.privacy = 2 AND p.privacy_settings LIKE ?))) 
+	WHERE ((user_id = ? OR group_id = ? OR IIF(? == -1 AND ? == -1, true, false)) AND ((p.privacy = '0') OR (p.privacy = '1' AND p.user_id IN (SELECT f.friend_id FROM friends f where f.user_id = ?)) OR (p.privacy = '2' AND p.privacy_settings LIKE ?))) OR p.user_id = ?
 	ORDER BY p.created_at DESC LIMIT 20 OFFSET 20*?
-	`, IDs["user_id"], IDs["group_id"], IDs["user_id"], IDs["group_id"], userFetching, "%"+strconv.Itoa(userFetching)+",%", index)
+	`, IDs["user_id"], IDs["group_id"], IDs["user_id"], IDs["group_id"], userFetching, "%"+strconv.Itoa(userFetching)+",%", userFetching, index)
 	if err != nil {
 		return Posts{}, err
 	}
