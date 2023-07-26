@@ -70,7 +70,7 @@ export default function Post({ post, deletePost }: PostProps) {
                     </div>
                 </div>
             </div>
-            <CommentsSection post_id={post.id} />
+            <CommentsSection post_id={post.id} comments={post.comments} />
         </div>
     );
 }
