@@ -3,7 +3,7 @@ import GroupSelection from './GroupSelection';
 import CreateAPost from '../CreateAPost/CreateAPost';
 import { useEffect, useState } from 'react';
 
-interface IPosts {
+interface IPost {
     id: number;
     user_id: number;
     user_fname: string;
@@ -17,7 +17,7 @@ interface IPosts {
 }
 
 export default function Posts() {
-    const [posts, setPosts] = useState([] as IPosts[]);
+    const [posts, setPosts] = useState([] as IPost[]);
     useEffect(() => {
         async function getPosts() {
             const url = 'http://localhost:8080/api/posts/get?group_id=33';
@@ -53,7 +53,11 @@ export default function Posts() {
     };
 
     const postAdded = (post: any) => {
-        setPosts([post, ...posts]);
+        var postsCopy = posts;
+        postsCopy !== undefined
+            ? postsCopy.unshift(post)
+            : (postsCopy = [post]);
+        setPosts(postsCopy);
     };
 
     return (
