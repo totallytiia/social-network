@@ -6,12 +6,16 @@ import (
 )
 
 type Comment struct {
-	ID        int    `json:"id"`
-	UserID    int    `json:"user_id"`
-	PostID    int    `json:"post_id"`
-	Comment   string `json:"comment"`
-	CreatedAt string `json:"created_at"`
-	UpdatedAt string `json:"updated_at"`
+	ID           int    `json:"id"`
+	UserID       int    `json:"user_id"`
+	UserFName    string `json:"user_fname"`
+	UserLName    string `json:"user_lname"`
+	UserNickname string `json:"user_nickname"`
+	UserAvatar   string `json:"user_avatar"`
+	PostID       int    `json:"post_id"`
+	Comment      string `json:"comment"`
+	CreatedAt    string `json:"created_at"`
+	UpdatedAt    string `json:"updated_at"`
 }
 
 type NewComment struct {
@@ -44,7 +48,7 @@ func (c *NewComment) Create() (int, error) {
 }
 
 func GetComments(postID int) ([]Comment, error) {
-	var rows, err = db.DB.Query("SELECT id, user_id, post_id, comment, created_at, updated_at FROM comments WHERE post_id = ?", postID)
+	var rows, err = db.DB.Query("SELECT c.id, c.user_id, u.fname, u.lname, u.nickname, u.avatar c.post_id, c.comment, c.created_at, c.updated_at FROM comments c INNER JOIN users u ON c.user_id = u.id WHERE c.post_id = ?", postID)
 	if err != nil {
 		return nil, err
 	}
@@ -52,7 +56,7 @@ func GetComments(postID int) ([]Comment, error) {
 	var comments []Comment
 	for rows.Next() {
 		var comment Comment
-		err = rows.Scan(&comment.ID, &comment.UserID, &comment.PostID, &comment.Comment, &comment.CreatedAt, &comment.UpdatedAt)
+		err = rows.Scan(&comment.ID, &comment.UserID, &comment.UserFName, &comment.UserLName, &comment.UserNickname, &comment.UserAvatar, &comment.PostID, &comment.Comment, &comment.CreatedAt, &comment.UpdatedAt)
 		if err != nil {
 			return nil, err
 		}
