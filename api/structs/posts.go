@@ -23,6 +23,10 @@ type NewPost struct {
 type Post struct {
 	ID              int         `json:"id"`
 	UserID          int         `json:"user_id"`
+	UserFName       string      `json:"user_fname"`
+	UserLName       string      `json:"user_lname"`
+	UserNickname    string      `json:"user_nickname"`
+	UserAvatar      string      `json:"user_avatar"`
 	GroupID         interface{} `json:"group_id"`
 	Title           string      `json:"title"`
 	Content         string      `json:"content"`
@@ -121,15 +125,14 @@ func GetPosts(IDs map[string]any) (Posts, error) {
 	}
 	// TODO: Add pagination
 	// TODO: Add privacy settings, return only posts that the user can see
-	// TODO: Also return author name
-	var rows, err = db.DB.Query("SELECT id, user_id, group_id, title, content, image, privacy, privacy_settings, created_at, updated_at FROM posts WHERE user_id = ? OR group_id = ? ORDER BY created_at DESC", IDs["user_id"], IDs["group_id"])
+	var rows, err = db.DB.Query("SELECT p.id, p.user_id, u.fname, u.nickname, u.lname, u.avatar, p.group_id, p.title, p.content, p.image, p.privacy, p.privacy_settings, p.created_at, p.updated_at FROM posts p INNER JOIN users u on p.user_id = u.id WHERE user_id = ? OR group_id = ? ORDER BY p.created_at DESC", IDs["user_id"], IDs["group_id"])
 	if err != nil {
 		return Posts{}, err
 	}
 	var posts Posts
 	for rows.Next() {
 		var post Post
-		err = rows.Scan(&post.ID, &post.UserID, &post.GroupID, &post.Title, &post.Content, &post.Image, &post.Privacy, &post.PrivacySettings, &post.CreatedAt, &post.UpdatedAt)
+		err = rows.Scan(&post.ID, &post.UserID, &post.UserFName, &post.UserNickname, &post.UserLName, &post.UserAvatar, &post.GroupID, &post.Title, &post.Content, &post.Image, &post.Privacy, &post.PrivacySettings, &post.CreatedAt, &post.UpdatedAt)
 		if err != nil {
 			return Posts{}, err
 		}

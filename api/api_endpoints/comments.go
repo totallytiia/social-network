@@ -69,8 +69,13 @@ func GetComments(w http.ResponseWriter, r *http.Request) {
 		w.Write(badReqJSON)
 		return
 	}
+	if len(comments) == 0 {
+		w.WriteHeader(http.StatusNoContent)
+		w.Write([]byte("{}"))
+		return
+	}
 	w.WriteHeader(http.StatusOK)
-	var respJSON, _ = json.Marshal(s.OKResponse{Message: "Comments retrieved", Details: comments})
+	var respJSON, _ = json.Marshal(s.Comments{Comments: comments})
 	w.Write(respJSON)
 }
 

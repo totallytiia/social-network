@@ -271,8 +271,8 @@ func GetPosts(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	if (len(posts.Posts)) == 0 {
-		w.WriteHeader(http.StatusNoContent)
 		w.Write([]byte("{}"))
+		w.WriteHeader(http.StatusNoContent)
 		return
 	}
 	for post := range posts.Posts {

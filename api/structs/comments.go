@@ -20,6 +20,10 @@ type NewComment struct {
 	Comment string `json:"comment"`
 }
 
+type Comments struct {
+	Comments []Comment `json:"comments"`
+}
+
 func (c *NewComment) Validate() error {
 	if c.Comment == "" {
 		return errors.New("comment comment cannot be empty")
