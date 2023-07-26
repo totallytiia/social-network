@@ -1,3 +1,5 @@
+import CommentsSection from "./CommentsSection";
+
 interface PostProps {
     deletePost: (id: number) => void;
     post: {
@@ -59,6 +61,7 @@ export default function Post({ post, deletePost }: PostProps) {
                         </svg>
                     </button>
                 </div>
+                <CommentsSection />
             </div>
         </div>
     );
