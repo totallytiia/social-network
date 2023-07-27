@@ -21,7 +21,7 @@ export default function Header() {
                     className="LOGO"
                 >
                     <h1 className="LOGO-TEXT text-black text-2xl font-bold">
-                        LOGO
+                        SOCIAL NETWORK
                     </h1>
                 </div>
                 <section className="MOBILE-MENU flex lg:hidden justify-end">
