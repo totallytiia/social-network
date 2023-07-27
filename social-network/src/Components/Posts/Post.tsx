@@ -1,5 +1,6 @@
 import CommentsSection from './CommentsSection';
-import { useState } from 'react';
+import { useState, useContext } from 'react';
+import { UserContext } from '../App/App';
 interface PostProps {
     deletePost: (id: number) => void;
     postInput: {
@@ -24,6 +25,7 @@ interface PostProps {
 }
 
 export default function Post({ postInput, deletePost }: PostProps) {
+    const { userData } = useContext(UserContext);
     const [post, setPost] = useState(postInput);
 
     const handleDislike = async (e: any) => {
@@ -158,6 +160,9 @@ export default function Post({ postInput, deletePost }: PostProps) {
                         <button
                             onClick={(e) => handleLike(e)}
                             className="flex gap-2"
+                            disabled={
+                                post.user_id === userData.id ? true : false
+                            }
                         >
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
@@ -175,6 +180,9 @@ export default function Post({ postInput, deletePost }: PostProps) {
                         <button
                             onClick={(e) => handleDislike(e)}
                             className="flex gap-2"
+                            disabled={
+                                post.user_id === userData.id ? true : false
+                            }
                         >
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
