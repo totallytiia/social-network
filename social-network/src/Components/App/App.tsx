@@ -12,7 +12,7 @@ interface ApiUserContextInterface {
     dateOfBirth: string;
     nickname: string;
     email: string;
-    about: string;
+    aboutMe: string;
     avatar: string;
 }
 
@@ -49,6 +49,7 @@ function App() {
             const data = await response.json();
             if (!data.errors) {
                 setUserData(data);
+                console.log(data);
             }
         }
         if (isAuthenticated) {

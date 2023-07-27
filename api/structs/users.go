@@ -2,6 +2,7 @@ package structs
 
 import (
 	"errors"
+	"fmt"
 	"log"
 	"regexp"
 	db "social_network_api/db"
@@ -18,13 +19,13 @@ var Users = map[int]User{}
 // Used when creating/registering a new user
 type NewUser struct {
 	Email    string `json:"email"`
-	FName    string `json:"fname"`
-	LName    string `json:"lname"`
+	FName    string `json:"fName"`
+	LName    string `json:"lName"`
 	Password string `json:"password"`
-	DoB      string `json:"date_of_birth"`
+	DoB      string `json:"dateOfirth"`
 	Nickname string `json:"nickname"`
 	Avatar   string `json:"avatar"`
-	AboutMe  string `json:"about_me"`
+	AboutMe  string `json:"aboutMe"`
 	Private  bool   `json:"private"`
 }
 
@@ -32,14 +33,14 @@ type NewUser struct {
 type User struct {
 	ID        int     `json:"id"`
 	Email     string  `json:"email"`
-	FName     string  `json:"fname"`
-	LName     string  `json:"lname"`
-	DoB       string  `json:"date_of_birth"`
+	FName     string  `json:"fName"`
+	LName     string  `json:"lName"`
+	DoB       string  `json:"dateOfBirth"`
 	Nickname  string  `json:"nickname"`
 	Avatar    string  `json:"avatar"`
-	AboutMe   string  `json:"about_me"`
-	CreatedAt string  `json:"created_at"`
-	UpdatedAt string  `json:"updated_at"`
+	AboutMe   string  `json:"aboutMe"`
+	CreatedAt string  `json:"createdAt"`
+	UpdatedAt string  `json:"updatedAt"`
 	Private   bool    `json:"private"`
 	Session   Session `json:"-"`
 }
@@ -189,6 +190,7 @@ func (u *User) Get() error {
 	if err != nil {
 		return err
 	}
+	fmt.Println(u)
 	return nil
 }
 

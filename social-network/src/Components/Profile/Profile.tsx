@@ -1,6 +1,9 @@
-import Header from '../Header/Header';
+import { useContext } from 'react';
+import { UserContext } from '../App/App';
 
 export default function Profile() {
+    const { userData } = useContext(UserContext);
+    console.log(userData);
     return (
         <>
             <div className="p-16 bg-custom z-0 item-center justify-center">
@@ -75,13 +78,15 @@ export default function Profile() {
 
                     <div className="mt-10 text-center border-b pb-12">
                         <h1 className="text-4xl font-medium text-gray-700">
-                            FULL NAME, NICKNAME
+                            {`${userData.fName} "${userData.nickname}" ${userData.lName}`}
                             <span className="text-gray-500"></span>
                         </h1>
-                        <p className="text-gray-600 mt-3">ABOUT</p>
+                        <p className="text-gray-600 mt-3">{userData.aboutMe}</p>
 
-                        <p className="mt-8 text-gray-500">EMAIL</p>
-                        <p className="mt-2 text-gray-500">BIRTHDAY</p>
+                        <p className="mt-8 text-gray-500">{userData.email}</p>
+                        <p className="mt-2 text-gray-500">
+                            {userData.dateOfBirth}
+                        </p>
                     </div>
 
                     <div className="mt-12 flex flex-col justify-center">
