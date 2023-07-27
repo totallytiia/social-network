@@ -19,10 +19,92 @@ interface PostProps {
         comments: any[];
         likes: number;
         dislikes: number;
+        liked: number; // either 1 for like -1 dislike and 0 for no reaction
     };
 }
 
 export default function Post({ post, deletePost }: PostProps) {
+    const handleDislike = async (e: any) => {
+        if (post.liked == 0 || post.liked == 1) {
+            const FD = new FormData();
+            FD.append('post_id', post.id.toString());
+            FD.append('value', '-1');
+            const res = await fetch('http://localhost:8080/api/likes/like', {
+                method: 'POST',
+                body: FD,
+                credentials: 'include',
+            });
+            if (!res.ok) {
+                console.log('error like');
+                return;
+            } else {
+                console.log('success like');
+            }
+            post.dislikes++;
+            post.liked = -1;
+            return;
+        }
+        if (post.liked == -1) {
+            const FD = new FormData();
+            FD.append('post_id', post.id.toString());
+
+            const res = await fetch('http://localhost:8080/api/likes/unlike', {
+                method: 'POST',
+                body: FD,
+                credentials: 'include',
+            });
+            if (!res.ok) {
+                console.log('error unlike');
+                return;
+            } else {
+                console.log('success unlike');
+            }
+            post.dislikes--;
+            post.liked = 0;
+            return;
+        }
+    };
+
+    const handleLike = async (e: any) => {
+        if (post.liked == 0 || post.liked == -1) {
+            const FD = new FormData();
+            FD.append('post_id', post.id.toString());
+            FD.append('value', '1');
+            const res = await fetch('http://localhost:8080/api/likes/like', {
+                method: 'POST',
+                body: FD,
+                credentials: 'include',
+            });
+            if (!res.ok) {
+                console.log('error like');
+                return;
+            } else {
+                console.log('success like');
+            }
+            post.likes++;
+            post.liked = 1;
+            return;
+        }
+        if (post.liked == 1) {
+            const FD = new FormData();
+            FD.append('post_id', post.id.toString());
+            const res = await fetch('http://localhost:8080/api/likes/unlike', {
+                method: 'POST',
+                body: FD,
+                credentials: 'include',
+            });
+            if (!res.ok) {
+                console.log('error unlike');
+                return;
+            } else {
+                console.log('success unlike');
+            }
+            post.likes--;
+            post.liked = 0;
+            return;
+        }
+    };
+
     return (
         <div>
             <div className="mt-4 mx-6 mb-0 p-5 bg-blue-50 rounded-xl">
@@ -48,7 +130,7 @@ export default function Post({ post, deletePost }: PostProps) {
                             viewBox="0 0 24 24"
                             strokeWidth={1.5}
                             stroke="#e50000"
-                            className="w-4 h-4"
+                            className="w-5 h-5"
                         >
                             <path
                                 strokeLinecap="round"
@@ -63,14 +145,20 @@ export default function Post({ post, deletePost }: PostProps) {
                 </div>
                 <div className="flex justify-between mt-4">
                     <div className="flex gap-4">
-                        <button className="flex gap-2">
+                        <button
+                            onClick={(e) => handleLike(e)}
+                            className="flex gap-2"
+                        >
                             <svg
+                                id="likeSvg"
                                 xmlns="http://www.w3.org/2000/svg"
                                 fill="none"
                                 viewBox="0 0 24 24"
                                 strokeWidth={1.5}
                                 stroke="currentColor"
-                                className="w-5 h-5 my-auto"
+                                className={`w-5 h-5 my-auto ${
+                                    post.liked === 1 ? 'fill-green-400' : ''
+                                }`}
                             >
                                 <path
                                     strokeLinecap="round"
@@ -80,14 +168,20 @@ export default function Post({ post, deletePost }: PostProps) {
                             </svg>
                             <p>{post.likes}</p>
                         </button>
-                        <button className="flex gap-2">
+                        <button
+                            onClick={(e) => handleDislike(e)}
+                            className="flex gap-2"
+                        >
                             <svg
+                                id="dislikeSvg"
                                 xmlns="http://www.w3.org/2000/svg"
                                 fill="none"
                                 viewBox="0 0 24 24"
                                 strokeWidth={1.5}
                                 stroke="currentColor"
-                                className="w-5 h-5 my-auto"
+                                className={`w-5 h-5 ${
+                                    post.liked === -1 ? 'fill-red-500' : ''
+                                }`}
                             >
                                 <path
                                     strokeLinecap="round"

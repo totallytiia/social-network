@@ -1,6 +1,5 @@
 import { NavLink } from './NavLink';
 import { useState } from 'react';
-import { Searchbar } from './Searchbar';
 
 export default function Header() {
     const [isNavOpen, setIsNavOpen] = useState(false);
@@ -16,7 +15,7 @@ export default function Header() {
     }
     return (
         <header className="HEADER bg-white sticky top-0 shadow-lg z-50">
-            <nav className="NAVIGATION grid grid-cols-3 gap-3 items-center px-2 py-2 mx-2">
+            <nav className="NAVIGATION grid grid-cols-2 gap-3 items-center px-2 py-2 mx-2">
                 <div
                     onClick={() => (window.location.href = '/')}
                     className="LOGO"
@@ -25,7 +24,6 @@ export default function Header() {
                         LOGO
                     </h1>
                 </div>
-                <Searchbar />
                 <section className="MOBILE-MENU flex lg:hidden justify-end">
                     <div
                         className="HAMBURGER-ICON space-y-2 "
