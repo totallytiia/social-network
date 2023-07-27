@@ -3,7 +3,6 @@ import { UserContext } from '../App/App';
 
 export default function Profile() {
     const { userData } = useContext(UserContext);
-    console.log(userData);
     return (
         <>
             <div className="p-16 bg-custom z-0 item-center justify-center">
