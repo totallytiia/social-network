@@ -2,6 +2,7 @@ package structs
 
 import (
 	"errors"
+	"fmt"
 	db "social_network_api/db"
 	"strconv"
 )
@@ -31,7 +32,8 @@ func (r *Reaction) Validate() error {
 			return errors.New("invalid post id")
 		}
 		r.PostID = p.ID
-		err := p.Get()
+		err := p.Get(0)
+		fmt.Println(err)
 		if err != nil {
 			return errors.New("post does not exist")
 		}

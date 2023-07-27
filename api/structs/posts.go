@@ -36,6 +36,7 @@ type Post struct {
 	Comments        []Comment   `json:"comments"`
 	Likes           int         `json:"likes"`
 	Dislikes        int         `json:"dislikes"`
+	Liked           bool        `json:"liked"`
 }
 
 type Posts struct {
@@ -88,8 +89,17 @@ func (p *Post) Update() error {
 	return nil
 }
 
-func (p *Post) Get() error {
-	var err = db.DB.QueryRow("SELECT user_id, group_id, content, image, privacy, privacy_settings, created_at, updated_at, (SELECT COUNT(*) FROM reactions r WHERE r.post_id = id AND r.value = 1) AS likes, (SELECT COUNT(*) FROM reactions r WHERE r.post_id = id AND r.value = -1) AS dislikes FROM posts WHERE id = ?", p.ID).Scan(&p.UserID, &p.GroupID, &p.Content, &p.Image, &p.Privacy, &p.PrivacySettings, &p.CreatedAt, &p.UpdatedAt, &p.Likes, &p.Dislikes)
+func (p *Post) Get(userFetching int) error {
+	var err = db.DB.QueryRow(`
+	WITH const(ufetching)  AS (SELECT ?)
+	SELECT user_id, group_id, content, image, privacy, privacy_settings, created_at, updated_at, 
+	(SELECT COUNT(*) FROM reactions r WHERE r.post_id = id AND r.value = 1) AS likes, 
+	(SELECT COUNT(*) FROM reactions r WHERE r.post_id = id AND r.value = -1) AS dislikes, 
+	IIF((SELECT COUNT(*) FROM reactions r WHERE r.post_id = id AND r.user_id = const.ufetching) > 0, true, false) as liked 
+	FROM posts 
+	CROSS JOIN const 
+	WHERE id = ?
+	`, userFetching, p.ID).Scan(&p.UserID, &p.GroupID, &p.Content, &p.Image, &p.Privacy, &p.PrivacySettings, &p.CreatedAt, &p.UpdatedAt, &p.Likes, &p.Dislikes, &p.Liked)
 	if err != nil {
 		return err
 	}
@@ -117,7 +127,7 @@ func GetPosts(IDs map[string]any, index, userFetching int) (Posts, error) {
 	var rows, err = db.DB.Query(`
 	WITH const(ind, uid, gid, ufetching)  AS (SELECT ?, ?, ?, ?)
 
-	SELECT p.id, p.user_id, u.fname, u.nickname, u.lname, u.avatar, p.group_id, p.content, p.image, p.privacy, p.privacy_settings, p.created_at, p.updated_at, (SELECT COUNT(*) FROM reactions r WHERE r.post_id = p.id AND r.value = 1) AS likes, (SELECT COUNT(*) FROM reactions r WHERE r.post_id = p.id AND r.value = -1) AS dislikes 
+	SELECT p.id, p.user_id, u.fname, u.nickname, u.lname, u.avatar, p.group_id, p.content, p.image, p.privacy, p.privacy_settings, p.created_at, p.updated_at, (SELECT COUNT(*) FROM reactions r WHERE r.post_id = p.id AND r.value = 1) AS likes, (SELECT COUNT(*) FROM reactions r WHERE r.post_id = p.id AND r.value = -1) AS dislikes, IIF((SELECT COUNT(*) FROM reactions r WHERE r.post_id = p.id AND r.user_id = const.ufetching) > 0, true, false) as liked
 	FROM posts p 
 	INNER JOIN users u on p.user_id = u.id 
 	CROSS JOIN const
@@ -130,7 +140,7 @@ func GetPosts(IDs map[string]any, index, userFetching int) (Posts, error) {
 	var posts Posts
 	for rows.Next() {
 		var post Post
-		err = rows.Scan(&post.ID, &post.UserID, &post.UserFName, &post.UserNickname, &post.UserLName, &post.UserAvatar, &post.GroupID, &post.Content, &post.Image, &post.Privacy, &post.PrivacySettings, &post.CreatedAt, &post.UpdatedAt, &post.Likes, &post.Dislikes)
+		err = rows.Scan(&post.ID, &post.UserID, &post.UserFName, &post.UserNickname, &post.UserLName, &post.UserAvatar, &post.GroupID, &post.Content, &post.Image, &post.Privacy, &post.PrivacySettings, &post.CreatedAt, &post.UpdatedAt, &post.Likes, &post.Dislikes, &post.Liked)
 		if err != nil {
 			return Posts{}, err
 		}
