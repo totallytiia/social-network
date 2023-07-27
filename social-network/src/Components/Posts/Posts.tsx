@@ -72,7 +72,7 @@ export default function Posts() {
                         <Post
                             deletePost={deletePost}
                             key={post.id}
-                            post={post}
+                            postInput={post}
                         />
                     ))
                 ) : (

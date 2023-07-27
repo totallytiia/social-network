@@ -1,8 +1,8 @@
 import CommentsSection from './CommentsSection';
-
+import { useState } from 'react';
 interface PostProps {
     deletePost: (id: number) => void;
-    post: {
+    postInput: {
         id: number;
         user_id: number;
         user_fname: string;
@@ -23,9 +23,11 @@ interface PostProps {
     };
 }
 
-export default function Post({ post, deletePost }: PostProps) {
+export default function Post({ postInput, deletePost }: PostProps) {
+    const [post, setPost] = useState(postInput);
+
     const handleDislike = async (e: any) => {
-        if (post.liked == 0 || post.liked == 1) {
+        if (post.liked === 0 || post.liked === 1) {
             const FD = new FormData();
             FD.append('post_id', post.id.toString());
             FD.append('value', '-1');
@@ -40,11 +42,15 @@ export default function Post({ post, deletePost }: PostProps) {
             } else {
                 console.log('success like');
             }
-            post.dislikes++;
-            post.liked = -1;
+            const postCopy = Object.assign({}, post);
+            postCopy.liked === 0
+                ? postCopy.dislikes++
+                : postCopy.likes-- && postCopy.dislikes++;
+            postCopy.liked = -1;
+            setPost(postCopy);
             return;
         }
-        if (post.liked == -1) {
+        if (post.liked === -1) {
             const FD = new FormData();
             FD.append('post_id', post.id.toString());
 
@@ -56,17 +62,17 @@ export default function Post({ post, deletePost }: PostProps) {
             if (!res.ok) {
                 console.log('error unlike');
                 return;
-            } else {
-                console.log('success unlike');
             }
-            post.dislikes--;
-            post.liked = 0;
+            const postCopy = Object.assign({}, post);
+            postCopy.dislikes--;
+            postCopy.liked = 0;
+            setPost(postCopy);
             return;
         }
     };
 
     const handleLike = async (e: any) => {
-        if (post.liked == 0 || post.liked == -1) {
+        if (post.liked === 0 || post.liked === -1) {
             const FD = new FormData();
             FD.append('post_id', post.id.toString());
             FD.append('value', '1');
@@ -81,11 +87,15 @@ export default function Post({ post, deletePost }: PostProps) {
             } else {
                 console.log('success like');
             }
-            post.likes++;
-            post.liked = 1;
+            const postCopy = Object.assign({}, post);
+            postCopy.liked === 0
+                ? postCopy.likes++
+                : postCopy.dislikes-- && postCopy.likes++;
+            postCopy.liked = 1;
+            setPost(postCopy);
             return;
         }
-        if (post.liked == 1) {
+        if (post.liked === 1) {
             const FD = new FormData();
             FD.append('post_id', post.id.toString());
             const res = await fetch('http://localhost:8080/api/likes/unlike', {
@@ -96,11 +106,11 @@ export default function Post({ post, deletePost }: PostProps) {
             if (!res.ok) {
                 console.log('error unlike');
                 return;
-            } else {
-                console.log('success unlike');
             }
-            post.likes--;
-            post.liked = 0;
+            const postCopy = Object.assign({}, post);
+            postCopy.likes--;
+            postCopy.liked = 0;
+            setPost(postCopy);
             return;
         }
     };
