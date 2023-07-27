@@ -212,7 +212,11 @@ export default function Post({ postInput, deletePost }: PostProps) {
                     </div>
                 </div>
             </div>
-            <CommentsSection post_id={post.id} comments={post.comments} />
+            <CommentsSection
+                key={post.id}
+                post_id={post.id}
+                commentsInput={post.comments}
+            />
         </div>
     );
 }

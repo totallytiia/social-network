@@ -72,7 +72,7 @@ func GetComments(postID int) ([]Comment, error) {
 }
 
 func (c *Comment) Get() error {
-	var err = db.DB.QueryRow("SELECT id, user_id, post_id, comment, created_at, updated_at FROM comments WHERE id = ?", c.ID).Scan(&c.ID, &c.UserID, &c.PostID, &c.Comment, &c.CreatedAt, &c.UpdatedAt)
+	var err = db.DB.QueryRow("SELECT c.id, c.user_id, u.fname, u.lname, u.nickname, u.avatar, c.post_id, c.comment, c.created_at, c.updated_at FROM comments c INNER JOIN users u ON c.user_id = u.id WHERE c.id = ?", c.ID).Scan(&c.ID, &c.UserID, &c.UserFName, &c.UserLName, &c.UserNickname, &c.UserAvatar, &c.PostID, &c.Comment, &c.CreatedAt, &c.UpdatedAt)
 	if err != nil {
 		return err
 	}

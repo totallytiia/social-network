@@ -43,8 +43,16 @@ func CreateComment(w http.ResponseWriter, r *http.Request) {
 		w.Write(badReqJSON)
 		return
 	}
+	var c = s.Comment{ID: id, UserID: u.ID, PostID: postID, Comment: comment.Comment}
+	err = c.Get()
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		badReqJSON, _ := json.Marshal(s.ErrorResponse{Errors: "There was an error with your request", Details: err.Error()})
+		w.Write(badReqJSON)
+		return
+	}
 	w.WriteHeader(http.StatusCreated)
-	var respJSON, _ = json.Marshal(s.OKResponse{Message: "Comment created", Details: id})
+	var respJSON, _ = json.Marshal(c)
 	w.Write(respJSON)
 }
 
