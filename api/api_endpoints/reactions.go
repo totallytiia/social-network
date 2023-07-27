@@ -84,7 +84,7 @@ func RemoveReaction(w http.ResponseWriter, r *http.Request) {
 	reaction.PostID = r.FormValue("post_id")
 	reaction.CommentID = r.FormValue("comment_id")
 	reaction.UserID = u.ID
-	reaction.Value = 0
+	reaction.Value = 1
 	err = reaction.Validate()
 	if err != nil {
 		BadRequest(w, r, err.Error())
