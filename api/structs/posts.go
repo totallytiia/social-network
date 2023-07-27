@@ -130,7 +130,7 @@ func GetPosts(IDs map[string]any, index, userFetching int) (Posts, error) {
 	p.privacy, p.privacy_settings, p.created_at, p.updated_at, 
 	(SELECT COUNT(*) FROM reactions r WHERE r.post_id = p.id AND r.value = 1) AS likes, 
 	(SELECT COUNT(*) FROM reactions r WHERE r.post_id = p.id AND r.value = -1) AS dislikes, 
-	IIF((SELECT value FROM reactions r WHERE id = r.post_id) NOT NULL, (SELECT value FROM reactions r WHERE id = r.post_id), 0) AS liked
+	IIF((SELECT value FROM reactions r WHERE post_id = r.post_id) NOT NULL, (SELECT value FROM reactions r WHERE post_id = r.post_id), 0) AS liked
 	FROM posts p 
 	INNER JOIN users u on p.user_id = u.id 
 	CROSS JOIN const
