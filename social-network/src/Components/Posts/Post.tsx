@@ -132,7 +132,7 @@ export default function Post({ postInput, deletePost }: PostProps) {
                     </div>
                     <button
                         onClick={(e) => deletePost(post.id)}
-                        className="mb-4"
+                        className="mb-6"
                     >
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -140,7 +140,7 @@ export default function Post({ postInput, deletePost }: PostProps) {
                             viewBox="0 0 24 24"
                             strokeWidth={1.5}
                             stroke="#e50000"
-                            className="w-5 h-5"
+                            className="w-4 h-4"
                         >
                             <path
                                 strokeLinecap="round"

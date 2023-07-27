@@ -19,19 +19,16 @@ export default function Comment({ comment, deleteComment }: ICommentProps) {
     return comment !== undefined ? (
         <>
             <div className="flex flex-row gap-2">
-                <div className="h-8 w-8 overflow-hidden rounded-full bg-pink-200 my-auto">
+                <div className="shrink-0 h-8 w-8 overflow-hidden rounded-full bg-pink-200 my-auto">
                     <img
                         className=""
                         src={comment.user_avatar.toString()}
                         alt=""
                     />
                 </div>
-                <div className="flex flex-col text-sm bg-gray-50 my-1 p-2 rounded-lg">
-                    <div className="flex font-bold">
+                <div className="flex flex-col text-sm bg-gray-50 my-1 p-2 rounded-lg ">
+                    <div className="flex font-bold gap-2 justify-between">
                         <p>{comment.user_fname + ' ' + comment.user_lname}</p>
-                    </div>
-                    <div className="flex">
-                        <p>{comment.comment}</p>
                         <button
                             onClick={() => deleteComment(comment.id)}
                             className="mb-4"
@@ -42,7 +39,7 @@ export default function Comment({ comment, deleteComment }: ICommentProps) {
                                 viewBox="0 0 24 24"
                                 strokeWidth={1.5}
                                 stroke="#e50000"
-                                className="w-5 h-5"
+                                className="w-4 h-4"
                             >
                                 <path
                                     strokeLinecap="round"
@@ -51,6 +48,9 @@ export default function Comment({ comment, deleteComment }: ICommentProps) {
                                 />
                             </svg>
                         </button>
+                    </div>
+                    <div className="flex">
+                        <p>{comment.comment}</p>
                     </div>
                 </div>
             </div>
