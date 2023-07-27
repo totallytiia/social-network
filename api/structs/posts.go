@@ -36,7 +36,7 @@ type Post struct {
 	Comments        []Comment   `json:"comments"`
 	Likes           int         `json:"likes"`
 	Dislikes        int         `json:"dislikes"`
-	Liked           bool        `json:"liked"`
+	Liked           int         `json:"liked"`
 }
 
 type Posts struct {
@@ -95,7 +95,7 @@ func (p *Post) Get(userFetching int) error {
 	SELECT user_id, group_id, content, image, privacy, privacy_settings, created_at, updated_at, 
 	(SELECT COUNT(*) FROM reactions r WHERE r.post_id = id AND r.value = 1) AS likes, 
 	(SELECT COUNT(*) FROM reactions r WHERE r.post_id = id AND r.value = -1) AS dislikes, 
-	IIF((SELECT COUNT(*) FROM reactions r WHERE r.post_id = id AND r.user_id = const.ufetching) > 0, true, false) as liked 
+	IIF((SELECT value FROM reactions r WHERE id = r.post_id) NOT NULL, (SELECT value FROM reactions r WHERE id = r.post_id), 0) AS liked 
 	FROM posts 
 	CROSS JOIN const 
 	WHERE id = ?
@@ -126,8 +126,11 @@ func GetPosts(IDs map[string]any, index, userFetching int) (Posts, error) {
 	}
 	var rows, err = db.DB.Query(`
 	WITH const(ind, uid, gid, ufetching)  AS (SELECT ?, ?, ?, ?)
-
-	SELECT p.id, p.user_id, u.fname, u.nickname, u.lname, u.avatar, p.group_id, p.content, p.image, p.privacy, p.privacy_settings, p.created_at, p.updated_at, (SELECT COUNT(*) FROM reactions r WHERE r.post_id = p.id AND r.value = 1) AS likes, (SELECT COUNT(*) FROM reactions r WHERE r.post_id = p.id AND r.value = -1) AS dislikes, IIF((SELECT COUNT(*) FROM reactions r WHERE r.post_id = p.id AND r.user_id = const.ufetching) > 0, true, false) as liked
+	SELECT p.id, p.user_id, u.fname, u.nickname, u.lname, u.avatar, p.group_id, p.content, p.image, 
+	p.privacy, p.privacy_settings, p.created_at, p.updated_at, 
+	(SELECT COUNT(*) FROM reactions r WHERE r.post_id = p.id AND r.value = 1) AS likes, 
+	(SELECT COUNT(*) FROM reactions r WHERE r.post_id = p.id AND r.value = -1) AS dislikes, 
+	IIF((SELECT value FROM reactions r WHERE id = r.post_id) NOT NULL, (SELECT value FROM reactions r WHERE id = r.post_id), 0) AS liked
 	FROM posts p 
 	INNER JOIN users u on p.user_id = u.id 
 	CROSS JOIN const

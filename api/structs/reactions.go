@@ -2,7 +2,6 @@ package structs
 
 import (
 	"errors"
-	"fmt"
 	db "social_network_api/db"
 	"strconv"
 )
@@ -33,7 +32,6 @@ func (r *Reaction) Validate() error {
 		}
 		r.PostID = p.ID
 		err := p.Get(0)
-		fmt.Println(err)
 		if err != nil {
 			return errors.New("post does not exist")
 		}
@@ -60,6 +58,26 @@ func (r *Reaction) Validate() error {
 	return nil
 }
 
+// Returns the value of the reaction if it exists, otherwise 0
+func (r Reaction) Exists() int {
+	if r.PostID != nil {
+		return r.PostExists()
+	}
+	return r.CommentExists()
+}
+
+func (r Reaction) CommentExists() int {
+	var value int
+	db.DB.QueryRow("SELECT value FROM reactions WHERE comment_id = ? AND user_id = ?", r.CommentID, r.UserID, r.Value).Scan(&value)
+	return value
+}
+
+func (r Reaction) PostExists() int {
+	var value int
+	db.DB.QueryRow("SELECT value FROM reactions WHERE post_id = ? AND user_id = ?", r.PostID, r.UserID, r.Value).Scan(&value)
+	return value
+}
+
 func (r Reaction) Create() error {
 	_, err := db.DB.Exec("INSERT INTO reactions (post_id, comment_id, user_id, value) VALUES (?, ?, ?, ?)", r.PostID, r.CommentID, r.UserID, r.Value)
 	if err != nil {
@@ -68,8 +86,31 @@ func (r Reaction) Create() error {
 	return nil
 }
 
+func (r Reaction) Update() error {
+	if r.PostID != "" {
+		return r.PostUpdate()
+	}
+	return r.CommentUpdate()
+}
+
+func (r Reaction) PostUpdate() error {
+	_, err := db.DB.Exec("UPDATE reactions SET value = ?, updated_at = CURRENT_TIMESTAMP WHERE post_id = ? AND user_id = ?", r.Value, r.PostID, r.UserID)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (r Reaction) CommentUpdate() error {
+	_, err := db.DB.Exec("UPDATE reactions SET value = ?, updated_at = CURRENT_TIMESTAMP WHERE comment_id = ? AND user_id = ?", r.Value, r.CommentID, r.UserID)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 func (r Reaction) Remove() error {
-	if r.PostID != nil {
+	if r.PostID != "" {
 		return r.PostRemove()
 	}
 	return r.CommentRemove()

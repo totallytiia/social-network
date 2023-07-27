@@ -37,6 +37,23 @@ func AddReaction(w http.ResponseWriter, r *http.Request) {
 		BadRequest(w, r, err.Error())
 		return
 	}
+	var val int
+	if val = reaction.Exists(); val == reaction.Value {
+		BadRequest(w, r, "Reaction already exists")
+		return
+	}
+	if val != reaction.Value && val != 0 {
+		err = reaction.Update()
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			badReqJSON, _ := json.Marshal(s.ErrorResponse{Errors: "There was an error removing the reaction", Details: err.Error()})
+			w.Write(badReqJSON)
+			return
+		}
+		w.WriteHeader(http.StatusCreated)
+		w.Write([]byte("{}"))
+		return
+	}
 	err = reaction.Create()
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
