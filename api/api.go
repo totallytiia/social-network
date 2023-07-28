@@ -42,6 +42,8 @@ func api(w http.ResponseWriter, r *http.Request) {
 			ep.LogoutUser(w, r)
 		case "get":
 			ep.GetUser(w, r)
+		case "getall":
+			ep.GetUsers(w, r)
 		default:
 			http.NotFound(w, r)
 			return

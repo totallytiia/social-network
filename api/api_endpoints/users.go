@@ -205,3 +205,27 @@ func GetUser(w http.ResponseWriter, r *http.Request) {
 	var userJSON, _ = json.Marshal(user)
 	w.Write(userJSON)
 }
+
+func GetUsers(w http.ResponseWriter, r *http.Request) {
+	v, _ := ValidateCookie(w, r)
+	if !v {
+		w.WriteHeader(http.StatusUnauthorized)
+		badReqJSON, _ := json.Marshal(s.ErrorResponse{Errors: "There was an error with your request", Details: "Invalid session"})
+		w.Write(badReqJSON)
+		return
+	}
+	if r.Method != "GET" {
+		MethodNotAllowed(w, r)
+		return
+	}
+	users, err := s.GetAllUsers()
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		badReqJSON, _ := json.Marshal(s.ErrorResponse{Errors: "There was an error getting the users", Details: err.Error()})
+		w.Write(badReqJSON)
+		return
+	}
+	w.WriteHeader(http.StatusOK)
+	var userJSON, _ = json.Marshal(users)
+	w.Write(userJSON)
+}
