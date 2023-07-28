@@ -134,8 +134,22 @@ export default function Post({ postInput, deletePost }: PostProps) {
             <div className="mt-4 mx-6 mb-0 p-5 bg-blue-50 rounded-xl">
                 <div className="flex justify-between">
                     <div className="flex">
-                        <div className="h-10 w-10 overflow-hidden rounded-full bg-black">
+                        <div className="h-8 w-8 relative overflow-hidden rounded-full bg-pink-200">
                             <img className="" src={post.user_avatar} alt="" />
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="white"
+                                viewBox="0 0 24 24"
+                                strokeWidth={0}
+                                stroke="currentColor"
+                                className="w-10 h-10 absolute -translate-x-1"
+                            >
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"
+                                />
+                            </svg>
                         </div>
                         <div className="ml-2">
                             <h1 className="text-sm font-bold">
