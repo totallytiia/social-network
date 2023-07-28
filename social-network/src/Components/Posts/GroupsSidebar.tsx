@@ -6,7 +6,7 @@ export default function GroupsSidebar() {
             <div className="order-1">
                 <div className="m-6 bg-blue-50 [&>*]:m-4 rounded-xl">
                     <h1 className="text-xl font-bold text-black">GROUPS</h1>
-                    <Group />
+                    {/* <Group /> */}
                 </div>
             </div>
         </>

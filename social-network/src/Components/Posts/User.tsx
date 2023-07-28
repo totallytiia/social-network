@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-interface User {
+interface IUser {
     id: number;
     fName: string;
     lName: string;
@@ -8,7 +8,7 @@ interface User {
 }
 
 export default function User() {
-    const [users, setUsers] = useState([] as User[]);
+    const [users, setUsers] = useState([] as IUser[]);
     useEffect(() => {
         async function getUsers() {
             const url = `http://localhost:8080/api/users/getall`;
@@ -17,11 +17,11 @@ export default function User() {
                 credentials: 'include',
             });
             if (!res.ok) {
-                console.log('error');
+                setUsers([]);
                 return;
             }
             const data = await res.json();
-            setUsers(data.users);
+            setUsers(data);
         }
         getUsers();
     }, []);
