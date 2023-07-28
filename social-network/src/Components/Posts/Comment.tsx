@@ -23,9 +23,9 @@ export default function Comment({ comment, deleteComment }: ICommentProps) {
     return comment !== undefined ? (
         <>
             <div className="flex flex-row gap-2">
-                <div className="shrink-0 relative h-6 w-6 overflow-hidden rounded-full bg-pink-200 mt-3">
+                <div className="shrink-0 relative h-6 w-6 overflow-hidden object-cover rounded-full bg-pink-200 mt-3">
                     <img
-                        className=""
+                        className="h-cover w-cover h-6 w-6 object-cover"
                         src={comment.user_avatar.toString()}
                         alt=""
                     />
