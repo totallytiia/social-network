@@ -1,8 +1,37 @@
-import { useContext } from 'react';
-import { UserContext } from '../App/App';
+import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 
-export default function Profile() {
-    const { userData } = useContext(UserContext);
+interface IUser {
+    id: number;
+    fName: string;
+    nickname: string;
+    lName: string;
+    avatar: Blob;
+    about: string;
+    email: string;
+    dateOfBirth: string;
+    private: boolean;
+}
+
+export default function User() {
+    const [user, setUser] = useState({} as IUser);
+    const { id } = useParams();
+    useEffect(() => {
+        async function getUser(userId: string): Promise<void> {
+            const url = `http://localhost:8080/api/users/get?id=${userId}`;
+            const res = await fetch(url, {
+                method: 'GET',
+                credentials: 'include',
+            });
+            if (!res.ok) {
+                setUser({} as IUser);
+                return;
+            }
+            const data = await res.json();
+            setUser(data);
+        }
+        if (id) getUser(id);
+    }, [id]);
     return (
         <>
             <div className="p-16 bg-custom z-0 item-center justify-center">
@@ -40,9 +69,7 @@ export default function Profile() {
                         </div>
 
                         <div className="justify-center gap-6 flex mt-10 md:mt-0 border-b md:border-b-0 pb-8 md:pb-0">
-                            {
-                                // TODO: Tiia: Add buttons for editing profile
-                                /* <button className="btn-custom">
+                            <button className="btn-custom">
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
                                     fill="none"
@@ -73,22 +100,19 @@ export default function Profile() {
                                         d="M12 20.25c4.97 0 9-3.694 9-8.25s-4.03-8.25-9-8.25S3 7.444 3 12c0 2.104.859 4.023 2.273 5.48.432.447.74 1.04.586 1.641a4.483 4.483 0 01-.923 1.785A5.969 5.969 0 006 21c1.282 0 2.47-.402 3.445-1.087.81.22 1.668.337 2.555.337z"
                                     />
                                 </svg>
-                            </button> */
-                            }
+                            </button>
                         </div>
                     </div>
 
                     <div className="mt-10 text-center border-b pb-12">
                         <h1 className="text-4xl font-medium text-gray-700">
-                            {`${userData.fName} "${userData.nickname}" ${userData.lName}`}
+                            {`${user.fName} "${user.nickname}" ${user.lName}`}
                             <span className="text-gray-500"></span>
                         </h1>
-                        <p className="text-gray-600 mt-3">{userData.aboutMe}</p>
+                        <p className="text-gray-600 mt-3">{user.about}</p>
 
-                        <p className="mt-8 text-gray-500">{userData.email}</p>
-                        <p className="mt-2 text-gray-500">
-                            {userData.dateOfBirth}
-                        </p>
+                        <p className="mt-8 text-gray-500">{user.email}</p>
+                        <p className="mt-2 text-gray-500">{user.dateOfBirth}</p>
                     </div>
 
                     <div className="mt-12 flex flex-col justify-center">

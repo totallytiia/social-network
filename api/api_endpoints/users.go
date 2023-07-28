@@ -195,12 +195,43 @@ func GetUser(w http.ResponseWriter, r *http.Request) {
 		BadRequest(w, r, err.Error())
 		return
 	}
-	user, err := s.UserFromSession(sessionCookie.Value)
+	err = r.ParseForm()
 	if err != nil {
 		BadRequest(w, r, err.Error())
 		return
 	}
+	if r.FormValue("id") == "0" {
+		BadRequest(w, r, "Invalid user id")
+		return
+	}
+	userId, _ := strconv.Atoi(r.FormValue("id"))
+	if userId == 0 {
+		user, err := s.UserFromSession(sessionCookie.Value)
+		if err != nil {
+			BadRequest(w, r, err.Error())
+			return
+		}
 
+		w.WriteHeader(http.StatusOK)
+		var userJSON, _ = json.Marshal(user)
+		w.Write(userJSON)
+		return
+	}
+	var user s.User
+	user.ID = userId
+	err = user.Get()
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		badReqJSON, _ := json.Marshal(s.ErrorResponse{Errors: "There was an error getting the user", Details: err.Error()})
+		w.Write(badReqJSON)
+		return
+	}
+	if user.FName == "" {
+		w.WriteHeader(http.StatusNotFound)
+		badReqJSON, _ := json.Marshal(s.ErrorResponse{Errors: "There was an error getting the user", Details: "User not found"})
+		w.Write(badReqJSON)
+		return
+	}
 	w.WriteHeader(http.StatusOK)
 	var userJSON, _ = json.Marshal(user)
 	w.Write(userJSON)

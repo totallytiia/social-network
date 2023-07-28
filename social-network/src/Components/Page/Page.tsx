@@ -7,9 +7,7 @@ import Profile from '../Profile/Profile';
 import FourOneFour from '../FourOneFour/FourOneFour';
 
 import { Routes, Route } from 'react-router-dom';
-
-
-
+import User from '../Profile/User';
 
 function Page() {
     return (
@@ -20,12 +18,13 @@ function Page() {
                 <Route path="/register" element={<Register />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/profile" element={<Profile />} />
+                <Route path="/user/:id" element={<User />} />
                 {/*
                 <Route path="/chat" element={<Chat />} />
                 <Route path="/notifications" element={<Notifications />} />
                 <Route path="/groups" element={<Groups />} />
                 <Route path="/new-post" element={<NewPost />} /> */}
-                <Route path="*" element={< FourOneFour />} />
+                <Route path="*" element={<FourOneFour />} />
             </Routes>
             <Footer></Footer>
         </>
