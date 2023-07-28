@@ -2,6 +2,7 @@ package endpoints
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 	s "social_network_api/structs"
 	"strconv"
@@ -48,14 +49,15 @@ func CreatePost(w http.ResponseWriter, r *http.Request) {
 		BadRequest(w, r, err.Error())
 		return
 	}
-	id, err := post.Create()
+	p, err := post.Create()
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		badReqJSON, _ := json.Marshal(s.ErrorResponse{Errors: "There was an error creating the post", Details: err.Error()})
 		w.Write(badReqJSON)
 		return
 	}
-	var postJSON, _ = json.Marshal(s.Post{ID: id, Content: post.Content, Image: post.Image, PrivacySettings: post.PrivacySettings, CreatedAt: post.CreatedAt, UserID: post.UserID, GroupID: post.GroupID})
+	fmt.Println(p)
+	var postJSON, _ = json.Marshal(p)
 	w.WriteHeader(http.StatusCreated)
 	w.Write(postJSON)
 }

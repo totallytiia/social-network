@@ -29,7 +29,7 @@ type Post struct {
 	GroupID         interface{} `json:"group_id"`
 	Content         string      `json:"content"`
 	Image           string      `json:"image"`
-	Privacy         string      `json:"privacy"`
+	Privacy         int         `json:"privacy"`
 	PrivacySettings string      `json:"privacy_settings"`
 	CreatedAt       string      `json:"created_at"`
 	UpdatedAt       string      `json:"updated_at"`
@@ -72,13 +72,16 @@ func (p *NewPost) Validate() error {
 	return nil
 }
 
-func (p *NewPost) Create() (int, error) {
+func (p *NewPost) Create() (Post, error) {
 	var res, err = db.DB.Exec("INSERT INTO posts (user_id, group_id, content, image, privacy, privacy_settings) VALUES (?, ?, ?, ?, ?, ?)", p.UserID, p.GroupID, p.Content, p.Image, p.Privacy, p.PrivacySettings)
 	if err != nil {
-		return 0, err
+		return Post{}, err
 	}
 	var id, _ = res.LastInsertId()
-	return int(id), nil
+	var post Post
+	post.ID = int(id)
+	post.Get(p.UserID)
+	return post, nil
 }
 
 func (p *Post) Update() error {
@@ -92,14 +95,15 @@ func (p *Post) Update() error {
 func (p *Post) Get(userFetching int) error {
 	var err = db.DB.QueryRow(`
 	WITH const(ufetching)  AS (SELECT ?)
-	SELECT user_id, group_id, content, image, privacy, privacy_settings, created_at, updated_at, 
-	(SELECT COUNT(*) FROM reactions r WHERE r.post_id = id AND r.value = 1) AS likes, 
-	(SELECT COUNT(*) FROM reactions r WHERE r.post_id = id AND r.value = -1) AS dislikes, 
-	IIF((SELECT value FROM reactions r WHERE id = r.post_id) NOT NULL, (SELECT value FROM reactions r WHERE id = r.post_id), 0) AS liked 
-	FROM posts 
+	SELECT p.user_id, u.fname, u.nickname, u.lname, u.avatar, p.group_id, p.content, p.image, p.privacy, p.privacy_settings, p.created_at, p.updated_at, 
+	(SELECT COUNT(*) FROM reactions r WHERE r.post_id = p.id AND r.value = 1) AS likes, 
+	(SELECT COUNT(*) FROM reactions r WHERE r.post_id = p.id AND r.value = -1) AS dislikes, 
+	IIF((SELECT value FROM reactions r WHERE p.id = r.post_id) NOT NULL, (SELECT value FROM reactions r WHERE p.id = r.post_id), 0) AS liked 
+	FROM posts p 
+	INNER JOIN users u ON p.user_id = u.id
 	CROSS JOIN const 
-	WHERE id = ?
-	`, userFetching, p.ID).Scan(&p.UserID, &p.GroupID, &p.Content, &p.Image, &p.Privacy, &p.PrivacySettings, &p.CreatedAt, &p.UpdatedAt, &p.Likes, &p.Dislikes, &p.Liked)
+	WHERE p.id = ?
+	`, userFetching, p.ID).Scan(&p.UserID, &p.UserFName, &p.UserNickname, &p.UserLName, &p.UserAvatar, &p.GroupID, &p.Content, &p.Image, &p.Privacy, &p.PrivacySettings, &p.CreatedAt, &p.UpdatedAt, &p.Likes, &p.Dislikes, &p.Liked)
 	if err != nil {
 		return err
 	}
