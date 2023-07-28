@@ -79,7 +79,14 @@ export default function CreateAPost(props: any) {
                 <div className="flex-row flex gap-2">
                     <div>
                         <div className="h-10 w-10 overflow-hidden rounded-full bg-black">
-                            <img src={userData.avatar} alt="" />
+                            <img
+                                src={
+                                    userData.avatar !== undefined
+                                        ? userData.avatar.toString()
+                                        : ''
+                                }
+                                alt=""
+                            />
                         </div>
                     </div>
                     <div className="w-full">
