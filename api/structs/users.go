@@ -216,7 +216,7 @@ func (u User) Delete() error {
 
 // Get all the users from the database
 func GetAllUsers() ([]User, error) {
-	var query = "SELECT id, email, fname, lname, dob, nickname, avatar, about, created_at, updated_at, private FROM users"
+	var query = "SELECT id, email, fname, lname, CAST(dob AS TEXT), nickname, avatar, about, created_at, updated_at, private FROM users"
 	rows, err := db.DB.Query(query)
 	if err != nil {
 		return nil, err
