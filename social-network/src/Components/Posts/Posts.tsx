@@ -2,6 +2,8 @@ import Post from './Post';
 import GroupSelection from './GroupSelection';
 import CreateAPost from '../CreateAPost/CreateAPost';
 import { useEffect, useState } from 'react';
+import GroupsSidebar from './GroupsSidebar';
+import UsersSidebar from './UsersSidebar';
 
 interface IPost {
     id: number;
@@ -65,11 +67,7 @@ export default function Posts() {
     return (
         <div className="bg-custom">
             <div className="flex flex-col lg:flex-row lg:px-12">
-                <div className="lg:fixed lg:left-4 order-1">
-                    <div className="m-6 bg-blue-50 [&>*]:m-4 rounded-xl">
-                        <h1 className="text-xl font-bold text-black">GROUPS</h1>
-                    </div>
-                </div>
+                <GroupsSidebar />
                 <div className="order-3 lg:order-2 flex flex-col mx-auto bg-white w-9/12 max-w-4xl m-6 rounded-xl shadow-lg pb-4">
                     <div className="flex flex-col  shadow-lg pb-4">
                         <CreateAPost postAdded={postAdded} />
@@ -89,11 +87,7 @@ export default function Posts() {
                         )}
                     </div>
                 </div>
-                <div className="lg:fixed lg:right-4 right order-2">
-                    <div className="m-6 bg-blue-50 [&>*]:m-4 rounded-xl">
-                        <h1 className="font-bold text-xl text-black">PEEPS</h1>
-                    </div>
-                </div>
+                <UsersSidebar />
             </div>
         </div>
     );
