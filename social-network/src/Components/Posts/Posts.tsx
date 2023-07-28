@@ -55,11 +55,9 @@ export default function Posts() {
         setPosts(posts.filter((post: any) => post.id !== id));
     };
 
-    const postAdded = (post: any) => {
-        var postsCopy = posts;
-        postsCopy !== undefined
-            ? postsCopy.unshift(post)
-            : (postsCopy = [post]);
+    const postAdded = async (post: any) => {
+        const postsCopy = [...posts];
+        postsCopy.unshift(post);
         setPosts(postsCopy);
     };
 
