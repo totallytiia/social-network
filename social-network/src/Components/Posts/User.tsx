@@ -11,7 +11,7 @@ export default function User() {
     const [users, setUsers] = useState([] as User[]);
     useEffect(() => {
         async function getUsers() {
-            const url = `http://localhost:8080/api/users`;
+            const url = `http://localhost:8080/api/users/getall`;
             const res = await fetch(url, {
                 method: 'GET',
                 credentials: 'include',
