@@ -49,7 +49,6 @@ function App() {
             const data = await response.json();
             if (!data.errors) {
                 setUserData(data);
-                console.log(data);
             }
         }
         if (isAuthenticated) {

@@ -21,14 +21,10 @@ export default function User() {
                 return;
             }
             const data = await res.json();
-            if (!data.errors) {
-                console.log(data);
-            }
-            setUsers(data);
+            setUsers(data.users);
         }
         getUsers();
     }, []);
-    console.log(users);
 
     return (
         <>

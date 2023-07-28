@@ -48,8 +48,6 @@ export default function Post({ postInput, deletePost }: PostProps) {
                     />
                 );
                 return;
-            } else {
-                console.log('success like');
             }
             const postCopy = Object.assign({}, post);
             postCopy.liked === 0
@@ -98,8 +96,6 @@ export default function Post({ postInput, deletePost }: PostProps) {
                     />
                 );
                 return;
-            } else {
-                console.log('success like');
             }
             const postCopy = Object.assign({}, post);
             postCopy.liked === 0

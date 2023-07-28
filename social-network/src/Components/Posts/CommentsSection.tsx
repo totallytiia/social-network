@@ -47,7 +47,6 @@ export default function CommentsSection({
         (document.getElementById('commentBox') as HTMLInputElement).value = '';
         const data = await response.json();
         if (data.errors) {
-            console.log(data);
             return;
         }
         const commentsCopy = comments !== null ? Array.from(comments) : [];

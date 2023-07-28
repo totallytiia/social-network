@@ -31,8 +31,7 @@ export default function Posts() {
             });
             if (res.status === 204) return; // no posts
             const data = await res.json();
-            if (!data.errors) {
-                console.log(data);
+            if (data.errors) {
                 setPosts([]);
             }
             setPosts(data.posts);
@@ -50,8 +49,8 @@ export default function Posts() {
             body: FD,
         });
         const data = await res.json();
-        if (!data.errors) {
-            console.log(data);
+        if (data.errors) {
+            return;
         }
         setPosts(posts.filter((post: any) => post.id !== id));
     };

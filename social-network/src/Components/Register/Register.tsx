@@ -50,7 +50,6 @@ export default function Register() {
         switch (target.name) {
             case 'fName':
                 if (value.length < 2 || value.length > 18) {
-                    console.log('error');
                     e.target.classList.add(
                         'border-red-500',
                         'border-2',
@@ -79,7 +78,6 @@ export default function Register() {
                 break;
             case 'lName':
                 if (value.length < 2 || value.length > 20) {
-                    console.log('error');
                     e.target.classList.add(
                         'border-red-500',
                         'border-2',
@@ -235,7 +233,6 @@ export default function Register() {
 
     const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files?.length === 0) return;
-        console.log(e.target.files);
         const file = e.target.files?.[0];
         const reader = new FileReader();
         reader.onloadend = () => {
@@ -269,7 +266,6 @@ export default function Register() {
 
     const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        console.log(formData);
         const FD = new FormData();
         FD.append('avatar', formData.register.avatar as string);
         FD.append('fname', formData.register.fName as string);
@@ -288,15 +284,9 @@ export default function Register() {
                 body: FD,
             }
         );
-        console.log(response.status);
         if (response.status === 200) {
-            console.log('success');
             window.location.href = '/login';
             // show home page
-        } else {
-            console.log('error');
-            console.log(response);
-            // show error message
         }
     };
 

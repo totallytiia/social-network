@@ -28,7 +28,6 @@ export default function CreateAPost(props: any) {
 
     const handlePostSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        console.log(postData.post);
         const FD = new FormData();
         FD.append('content', postData.post.content as string);
         FD.append('image', postData.post.imgUpload as string);
@@ -45,19 +44,15 @@ export default function CreateAPost(props: any) {
         (document.getElementById('imgUpload') as HTMLInputElement).value = '';
 
         if (response.status === 201) {
-            console.log('Post created!');
-            // Send await response.json() to the parent
             const post = await response.json();
             props.postAdded(post);
         } else {
-            console.log('Error creating post!');
             console.log(response);
         }
     };
 
     const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files?.length === 0) return;
-        console.log(e.target.files);
         const file = e.target.files?.[0];
         const reader = new FileReader();
         reader.onloadend = () => {
@@ -93,7 +88,6 @@ export default function CreateAPost(props: any) {
                                 placeholder="Write something..."
                                 name="content"
                                 onChange={(e) => {
-                                    console.log(e.target.value);
                                     const postCopy = postData;
                                     postCopy.post.content = e.target.value;
                                     setPostData(postCopy);
@@ -107,7 +101,6 @@ export default function CreateAPost(props: any) {
                                 <select
                                     className="btn-custom text-center text-sm  font-semibold p-1"
                                     onChange={(e) => {
-                                        console.log(e.target.value);
                                         const postCopy = postData;
                                         postCopy.post.privacy = parseInt(
                                             e.target.value
