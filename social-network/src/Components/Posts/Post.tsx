@@ -1,6 +1,8 @@
 import CommentsSection from './CommentsSection';
 import { useState, useContext } from 'react';
 import { UserContext } from '../App/App';
+import ErrorNotification from '../Notification/ErrorNotification';
+import { render } from '@testing-library/react';
 interface PostProps {
     deletePost: (id: number) => void;
     postInput: {
@@ -39,7 +41,12 @@ export default function Post({ postInput, deletePost }: PostProps) {
                 credentials: 'include',
             });
             if (!res.ok) {
-                console.log('error like');
+                render(
+                    <ErrorNotification
+                        title="Error: narcissism"
+                        message="Sorry you can’t be this narcisistic that you want to react your own post"
+                    />
+                );
                 return;
             } else {
                 console.log('success like');
@@ -84,7 +91,12 @@ export default function Post({ postInput, deletePost }: PostProps) {
                 credentials: 'include',
             });
             if (!res.ok) {
-                console.log('error like');
+                render(
+                    <ErrorNotification
+                        title="Error: narcissism"
+                        message="Sorry you can’t be this narcisistic that you want to like your own post"
+                    />
+                );
                 return;
             } else {
                 console.log('success like');
@@ -160,9 +172,9 @@ export default function Post({ postInput, deletePost }: PostProps) {
                         <button
                             onClick={(e) => handleLike(e)}
                             className="flex gap-2"
-                            disabled={
-                                post.user_id === userData.id ? true : false
-                            }
+                            // disabled={
+                            //     post.user_id === userData.id ? true : false
+                            // }
                         >
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
