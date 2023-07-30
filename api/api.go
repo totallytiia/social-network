@@ -7,7 +7,6 @@ import (
 	ep "social_network_api/api_endpoints"
 	s "social_network_api/structs"
 	"strings"
-	"time"
 )
 
 func api(w http.ResponseWriter, r *http.Request) {
@@ -25,17 +24,18 @@ func api(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Access-Control-Allow-Headers, X-Requested-With, Cookie")
 	w.Header().Set("Access-Control-Allow-Credentials", "true")
 
-	cookie, _ := r.Cookie("session")
-	if len(cookie.Value) != 0 {
-		v, u := ep.ValidateCookie(w, r)
-		if !v {
-			cookie := http.Cookie{Name: "session", Value: "", Path: "/"}
-			http.SetCookie(w, &cookie)
-		} else {
-			cookie := http.Cookie{Name: "session", Value: u.Session.SessionID, Path: "/", Expires: time.Now().Add(24 * time.Hour * 7), HttpOnly: false}
-			http.SetCookie(w, &cookie)
-		}
-	}
+	// TODO: Fix cookie renewal
+	// cookie, _ := r.Cookie("session")
+	// if len(cookie.Value) != 0 {
+	// 	v, u := ep.ValidateCookie(w, r)
+	// 	if !v {
+	// 		cookie := http.Cookie{Name: "session", Value: "", Path: "/"}
+	// 		http.SetCookie(w, &cookie)
+	// 	} else {
+	// 		cookie := http.Cookie{Name: "session", Value: u.Session.SessionID, Path: "/", Expires: time.Now().Add(24 * time.Hour * 7), HttpOnly: false}
+	// 		http.SetCookie(w, &cookie)
+	// 	}
+	// }
 
 	// Switch on first part after /api/
 	switch reqUrl[0] {

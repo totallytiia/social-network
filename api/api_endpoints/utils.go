@@ -11,9 +11,6 @@ func ValidateCookie(w http.ResponseWriter, r *http.Request) (bool, s.User) {
 	if err != nil {
 		return false, s.User{}
 	}
-	if err != nil {
-		return false, s.User{}
-	}
 	user, err := s.UserFromSession(cookie.Value)
 	if err != nil {
 		return false, s.User{}
