@@ -44,11 +44,13 @@ export default function CommentsSection({
                 body: FD,
             }
         );
-        (document.getElementById('commentBox') as HTMLInputElement).value = '';
         const data = await response.json();
         if (data.errors) {
             return;
         }
+        (
+            document.getElementById('commentBox' + post_id) as HTMLInputElement
+        ).value = '';
         const commentsCopy = comments !== null ? Array.from(comments) : [];
         commentsCopy.push(data);
         setComments(commentsCopy);
@@ -86,12 +88,11 @@ export default function CommentsSection({
                 <form
                     onSubmit={(e) => handleCommentSubmit(e)}
                     className="flex flex-cols mt-1"
-                    action=""
                 >
                     <input
                         className="bg-gray-50 px-4 text-sm outline-none rounded-full w-full"
                         type="text"
-                        id="commentBox"
+                        id={'commentBox' + post_id}
                         placeholder="Write a comment"
                         onChange={(e) => {
                             setComment({
@@ -102,7 +103,7 @@ export default function CommentsSection({
                     />
                     <label
                         className="my-auto cursor-pointer"
-                        htmlFor="commentSubmit"
+                        htmlFor={'commentSubmit-' + post_id}
                     >
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -120,9 +121,9 @@ export default function CommentsSection({
                         </svg>
                     </label>
                     <input
-                        id="commentSubmit"
                         className="hidden"
                         type="submit"
+                        id={`commentSubmit-${post_id}`}
                     />
                 </form>
             </div>
