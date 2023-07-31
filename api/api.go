@@ -1,21 +1,17 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
 	"net/http"
 	ep "social_network_api/api_endpoints"
-	s "social_network_api/structs"
 	"strings"
+	"time"
 )
 
 func api(w http.ResponseWriter, r *http.Request) {
-	var badReqJSON, _ = json.Marshal(s.ErrorResponse{Errors: "Bad request"})
 	reqUrl := strings.Split(r.URL.Path[len("/api/"):], "/")
 	if len(reqUrl) == 0 {
-		w.WriteHeader(http.StatusBadRequest)
-		w.Write(badReqJSON)
-		return
+		ep.BadRequest(w, r, "Bad Request")
 	}
 	fmt.Println(reqUrl)
 	// Write CORS headers
@@ -25,25 +21,25 @@ func api(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Credentials", "true")
 
 	// TODO: Fix cookie renewal
-	// cookie, _ := r.Cookie("session")
-	// if len(cookie.Value) != 0 {
-	// 	v, u := ep.ValidateCookie(w, r)
-	// 	if !v {
-	// 		cookie := http.Cookie{Name: "session", Value: "", Path: "/"}
-	// 		http.SetCookie(w, &cookie)
-	// 	} else {
-	// 		cookie := http.Cookie{Name: "session", Value: u.Session.SessionID, Path: "/", Expires: time.Now().Add(24 * time.Hour * 7), HttpOnly: false}
-	// 		http.SetCookie(w, &cookie)
-	// 	}
-	// }
+	cookie, err := r.Cookie("session")
+	if err == nil {
+		if len(cookie.Value) != 0 {
+			v, u := ep.ValidateCookie(w, r)
+			if !v {
+				cookie := http.Cookie{Name: "session", Value: "", Path: "/", MaxAge: -1, HttpOnly: false}
+				http.SetCookie(w, &cookie)
+			} else {
+				cookie := http.Cookie{Name: "session", Value: u.Session.SessionID, Path: "/", Expires: time.Now().Add(24 * time.Hour * 7), HttpOnly: false}
+				http.SetCookie(w, &cookie)
+			}
+		}
+	}
 
 	// Switch on first part after /api/
 	switch reqUrl[0] {
 	case "users":
 		if len(reqUrl) == 1 {
-			w.WriteHeader(http.StatusBadRequest)
-			w.Write(badReqJSON)
-			return
+			ep.BadRequest(w, r, "Bad Request")
 		}
 		switch reqUrl[1] {
 		case "register":
@@ -68,9 +64,7 @@ func api(w http.ResponseWriter, r *http.Request) {
 		}
 	case "posts":
 		if len(reqUrl) == 1 {
-			w.WriteHeader(http.StatusBadRequest)
-			w.Write(badReqJSON)
-			return
+			ep.BadRequest(w, r, "Bad Request")
 		}
 		switch reqUrl[1] {
 		case "create":
@@ -87,9 +81,7 @@ func api(w http.ResponseWriter, r *http.Request) {
 		}
 	case "groups":
 		if len(reqUrl) == 1 {
-			w.WriteHeader(http.StatusBadRequest)
-			w.Write(badReqJSON)
-			return
+			ep.BadRequest(w, r, "Bad Request")
 		}
 		switch reqUrl[1] {
 		case "create":
@@ -122,9 +114,7 @@ func api(w http.ResponseWriter, r *http.Request) {
 		}
 	case "comments":
 		if len(reqUrl) == 1 {
-			w.WriteHeader(http.StatusBadRequest)
-			w.Write(badReqJSON)
-			return
+			ep.BadRequest(w, r, "Bad Request")
 		}
 		switch reqUrl[1] {
 		case "create":
@@ -141,9 +131,7 @@ func api(w http.ResponseWriter, r *http.Request) {
 		}
 	case "likes":
 		if len(reqUrl) == 1 {
-			w.WriteHeader(http.StatusBadRequest)
-			w.Write(badReqJSON)
-			return
+			ep.BadRequest(w, r, "Bad Request")
 		}
 		switch reqUrl[1] {
 		case "like":

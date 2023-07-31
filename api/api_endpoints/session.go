@@ -14,11 +14,8 @@ func ValidateSession(w http.ResponseWriter, r *http.Request) {
 		w.Write(okJson)
 		return
 	}
-	http.SetCookie(w, &http.Cookie{
-		Name:   "session",
-		Value:  "",
-		MaxAge: -1,
-	})
+	cookie := http.Cookie{Name: "session", Value: "", Path: "/", MaxAge: -1}
+	http.SetCookie(w, &cookie)
 	w.WriteHeader(http.StatusUnauthorized)
 	errorJson, _ := json.Marshal(s.ErrorResponse{Errors: "Invalid cookie"})
 	w.Write(errorJson)
