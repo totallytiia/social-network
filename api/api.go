@@ -58,6 +58,10 @@ func api(w http.ResponseWriter, r *http.Request) {
 			ep.GetUser(w, r)
 		case "getall":
 			ep.GetUsers(w, r)
+		case "follow":
+			ep.FollowUser(w, r)
+		case "unfollow":
+			ep.UnfollowUser(w, r)
 		default:
 			http.NotFound(w, r)
 			return

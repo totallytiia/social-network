@@ -54,7 +54,10 @@ func WSBroadcast(msg string) {
 }
 
 func WSSendToUser(uID int, msg string) {
-	user := s.Users[uID]
+	user, online := s.Users[uID]
+	if !online {
+		return
+	}
 	conn, ok := clients[user]
 	if !ok {
 		return

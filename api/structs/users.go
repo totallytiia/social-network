@@ -127,17 +127,14 @@ func (u NewUser) Validate() error {
 func (u User) Exists() bool {
 	var query = "SELECT id FROM users WHERE email = ?"
 	db.DB.QueryRow(query, u.Email).Scan(&u.ID)
-	// Check if the user exists
 	return u.ID != 0
 }
 
-// Register a new user (insert into the database)
 func (u NewUser) Register() error {
 	var usr = User{Email: u.Email}
 	if usr.Exists() {
 		return errors.New("an account using this email already exists")
 	}
-	// Hash the password using bcrypt
 	var hashedPassword, err = bcrypt.GenerateFromPassword([]byte(u.Password), bcrypt.DefaultCost)
 	if err != nil {
 		return err
@@ -157,7 +154,6 @@ func (u *User) Login(password string) error {
 	if u.ID == 0 {
 		return errors.New("an account using this email doesn't exist")
 	}
-	// Compare the passwords
 	err := bcrypt.CompareHashAndPassword([]byte(hashedPassword), []byte(password))
 	if err != nil {
 		return errors.New("invalid password")
@@ -166,14 +162,12 @@ func (u *User) Login(password string) error {
 	if err != nil {
 		return err
 	}
-	// Generate a new session
 	var session = Session{ID: len(Users), UserID: u.ID}
 	err = session.Generate()
 	if err != nil {
 		return err
 	}
 	u.Session = session
-	// Add the user to the list of logged in users
 	Users[u.ID] = *u
 	return nil
 }
@@ -183,7 +177,6 @@ func (u User) Logout() error {
 	return nil
 }
 
-// Get a user from the database
 func (u *User) Get() error {
 	var query = "SELECT id, email, fname, lname, CAST(dob AS TEXT), nickname, avatar, about, created_at, updated_at, private FROM users WHERE id = ?"
 	err := db.DB.QueryRow(query, u.ID).Scan(&u.ID, &u.Email, &u.FName, &u.LName, &u.DoB, &u.Nickname, &u.Avatar, &u.AboutMe, &u.CreatedAt, &u.UpdatedAt, &u.Private)
@@ -194,7 +187,6 @@ func (u *User) Get() error {
 	return nil
 }
 
-// Update a user in the database
 func (u User) Update() error {
 	var query = "UPDATE users SET fname = ?, lname = ?, dob = ?, nickname = ?, avatar = ?, about = ?, private = ? WHERE id = ?"
 	_, err := db.DB.Exec(query, u.FName, u.LName, u.DoB, u.Nickname, u.Avatar, u.AboutMe, u.Private, u.ID)
@@ -204,7 +196,6 @@ func (u User) Update() error {
 	return nil
 }
 
-// Delete a user from the database
 func (u User) Delete() error {
 	var query = "DELETE FROM users WHERE id = ?"
 	_, err := db.DB.Exec(query, u.ID)
@@ -214,7 +205,6 @@ func (u User) Delete() error {
 	return nil
 }
 
-// Get all the users from the database
 func GetAllUsers() ([]User, error) {
 	var query = "SELECT id, email, fname, lname, CAST(dob AS TEXT), nickname, avatar, about, created_at, updated_at, private FROM users"
 	rows, err := db.DB.Query(query)
