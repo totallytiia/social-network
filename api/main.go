@@ -7,6 +7,7 @@ import (
 	http "net/http"
 	"os"
 	"os/signal"
+	ep "social_network_api/api_endpoints"
 	db "social_network_api/db"
 	"time"
 )
@@ -26,7 +27,7 @@ func main() {
 
 	// Routes definition
 	http.HandleFunc("/api/", api)
-	http.HandleFunc("/ws/", ws)
+	http.HandleFunc("/ws/", ep.WS)
 
 	log.Println("Starting server at", srv.Addr)
 	fmt.Println("Starting server at", srv.Addr)

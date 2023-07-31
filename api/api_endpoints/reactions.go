@@ -61,6 +61,18 @@ func AddReaction(w http.ResponseWriter, r *http.Request) {
 		w.Write(badReqJSON)
 		return
 	}
+	if reaction.PostID != "" {
+		var p s.Post
+		p.ID = reaction.PostID.(int)
+		p.Get(u.ID)
+		WSSendToUser(p.UserID, `{"type": "reaction", "post_id": "`+strconv.Itoa(p.ID)+`", "value": `+strconv.Itoa(reaction.Value)+`}`)
+	}
+	if reaction.CommentID != "" {
+		var c s.Comment
+		c.ID = reaction.CommentID.(int)
+		c.Get()
+		WSSendToUser(c.UserID, `{"type": "reaction", "comment_id": "`+strconv.Itoa(c.ID)+`", "value": `+strconv.Itoa(reaction.Value)+`}`)
+	}
 	w.WriteHeader(http.StatusCreated)
 	w.Write([]byte("{}"))
 }

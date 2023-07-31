@@ -1,11 +1,10 @@
-package main
+package endpoints
 
 import (
 	"log"
 	"net/http"
 
-	ep "social_network_api/api_endpoints"
-	"social_network_api/structs"
+	s "social_network_api/structs"
 
 	"github.com/gorilla/websocket"
 )
@@ -14,9 +13,9 @@ var upgrader = websocket.Upgrader{
 	ReadBufferSize:  1024,
 	WriteBufferSize: 1024,
 }
-var clients = make(map[structs.User]*websocket.Conn)
+var clients = make(map[s.User]*websocket.Conn)
 
-func ws(w http.ResponseWriter, r *http.Request) {
+func WS(w http.ResponseWriter, r *http.Request) {
 	// Upgrade the connection to a websocket
 	conn, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
@@ -24,7 +23,7 @@ func ws(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	// Register the client
-	v, user := ep.ValidateCookie(w, r)
+	v, user := ValidateCookie(w, r)
 	if !v {
 		log.Println(err)
 		// Send an error message to the client
@@ -46,4 +45,19 @@ func ws(w http.ResponseWriter, r *http.Request) {
 		}
 		log.Printf("Message received: %s; from %s\n", msg, conn.RemoteAddr())
 	}
+}
+
+func WSBroadcast(msg string) {
+	for _, conn := range clients {
+		conn.WriteMessage(websocket.TextMessage, []byte(msg))
+	}
+}
+
+func WSSendToUser(uID int, msg string) {
+	user := s.Users[uID]
+	conn, ok := clients[user]
+	if !ok {
+		return
+	}
+	conn.WriteMessage(websocket.TextMessage, []byte(msg))
 }

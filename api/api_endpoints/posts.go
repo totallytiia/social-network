@@ -2,7 +2,6 @@ package endpoints
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 	s "social_network_api/structs"
 	"strconv"
@@ -56,7 +55,6 @@ func CreatePost(w http.ResponseWriter, r *http.Request) {
 		w.Write(badReqJSON)
 		return
 	}
-	fmt.Println(p)
 	var postJSON, _ = json.Marshal(p)
 	w.WriteHeader(http.StatusCreated)
 	w.Write(postJSON)
