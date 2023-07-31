@@ -142,6 +142,8 @@ func api(w http.ResponseWriter, r *http.Request) {
 			http.NotFound(w, r)
 			return
 		}
+	case "notifications":
+		ep.GetNotifications(w, r)
 	case "validate":
 		ep.ValidateSession(w, r)
 	default:
