@@ -138,7 +138,7 @@ func GetPosts(IDs map[string]any, index, userFetching int) (Posts, error) {
 	FROM posts p 
 	INNER JOIN users u on p.user_id = u.id 
 	CROSS JOIN const
-	WHERE ((user_id = const.uid OR group_id = const.gid OR IIF(const.uid == -1 AND const.gid == -1, true, false)) AND ((p.privacy = '0') OR (p.privacy = '1' AND p.user_id IN (SELECT f.friend_id FROM friends f where f.user_id = const.ufetching)) OR (p.privacy = '2' AND p.privacy_settings LIKE '%'||const.ufetching||'%'))) OR (p.user_id = const.ufetching AND IIF(const.uid == -1 AND const.gid == -1, true, false))
+	WHERE ((user_id = const.uid OR group_id = const.gid OR IIF(const.uid == -1 AND const.gid == -1, true, false)) AND ((p.privacy = '0') OR (p.privacy = '1' AND p.user_id IN (SELECT f.follow_id FROM follows f where f.user_id = const.ufetching)) OR (p.privacy = '2' AND p.privacy_settings LIKE '%'||const.ufetching||'%'))) OR (p.user_id = const.ufetching AND IIF(const.uid == -1 AND const.gid == -1, true, false))
 	ORDER BY p.created_at DESC LIMIT 20 OFFSET 20*(SELECT ind FROM const)
 	`, index, IDs["user_id"], IDs["group_id"], userFetching)
 	if err != nil {
