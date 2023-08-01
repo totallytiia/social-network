@@ -51,6 +51,29 @@ func CreateComment(w http.ResponseWriter, r *http.Request) {
 		w.Write(badReqJSON)
 		return
 	}
+	var p = s.Post{ID: postID}
+	err = p.Get(u.ID)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		badReqJSON, _ := json.Marshal(s.ErrorResponse{Errors: "There was an error with your request", Details: err.Error()})
+		w.Write(badReqJSON)
+		return
+	}
+	var postOwner = s.User{ID: p.UserID}
+	err = postOwner.Get()
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		badReqJSON, _ := json.Marshal(s.ErrorResponse{Errors: "There was an error with your request", Details: err.Error()})
+		w.Write(badReqJSON)
+		return
+	}
+	err = postOwner.AddNotification(u.ID, "comment", "Someone just commented on your post")
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		badReqJSON, _ := json.Marshal(s.ErrorResponse{Errors: "There was an error with your request", Details: err.Error()})
+		w.Write(badReqJSON)
+		return
+	}
 	w.WriteHeader(http.StatusCreated)
 	var respJSON, _ = json.Marshal(c)
 	w.Write(respJSON)

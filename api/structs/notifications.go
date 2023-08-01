@@ -34,7 +34,7 @@ func (u *User) GetNotifications() (Notifications, error) {
 			return notifications, err
 		}
 		if time.Since(createdAt).Hours() > 24*7 {
-			_, err := db.DB.Exec("DELETE FROM notifications WHERE id = ?", n.ID)
+			DeleteNotification(n.ID)
 			if err != nil {
 				return notifications, err
 			}
@@ -45,4 +45,20 @@ func (u *User) GetNotifications() (Notifications, error) {
 		notifications = append(notifications, n)
 	}
 	return notifications, nil
+}
+
+func (u *User) AddNotification(followerID int, nType, message string) error {
+	_, err := db.DB.Exec("INSERT INTO notifications (user_id, follower_id, message, type) VALUES (?, ?, ?, ?)", u.ID, followerID, message, nType)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func DeleteNotification(id int) error {
+	_, err := db.DB.Exec("DELETE FROM notifications WHERE id = ?", id)
+	if err != nil {
+		return err
+	}
+	return nil
 }

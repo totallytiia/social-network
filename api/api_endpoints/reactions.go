@@ -65,7 +65,16 @@ func AddReaction(w http.ResponseWriter, r *http.Request) {
 		var p s.Post
 		p.ID = reaction.PostID.(int)
 		p.Get(u.ID)
-		WSSendToUser(p.UserID, `{"type": "reaction", "post_id": "`+strconv.Itoa(p.ID)+`", "value": `+strconv.Itoa(reaction.Value)+`}`)
+		var postOwner = s.User{ID: p.UserID}
+		postOwner.Get()
+		err = postOwner.AddNotification(u.ID, "reaction", "Someone reacted on your post")
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			badReqJSON, _ := json.Marshal(s.ErrorResponse{Errors: "There was an error creating the notification", Details: err.Error()})
+			w.Write(badReqJSON)
+			return
+		}
+		WSSendToUser(postOwner.ID, `{"type": "reaction", "post_id": "`+strconv.Itoa(p.ID)+`", "value": `+strconv.Itoa(reaction.Value)+`}`)
 	}
 	if reaction.CommentID != "" {
 		var c s.Comment

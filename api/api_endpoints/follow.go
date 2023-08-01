@@ -49,12 +49,26 @@ func FollowUser(w http.ResponseWriter, r *http.Request) {
 			w.Write(badReqJSON)
 			return
 		}
+		err = followUser.AddNotification(u.ID, "follow_request", "You have a new follow request")
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			badReqJSON, _ := json.Marshal(s.ErrorResponse{Errors: "There was an error following the user", Details: err.Error()})
+			w.Write(badReqJSON)
+			return
+		}
 		WSSendToUser(followUser.ID, `{"type": "follow_request", "message": "You have a new follow request", "user_id": `+strconv.Itoa(u.ID)+`}`)
 		w.WriteHeader(http.StatusCreated)
 		var okJSON, _ = json.Marshal(s.OKResponse{Message: "User request sent successfully"})
 		w.Write(okJSON)
 	}
 	err = u.Follow(followUser.ID)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		badReqJSON, _ := json.Marshal(s.ErrorResponse{Errors: "There was an error following the user", Details: err.Error()})
+		w.Write(badReqJSON)
+		return
+	}
+	err = followUser.AddNotification(u.ID, "follow", "You have a new follower")
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		badReqJSON, _ := json.Marshal(s.ErrorResponse{Errors: "There was an error following the user", Details: err.Error()})
