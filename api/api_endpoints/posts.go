@@ -230,13 +230,13 @@ func GetPosts(w http.ResponseWriter, r *http.Request) {
 		w.Write(badReqJSON)
 		return
 	}
-	if (len(posts.Posts)) == 0 {
+	if (len(posts)) == 0 {
 		w.Write([]byte("{}"))
 		w.WriteHeader(http.StatusNoContent)
 		return
 	}
-	for post := range posts.Posts {
-		posts.Posts[post].Comments, err = s.GetComments(posts.Posts[post].ID)
+	for post := range posts {
+		posts[post].Comments, err = s.GetComments(posts[post].ID)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			badReqJSON, _ := json.Marshal(s.ErrorResponse{Errors: "There was an error getting the comments", Details: err.Error()})

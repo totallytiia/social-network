@@ -34,7 +34,7 @@ export default function Posts() {
             if (data.errors) {
                 setPosts([]);
             }
-            setPosts(data.posts);
+            setPosts(data);
         }
         getPosts();
     }, []);
