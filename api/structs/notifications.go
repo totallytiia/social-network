@@ -48,7 +48,7 @@ func (u *User) GetNotifications() (Notifications, error) {
 }
 
 func (u *User) AddNotification(followerID int, nType, message string) error {
-	_, err := db.DB.Exec("INSERT INTO notifications (user_id, follower_id, message, type) VALUES (?, ?, ?, ?)", u.ID, followerID, message, nType)
+	_, err := db.DB.Exec("INSERT INTO notifications (user_id, follow_id, message, type) VALUES (?, ?, ?, ?)", u.ID, followerID, message, nType)
 	if err != nil {
 		return err
 	}
