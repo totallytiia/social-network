@@ -5,12 +5,7 @@
 ### Tiia
 
 #### Primary (front-end):
-- [x] Add posts
-- [x] Show posts
-- [x] Delete posts
-- [ ] Add comments
-- [ ] Show comments
-- [ ] Delete comments
+- [ ] Show notifications (Header has them fetched and set (I hope))
 - [ ] Create group page
 #### Extra:
 - [ ] Edit posts
