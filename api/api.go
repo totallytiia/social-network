@@ -85,15 +85,15 @@ func api(w http.ResponseWriter, r *http.Request) {
 		}
 		switch reqUrl[1] {
 		case "create":
-			// createGroup(w, r)
+			ep.CreateGroup(w, r)
 		case "update":
-			// updateGroup(w, r)
+			ep.UpdateGroup(w, r)
 		case "delete":
-			// deleteGroup(w, r)
+			ep.DeleteGroup(w, r)
 		case "get":
-			// getGroup(w, r)
+			ep.GetGroup(w, r)
 		case "getall":
-			// getAllGroups(w, r)
+			ep.GetGroups(w, r)
 		case "join":
 			// joinGroup(w, r)
 		case "leave":
@@ -104,10 +104,6 @@ func api(w http.ResponseWriter, r *http.Request) {
 			// acceptGroupInvite(w, r)
 		case "decline":
 			// declineGroupInvite(w, r)
-		case "members":
-			// getGroupMembers(w, r)
-		case "posts":
-			// getGroupPosts(w, r)
 		default:
 			http.NotFound(w, r)
 			return
