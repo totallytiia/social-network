@@ -15,6 +15,8 @@ export default function Login() {
         });
         const data = await res.json();
         if (data.errors) {
+            alert(data.errors);
+            return;
         }
         window.location.href = '/';
     }

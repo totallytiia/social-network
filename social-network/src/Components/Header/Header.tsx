@@ -1,8 +1,35 @@
 import { NavLink } from './NavLink';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+
+interface INotification {
+    id: number;
+    message: string;
+    type: string;
+    uesr_id: number;
+    follower_id: number;
+    createdAt: string;
+}
 
 export default function Header() {
     const [isNavOpen, setIsNavOpen] = useState(false);
+    const [notifications, setNotifications] = useState([] as INotification[]);
+
+    useEffect(() => {
+        async function getNotifications() {
+            const res = await fetch('http://localhost:8080/api/notifications', {
+                method: 'GET',
+                credentials: 'include',
+            });
+            if (res.status === 204) return;
+            const data = await res.json();
+            if (data.errors) {
+                return;
+            }
+            setNotifications(data);
+        }
+        getNotifications();
+    }, []);
+
     async function Logout() {
         const res = await fetch('http://localhost:8080/api/users/logout', {
             method: 'GET',
@@ -13,13 +40,11 @@ export default function Header() {
             window.location.href = '/';
         }
     }
+
     return (
         <header className="HEADER bg-white sticky top-0 shadow-lg z-50">
             <nav className="NAVIGATION grid grid-cols-2 gap-3 items-center px-2 py-2 mx-2">
-                <div
-                    onClick={() => (window.location.href = '/')}
-                    className="LOGO"
-                >
+                <div className="LOGO">
                     <h1 className="LOGO-TEXT text-black text-2xl font-bold">
                         SOCIAL NETWORK
                     </h1>
@@ -53,28 +78,16 @@ export default function Header() {
                             </svg>
                         </div>
                         <div className="NAVIGATION-MOBILE-OPEN flex flex-col items-center justify-between min-h-[250px]">
-                            <button
-                                onClick={() => (window.location.href = '/')}
-                                className="text-2xl font-extrabold"
-                            >
+                            <button className="text-2xl font-extrabold">
                                 Make a post
                             </button>
-                            <button
-                                onClick={() => (window.location.href = '/')}
-                                className="text-2xl font-extrabold"
-                            >
+                            <button className="text-2xl font-extrabold">
                                 Chat
                             </button>
-                            <button
-                                onClick={() => (window.location.href = '/')}
-                                className="text-2xl font-extrabold"
-                            >
+                            <button className="text-2xl font-extrabold">
                                 Notifications
                             </button>
-                            <button
-                                onClick={() => (window.location.href = '/')}
-                                className="text-2xl font-extrabold"
-                            >
+                            <button className="text-2xl font-extrabold">
                                 Groups
                             </button>
                             <button
@@ -95,19 +108,19 @@ export default function Header() {
                     </div>
                 </section>
                 <div className="space-x-2 text-xs justify-end DESKTOP-MENU hidden lg:flex">
-                    <div onClick={() => (window.location.href = '/')}>
+                    <div>
                         <NavLink text="+" />
                     </div>
-                    <div onClick={() => (window.location.href = '/')}>
+                    <div>
                         <NavLink text="fullscreen-chat" />
                     </div>
-                    <div onClick={() => (window.location.href = '/')}>
+                    <div>
                         <NavLink text="Nofitications" />
                     </div>
-                    <div onClick={() => (window.location.href = '/')}>
+                    <div>
                         <NavLink text="Groups" />
                     </div>
-                    <div onClick={() => (window.location.href = '/profile')}>
+                    <div>
                         <NavLink text="Profile" />
                     </div>
                     <div onClick={Logout}>

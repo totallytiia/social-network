@@ -20,6 +20,10 @@ func GetNotifications(w http.ResponseWriter, r *http.Request) {
 		BadRequest(w, r, "Bad Request")
 		return
 	}
+	if len(notifications) == 0 {
+		w.WriteHeader(http.StatusNoContent)
+		return
+	}
 	notificationsJson, err := json.Marshal(notifications)
 	if err != nil {
 		BadRequest(w, r, "Bad Request")
