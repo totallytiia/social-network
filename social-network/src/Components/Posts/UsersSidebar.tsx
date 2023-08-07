@@ -10,7 +10,7 @@ interface IUser {
 
 export default function UsersSidebar() {
     const [users, setUsers] = useState([] as IUser[]);
-    console.log(users);
+    // console.log(users);
     useEffect(() => {
         async function getUsers() {
             const url = `http://localhost:8080/api/users/getall`;
