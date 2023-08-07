@@ -83,19 +83,6 @@ export default function Header() {
         }
     }
 
-    // document.getElementById('NOTIFICATIONS-BUTTON')?.addEventListener('click', (e) => {
-    //     document.getElementById('NOTIFICATIONS-OVERLAY')?.classList.remove('hidden');
-    // });
-    // document.getElementById('NOTIFICATIONS-CONTAINER')?.addEventListener('click', (e) => {
-    //     e.stopPropagation();
-    //     if (e.target === document.getElementById('NOTIFICATIONS-BUTTON')) {
-    //         document.getElementById('NOTIFICATIONS-OVERLAY')?.classList.add('hidden');
-    //     }
-    // });
-    // document.getElementById('NOTIFICATIONS-OVERLAY')?.addEventListener('click', () => {
-    //     document.getElementById('NOTIFICATIONS-OVERLAY')?.classList.add('hidden');
-    // });
-
     const [isNotificationsOpen, setNotificationsOpen] = useState(false);
 
     const handleButtonClick = () => {
@@ -233,10 +220,9 @@ export default function Header() {
                                             <div className="NOTIFICATION-TEXT flex flex-row justify-between bg-blue-50 p-2 my-1 rounded-md" >
                                                 <div className='flex flex-row gap-2'>
                                                     <p className="text-sm">
-                                                        {notification.message}
+                                                        {notification.follower_id}: {notification.message}
                                                     </p>
                                                     <p className="text-xs text-gray-500">
-                                                        14:00
                                                         {notification.createdAt}
                                                     </p>
                                                 </div>
