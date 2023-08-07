@@ -83,19 +83,35 @@ export default function Header() {
         }
     }
 
-    document.getElementById('NOTIFICATIONS-BUTTON')?.addEventListener('click', (e) => {
-        document.getElementById('NOTIFICATIONS-OVERLAY')?.classList.remove('hidden');
-    });
-    document.getElementById('NOTIFICATIONS-CONTAINER')?.addEventListener('click', (e) => {
-        e.stopPropagation();
-        if (e.target === document.getElementById('NOTIFICATIONS-BUTTON')) {
-            document.getElementById('NOTIFICATIONS-OVERLAY')?.classList.add('hidden');
-        }
-    });
-    document.getElementById('NOTIFICATIONS-OVERLAY')?.addEventListener('click', () => {
-        document.getElementById('NOTIFICATIONS-OVERLAY')?.classList.add('hidden');
-    });
+    // document.getElementById('NOTIFICATIONS-BUTTON')?.addEventListener('click', (e) => {
+    //     document.getElementById('NOTIFICATIONS-OVERLAY')?.classList.remove('hidden');
+    // });
+    // document.getElementById('NOTIFICATIONS-CONTAINER')?.addEventListener('click', (e) => {
+    //     e.stopPropagation();
+    //     if (e.target === document.getElementById('NOTIFICATIONS-BUTTON')) {
+    //         document.getElementById('NOTIFICATIONS-OVERLAY')?.classList.add('hidden');
+    //     }
+    // });
+    // document.getElementById('NOTIFICATIONS-OVERLAY')?.addEventListener('click', () => {
+    //     document.getElementById('NOTIFICATIONS-OVERLAY')?.classList.add('hidden');
+    // });
 
+    const [isNotificationsOpen, setNotificationsOpen] = useState(false);
+
+    const handleButtonClick = () => {
+        setNotificationsOpen(prevOpen => !prevOpen);
+    };
+
+    const handleOverlayClick = () => {
+        setNotificationsOpen(false);
+    };
+
+    const handleContainerClick = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+        event.stopPropagation();
+        if ((event.target as Element).id === 'NOTIFICATIONS-BUTTON') {
+            setNotificationsOpen(false);
+        }
+    };
 
 
 
@@ -190,6 +206,7 @@ export default function Header() {
                     </div>
                     <div>
                         <div
+                            onClick={handleButtonClick}
                             id='NOTIFICATIONS-BUTTON'
                             className=" cursor-pointer relative text-black bg-gray-200 hover:bg-gray-300 focus:bg-gray-300  py-2 px-3 rounded-full">
                             Notifications
@@ -199,10 +216,10 @@ export default function Header() {
                                 </div>
                             )}
                         </div>
-                        <div id="NOTIFICATIONS-OVERLAY" className='w-full hidden fixed top-0 bottom-0 right-0 left-0 block'>
+                        <div className={`fixed left-0 top-0 bottom-0 right-0 w-full ${isNotificationsOpen ? '' : 'hidden'}`} onClick={handleOverlayClick}>
 
 
-                            <div id='NOTIFICATIONS-CONTAINER' className="flex absolute top-14 right-2 bg-white shadow-lg rounded-lg w-96">
+                            <div onClick={handleContainerClick} id='NOTIFICATIONS-CONTAINER' className="flex absolute top-14 right-2 bg-white shadow-lg rounded-lg w-96">
                                 <div id='NOTIFICATIONS-CONTAINER-HEADER' className=" flex flex-col  w-full px-2 py-1 border-b border-gray-200">
                                     <h1 className="text-lg font-bold">
                                         Notifications
