@@ -1,5 +1,7 @@
 import { useContext, useState } from 'react';
 import { UserContext } from '../App/App';
+import Profile from '../Profile/Profile';
+import ProfileIcon from '../Posts/ProfileIcon';
 
 interface iFormKeys {
     [key: string]: {
@@ -79,7 +81,7 @@ export default function CreateAPost(props: any) {
                 <div className="flex-row flex gap-2">
                     <div className="shrink-0 h-8 w-8 relative overflow-hidden object-cover rounded-full bg-pink-200">
                         <img
-                            className="h-cover w-cover h-8 w-8 object-cover"
+                            className="border-none outline-none"
                             src={
                                 userData.avatar !== undefined
                                     ? userData.avatar.toString()
@@ -87,20 +89,7 @@ export default function CreateAPost(props: any) {
                             }
                             alt=""
                         />
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="white"
-                            viewBox="0 0 24 24"
-                            strokeWidth={0}
-                            stroke="currentColor"
-                            className="w-10 h-10 absolute -translate-x-1"
-                        >
-                            <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"
-                            />
-                        </svg>
+                        <ProfileIcon classNames="w-10 h-10" />
                     </div>
                     <div className="w-full">
                         <div className="flex flex-col gap-2">
@@ -114,12 +103,12 @@ export default function CreateAPost(props: any) {
                                 }}
                                 id="content"
                                 rows={5}
-                                className="rounded-md text-sm p-1.5"
+                                className="rounded-md text-sm p-1.5 outline-none"
                                 required
                             ></textarea>
                             <div className="flex flex-rows justify-end gap-2 [&>*]:outline-none md:gap-6">
                                 <select
-                                    className="btn-custom text-center text-sm  font-semibold p-1"
+                                    className="cursor-pointer border-r-8 border-blue-100 hover:border-blue-200 btn-custom text-center text-sm  font-semibold p-1"
                                     onChange={(e) => {
                                         const postCopy = postData;
                                         postCopy.post.privacy = parseInt(
@@ -169,7 +158,7 @@ export default function CreateAPost(props: any) {
                                     type="submit"
                                     id="submitBtn"
                                     value="Submit"
-                                    className="btn-custom font-semibold"
+                                    className="btn-custom font-semibold cursor-pointer"
                                 ></input>
                             </div>
                         </div>

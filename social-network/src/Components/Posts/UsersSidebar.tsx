@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
+import ProfileIcon from './ProfileIcon';
 import { Link } from 'react-router-dom';
 interface IUser {
     id: number;
@@ -9,6 +10,7 @@ interface IUser {
 
 export default function UsersSidebar() {
     const [users, setUsers] = useState([] as IUser[]);
+    console.log(users);
     useEffect(() => {
         async function getUsers() {
             const url = `http://localhost:8080/api/users/getall`;
@@ -46,6 +48,7 @@ export default function UsersSidebar() {
                                             src={user.avatar.toString()}
                                             alt=""
                                         />
+                                        <ProfileIcon classNames="w-8 h-8" />
                                         <svg
                                             xmlns="http://www.w3.org/2000/svg"
                                             fill="white"

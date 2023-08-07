@@ -1,5 +1,7 @@
 import { useContext } from 'react';
 import { UserContext } from '../App/App';
+import Profile from '../Profile/Profile';
+import ProfileIcon from './ProfileIcon';
 
 interface IComment {
     id: number;
@@ -19,30 +21,19 @@ interface ICommentProps {
 }
 
 export default function Comment({ comment, deleteComment }: ICommentProps) {
+    console.log(comment);
     const { userData } = useContext(UserContext);
     return comment !== undefined ? (
         <>
             <div className="flex flex-row gap-2">
-                <div className="shrink-0 relative h-6 w-6 overflow-hidden object-cover rounded-full bg-pink-200 mt-3">
+                <div className="w-6 h-6 relative overflow-hidden shrink-0 rounded-full bg-pink-200 border-none outline-none">
                     <img
-                        className="h-cover w-cover h-6 w-6 object-cover"
+                        className="border-none outline-none"
                         src={comment.user_avatar.toString()}
+
                         alt=""
                     />
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="white"
-                        viewBox="0 0 24 24"
-                        strokeWidth={0}
-                        stroke="currentColor"
-                        className="w-8 h-8 absolute -translate-x-1"
-                    >
-                        <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"
-                        />
-                    </svg>
+                    <ProfileIcon classNames="w-8 h-8" />
                 </div>
                 <div className="flex flex-col text-sm bg-gray-50 my-1 p-2 rounded-lg ">
                     <div className="flex font-bold gap-2 justify-between">
