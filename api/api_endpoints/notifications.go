@@ -2,12 +2,14 @@ package endpoints
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 )
 
 func GetNotifications(w http.ResponseWriter, r *http.Request) {
 	v, u := ValidateCookie(w, r)
 	if !v {
+		fmt.Println("Not logged in")
 		BadRequest(w, r, "Bad Request")
 		return
 	}
