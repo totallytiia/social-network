@@ -51,12 +51,7 @@ export default function Header() {
     };
 
 
-    const openNotifications = () => {
-        const notificationsContainer = document.querySelector(
-            '.NOTIFICATIONS-CONTAINER'
-        ) as HTMLDivElement;
-        notificationsContainer.classList.toggle('hidden');
-    };
+
 
     // remove notification from database
     async function deleteNotification(id: number) {
@@ -87,6 +82,19 @@ export default function Header() {
             window.location.href = '/';
         }
     }
+
+    document.getElementById('NOTIFICATIONS-BUTTON')?.addEventListener('click', (e) => {
+        document.getElementById('NOTIFICATIONS-OVERLAY')?.classList.remove('hidden');
+    });
+    document.getElementById('NOTIFICATIONS-CONTAINER')?.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (e.target === document.getElementById('NOTIFICATIONS-BUTTON')) {
+            document.getElementById('NOTIFICATIONS-OVERLAY')?.classList.add('hidden');
+        }
+    });
+    document.getElementById('NOTIFICATIONS-OVERLAY')?.addEventListener('click', () => {
+        document.getElementById('NOTIFICATIONS-OVERLAY')?.classList.add('hidden');
+    });
 
 
 
@@ -181,8 +189,9 @@ export default function Header() {
                         </div>
                     </div>
                     <div>
-                        <div onClick={openNotifications}
-                            className="cursor-pointer relative text-black bg-gray-200 hover:bg-gray-300 focus:bg-gray-300  py-2 px-3 rounded-full">
+                        <div
+                            id='NOTIFICATIONS-BUTTON'
+                            className=" cursor-pointer relative text-black bg-gray-200 hover:bg-gray-300 focus:bg-gray-300  py-2 px-3 rounded-full">
                             Notifications
                             {notifications.length > 0 && (
                                 <div className="flex absolute right-2 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs">
@@ -190,57 +199,60 @@ export default function Header() {
                                 </div>
                             )}
                         </div>
-                        <div className="NOTIFICATIONS-CONTAINER hidden flex absolute top-14 right-2 bg-white shadow-lg rounded-lg w-96">
-                            <div className="NOTIFICATIONS-CONTAINER-HEADER flex flex-col  w-full px-2 py-1 border-b border-gray-200">
-                                <h1 className="text-lg font-bold">
-                                    Notifications
-                                </h1>
-                                {notifications.map((notification) => (
-                                    <div
-                                        key={notification.id}
-                                        id={notification.id.toString()}
-                                        className="NOTIFICATION flex flex-col"
-                                    >
-                                        <div id="test" className="NOTIFICATION-TEXT flex flex-row justify-between bg-blue-50 p-2 my-1 rounded-md" >
-                                            <div className='flex flex-row gap-2'>
-                                                <p className="text-sm">
-                                                    {notification.message}
-                                                </p>
-                                                <p className="text-xs text-gray-500">
-                                                    14:00
-                                                    {notification.createdAt}
-                                                </p>
-                                            </div>
-                                            <div className="NOTIFICATION-ACTIONS flex-col flex">
-                                                <button className="text-xs font-bold"
-                                                    onClick={(e) => deleteNotification(notification.id)}>
-                                                    <svg
-                                                        xmlns="http://www.w3.org/2000/svg"
-                                                        fill="none"
-                                                        viewBox="0 0 24 24"
-                                                        strokeWidth={1.5}
-                                                        stroke="#e50000"
-                                                        className="w-4 h-4"
-                                                    >
-                                                        <path
-                                                            strokeLinecap="round"
-                                                            strokeLinejoin="round"
-                                                            d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"
-                                                        />
-                                                    </svg>
-                                                </button>
-                                            </div>
-                                        </div >
-                                    </div>
-                                ))}
+                        <div id="NOTIFICATIONS-OVERLAY" className='w-full hidden fixed top-0 bottom-0 right-0 left-0 block'>
 
-                                {/* <button className="text-xs font-bold">
+
+                            <div id='NOTIFICATIONS-CONTAINER' className="flex absolute top-14 right-2 bg-white shadow-lg rounded-lg w-96">
+                                <div id='NOTIFICATIONS-CONTAINER-HEADER' className=" flex flex-col  w-full px-2 py-1 border-b border-gray-200">
+                                    <h1 className="text-lg font-bold">
+                                        Notifications
+                                    </h1>
+                                    {notifications.map((notification) => (
+                                        <div
+                                            key={notification.id}
+                                            id={notification.id.toString()}
+                                            className="NOTIFICATION flex flex-col"
+                                        >
+                                            <div className="NOTIFICATION-TEXT flex flex-row justify-between bg-blue-50 p-2 my-1 rounded-md" >
+                                                <div className='flex flex-row gap-2'>
+                                                    <p className="text-sm">
+                                                        {notification.message}
+                                                    </p>
+                                                    <p className="text-xs text-gray-500">
+                                                        14:00
+                                                        {notification.createdAt}
+                                                    </p>
+                                                </div>
+                                                <div className="NOTIFICATION-ACTIONS flex-col flex">
+                                                    <button className="text-xs font-bold"
+                                                        onClick={(e) => deleteNotification(notification.id)}>
+                                                        <svg
+                                                            xmlns="http://www.w3.org/2000/svg"
+                                                            fill="none"
+                                                            viewBox="0 0 24 24"
+                                                            strokeWidth={1.5}
+                                                            stroke="#e50000"
+                                                            className="w-4 h-4"
+                                                        >
+                                                            <path
+                                                                strokeLinecap="round"
+                                                                strokeLinejoin="round"
+                                                                d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"
+                                                            />
+                                                        </svg>
+                                                    </button>
+                                                </div>
+                                            </div >
+                                        </div>
+                                    ))}
+
+                                    {/* <button className="text-xs font-bold">
                                         Mark all as read
                                     </button> */}
+                                </div>
                             </div>
+
                         </div>
-
-
                     </div>
                     <div
                         className="text-black bg-gray-200 hover:bg-gray-300 focus:bg-gray-300  py-2 px-3 rounded-full"
@@ -272,22 +284,22 @@ export default function Header() {
                 </div>
             </nav>
             <style>{`
-      .hideMenuNav {
+                                .hideMenuNav {
         display: none;
       }
-      .showMenuNav {
-        display: block;
-        position: absolute;
-        width: 100%;
-        height: 100vh;
-        top: 0;
-        left: 0;
-        background-color: rgb(255 237 213);
-        z-index: 10;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-evenly;
-        align-items: center;
+                            .showMenuNav {
+                                display: block;
+                            position: absolute;
+                            width: 100%;
+                            height: 100vh;
+                            top: 0;
+                            left: 0;
+                            background-color: rgb(255 237 213);
+                            z-index: 10;
+                            display: flex;
+                            flex-direction: column;
+                            justify-content: space-evenly;
+                            align-items: center;
       }
     `}</style>
         </header >
