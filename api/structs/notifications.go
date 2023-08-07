@@ -11,6 +11,7 @@ type Notification struct {
 	UserID     int    `json:"user_id"`
 	FollowerID int    `json:"follower_id"`
 	Message    string `json:"message"`
+	Type       string `json:"type"`
 	CreatedAt  string `json:"created_at"`
 	UpdatedAt  string `json:"updated_at"`
 }
@@ -27,7 +28,7 @@ func (u *User) GetNotifications() (Notifications, error) {
 	defer rows.Close()
 	for rows.Next() {
 		var n Notification
-		err := rows.Scan(&n.ID, &n.UserID, &n.FollowerID, &n.Message, &n.CreatedAt, &n.UpdatedAt)
+		err := rows.Scan(&n.ID, &n.UserID, &n.FollowerID, &n.Message, &n.CreatedAt, &n.UpdatedAt, &n.Type)
 		if err != nil {
 			fmt.Println(err)
 			return notifications, err
