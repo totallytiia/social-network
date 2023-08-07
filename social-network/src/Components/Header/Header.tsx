@@ -1,5 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import { Link } from 'react-router-dom';
+import { UserContext } from '../App/App';
 
 interface INotification {
     id: number;
@@ -10,7 +11,17 @@ interface INotification {
     createdAt: string;
 }
 
+interface IUser {
+    id: number;
+    fName: string;
+    lName: string;
+    avatar: Blob;
+}
+
+
+
 export default function Header() {
+    const { userData } = useContext(UserContext);
     const [isNavOpen, setIsNavOpen] = useState(false);
     const [notifications, setNotifications] = useState([] as INotification[]);
     console.log(notifications);
@@ -31,6 +42,14 @@ export default function Header() {
         }
         getNotifications();
     }, []);
+
+
+    //get users name from id and return it from database
+    const getUsersName = (id: number) => {
+
+
+    };
+
 
     const openNotifications = () => {
         const notificationsContainer = document.querySelector(
@@ -185,7 +204,6 @@ export default function Header() {
                                         <div id="test" className="NOTIFICATION-TEXT flex flex-row justify-between bg-blue-50 p-2 my-1 rounded-md" >
                                             <div className='flex flex-row gap-2'>
                                                 <p className="text-sm">
-                                                    {notification.follower_id}:
                                                     {notification.message}
                                                 </p>
                                                 <p className="text-xs text-gray-500">
