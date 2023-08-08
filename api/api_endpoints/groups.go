@@ -90,6 +90,12 @@ func GetGroups(w http.ResponseWriter, r *http.Request) {
 	}
 	groups, err := s.GetGroups()
 	if err != nil {
+		if err.Error() == "no groups found" {
+			w.WriteHeader(http.StatusNoContent)
+			okJSON, _ := json.Marshal(s.OKResponse{Message: "No groups found"})
+			w.Write(okJSON)
+			return
+		}
 		BadRequest(w, r, err.Error())
 		return
 	}
