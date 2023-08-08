@@ -21,7 +21,6 @@ interface ICommentProps {
 }
 
 export default function Comment({ comment, deleteComment }: ICommentProps) {
-    console.log(comment);
     const { userData } = useContext(UserContext);
     return comment !== undefined ? (
         <>
@@ -30,7 +29,6 @@ export default function Comment({ comment, deleteComment }: ICommentProps) {
                     <img
                         className="border-none outline-none"
                         src={comment.user_avatar.toString()}
-
                         alt=""
                     />
                     <ProfileIcon classNames="w-8 h-8" />

@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import { useHref } from 'react-router-dom';
 
 export default function Group() {
-
     interface Group {
         id: number;
         name: string;
@@ -17,8 +16,7 @@ export default function Group() {
                 method: 'GET',
                 credentials: 'include',
             });
-            if (!res.ok) {
-                console.log('error');
+            if (!res.ok || res.status === 204) {
                 return;
             }
             const data = await res.json();
@@ -30,10 +28,5 @@ export default function Group() {
         getGroups();
     }, []);
 
-    return (<>
-    </>)
-
+    return <></>;
 }
-
-
-

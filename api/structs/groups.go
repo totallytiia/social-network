@@ -2,7 +2,6 @@ package structs
 
 import (
 	"errors"
-	"fmt"
 	db "social_network_api/db"
 	"strconv"
 	"strings"
@@ -83,13 +82,12 @@ func GetGroups() (Groups, error) {
 
 	var groups Groups
 	for rows.Next() {
-		fmt.Println("here")
 		var group Group
 		var members string
 		err := rows.Scan(&group.GroupID, &group.GroupName, &group.GroupDescription, &group.GroupOwner, &members)
 		if err != nil {
 			if group.GroupID == 0 {
-				return Groups{Group{}}, nil
+				return nil, errors.New("no groups found")
 			}
 			return nil, err
 		}
