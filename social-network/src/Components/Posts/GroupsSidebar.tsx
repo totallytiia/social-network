@@ -1,4 +1,4 @@
-import Group from "../Group/Group"
+import Group from '../Group/Group';
 
 export default function GroupsSidebar() {
     return (
