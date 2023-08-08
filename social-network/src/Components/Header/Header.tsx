@@ -1,6 +1,5 @@
 import { useEffect, useState, useContext } from 'react';
 import { Link } from 'react-router-dom';
-import { UserContext } from '../App/App';
 
 interface INotification {
     id: number;
@@ -15,7 +14,6 @@ interface INotification {
 export default function Header() {
     const [isNavOpen, setIsNavOpen] = useState(false);
     const [notifications, setNotifications] = useState([] as INotification[]);
-    console.log(notifications);
     useEffect(() => {
         async function getNotifications() {
             const res = await fetch('http://localhost:8080/api/notifications', {

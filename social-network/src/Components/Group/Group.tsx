@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
+import { useHref } from 'react-router-dom';
 
 export default function Group() {
+
     interface Group {
         id: number;
         name: string;
@@ -10,7 +12,7 @@ export default function Group() {
     const [groups, setGroups] = useState([] as Group[]);
     useEffect(() => {
         async function getGroups() {
-            const url = `http://localhost:8080/api/groups`;
+            const url = `http://localhost:8080/api/groups/getall`;
             const res = await fetch(url, {
                 method: 'GET',
                 credentials: 'include',
@@ -21,21 +23,17 @@ export default function Group() {
             }
             const data = await res.json();
             if (!data.errors) {
+                setGroups(data);
                 console.log(data);
             }
         }
         getGroups();
     }, []);
 
-    return (
-        <>
-            <div className="flex flex-row items-center justify-center">
-                {groups.map((group) => (
-                    <div key={group.id} className="flex flex-row">
-                        <p className="text-black">{group.name}</p>
-                    </div>
-                ))}
-            </div>
-        </>
-    );
+    return (<>
+    </>)
+
 }
+
+
+

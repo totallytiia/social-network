@@ -5,6 +5,7 @@ import Login from '../Login/Login';
 import Register from '../Register/Register';
 import Profile from '../Profile/Profile';
 import FourOneFour from '../FourOneFour/FourOneFour';
+import Groups from '../Group/Groups';
 
 import { Routes, Route } from 'react-router-dom';
 import User from '../Profile/User';
@@ -19,11 +20,11 @@ function Page() {
                 <Route path="/login" element={<Login />} />
                 <Route path="/profile" element={<Profile />} />
                 <Route path="/user/:id" element={<User />} />
-                {/*
+                {/*                 
                 <Route path="/chat" element={<Chat />} />
-                <Route path="/notifications" element={<Notifications />} />
+                <Route path="/notifications" element={<Notifications />} /> */}
                 <Route path="/groups" element={<Groups />} />
-                <Route path="/new-post" element={<NewPost />} /> */}
+                {/* <Route path="/new-post" element={<NewPost />} /> */}
                 <Route path="*" element={<FourOneFour />} />
             </Routes>
             <Footer></Footer>

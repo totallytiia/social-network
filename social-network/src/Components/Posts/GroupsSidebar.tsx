@@ -1,4 +1,4 @@
-import Group from './Group';
+import Group from "../Group/Group"
 
 export default function GroupsSidebar() {
     return (
@@ -8,7 +8,7 @@ export default function GroupsSidebar() {
                     <h1 className="font-bold text-xl text-black mb-2">
                         GROUPS
                     </h1>
-                    {/* <Group /> */}
+                    <Group />
                 </div>
             </div>
         </>
