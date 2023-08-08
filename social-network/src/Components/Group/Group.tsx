@@ -28,5 +28,5 @@ export default function Group() {
         getGroups();
     }, []);
 
-    return <></>;
+    return <><div></div></>;
 }
