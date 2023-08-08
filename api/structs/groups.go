@@ -2,6 +2,7 @@ package structs
 
 import (
 	"errors"
+	"fmt"
 	db "social_network_api/db"
 	"strconv"
 	"strings"
@@ -45,7 +46,7 @@ func (g *NewGroup) Validate() error {
 
 func (g NewGroup) Create() (Group, error) {
 	var group Group
-	err := db.DB.QueryRow("INSERT INTO groups(group_name, group_description, user_id) VALUES(?, ?, ?) RETURNING group_id", g.GroupName, g.GroupDescription, g.GroupOwner).Scan(&group.GroupID)
+	err := db.DB.QueryRow("INSERT INTO groups(group_name, group_description, user_id) VALUES(?, ?, ?) RETURNING id", g.GroupName, g.GroupDescription, g.GroupOwner).Scan(&group.GroupID)
 	if err != nil {
 		return group, err
 	}
@@ -56,7 +57,7 @@ func (g NewGroup) Create() (Group, error) {
 }
 
 func (g *Group) Get() error {
-	row := db.DB.QueryRow(`SELECT group_name, group_description, user_id, group_concat((SELECT user_id FROM group_members WHERE group_id = ?), ", ") AS members FROM groups WHERE group_id = ?`, g.GroupID, g.GroupID)
+	row := db.DB.QueryRow(`SELECT group_name, group_description, user_id, group_concat((SELECT user_id FROM group_members WHERE id = ?), ", ") AS members FROM groups WHERE id = ?`, g.GroupID, g.GroupID)
 	var members string
 	err := row.Scan(&g.GroupName, &g.GroupDescription, &g.GroupOwner, &members)
 	if err != nil {
@@ -74,7 +75,7 @@ func (g *Group) Get() error {
 }
 
 func GetGroups() (Groups, error) {
-	rows, err := db.DB.Query(`SELECT group_id, group_name, group_description, user_id, group_concat((SELECT user_id FROM group_members WHERE group_id = groups.group_id), ", ") AS members FROM groups`)
+	rows, err := db.DB.Query(`SELECT id, group_name, group_description, user_id, group_concat((SELECT user_id FROM group_members WHERE group_id = groups.id), ", ") AS members FROM groups`)
 	if err != nil {
 		return nil, err
 	}
@@ -82,10 +83,14 @@ func GetGroups() (Groups, error) {
 
 	var groups Groups
 	for rows.Next() {
+		fmt.Println("here")
 		var group Group
 		var members string
 		err := rows.Scan(&group.GroupID, &group.GroupName, &group.GroupDescription, &group.GroupOwner, &members)
 		if err != nil {
+			if group.GroupID == 0 {
+				return Groups{Group{}}, nil
+			}
 			return nil, err
 		}
 		group.GroupMembers = func(s string) []int {
@@ -116,7 +121,7 @@ func (g Group) Delete() error {
 	if err != nil {
 		return err
 	}
-	_, err = db.DB.Exec("DELETE FROM groups WHERE group_id = ?", g.GroupID)
+	_, err = db.DB.Exec("DELETE FROM groups WHERE id = ?", g.GroupID)
 	return err
 }
 
@@ -146,7 +151,7 @@ func (g Group) IsMember(user int) bool {
 }
 
 func (g *Group) Update(group NewGroup) error {
-	_, err := db.DB.Exec("UPDATE groups SET group_name = ?, group_description = ? WHERE group_id = ?", group.GroupName, group.GroupDescription, g.GroupID)
+	_, err := db.DB.Exec("UPDATE groups SET group_name = ?, group_description = ? WHERE id = ?", group.GroupName, group.GroupDescription, g.GroupID)
 	if err != nil {
 		return err
 	}
