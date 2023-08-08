@@ -11,17 +11,8 @@ interface INotification {
     createdAt: string;
 }
 
-interface IUser {
-    id: number;
-    fName: string;
-    lName: string;
-    avatar: Blob;
-}
-
-
 
 export default function Header() {
-    const { userData } = useContext(UserContext);
     const [isNavOpen, setIsNavOpen] = useState(false);
     const [notifications, setNotifications] = useState([] as INotification[]);
     console.log(notifications);
@@ -198,7 +189,7 @@ export default function Header() {
                             className=" cursor-pointer relative text-black bg-gray-200 hover:bg-gray-300 focus:bg-gray-300  py-2 px-3 rounded-full">
                             Notifications
                             {notifications.length > 0 && (
-                                <div className="flex absolute right-2 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs">
+                                <div className="flex absolute right-2 -bottom-3 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs">
                                     {notifications.length}
                                 </div>
                             )}
