@@ -17,14 +17,6 @@ export default function CreateGroup() {
 						<textarea name="description" id="description" />
 					</div>
 					<div className="form__group">
-						<label htmlFor="image">Image</label>
-						<input type="file" name="image" id="image" />
-					</div>
-					<div className="form__group">
-						<label htmlFor="coverImage">Cover Image</label>
-						<input type="file" name="coverImage" id="coverImage" />
-					</div>
-					<div className="form__group">
 						<label htmlFor="private">Private</label>
 						<input type="checkbox" name="private" id="private" />
 					</div>
