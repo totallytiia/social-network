@@ -83,17 +83,23 @@ func GetGroups() (Groups, error) {
 	var groups Groups
 	for rows.Next() {
 		var group Group
-		var members string
+		var members interface{}
 		err := rows.Scan(&group.GroupID, &group.GroupName, &group.GroupDescription, &group.GroupOwner, &members)
 		if err != nil {
 			if group.GroupID == 0 {
 				return nil, errors.New("no groups found")
 			}
+			if members == nil {
+				group.GroupMembers = []int{}
+			}
 			return nil, err
 		}
-		group.GroupMembers = func(s string) []int {
+		group.GroupMembers = func(s interface{}) []int {
+			if s == nil {
+				return []int{}
+			}
 			var intSlice []int
-			for _, v := range strings.Split(s, ", ") {
+			for _, v := range strings.Split(s.(string), ", ") {
 				i, _ := strconv.Atoi(v)
 				intSlice = append(intSlice, i)
 			}
