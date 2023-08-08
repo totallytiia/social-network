@@ -1,5 +1,6 @@
 import { useEffect, useState, useContext } from 'react';
 import { Link } from 'react-router-dom';
+import Groups from '../Group/Groups';
 
 interface INotification {
     id: number;
@@ -129,7 +130,7 @@ export default function Header() {
                                 <line x1="6" y1="6" x2="18" y2="18" />
                             </svg>
                         </div>
-                        <div className="NAVIGATION-MOBILE-OPEN flex flex-col items-center justify-between min-h-[250px]">
+                        <div onClick={() => setIsNavOpen((prev) => !prev)} className="NAVIGATION-MOBILE-OPEN flex flex-col items-center justify-between min-h-[250px]">
                             <button className="text-2xl font-extrabold">
                                 Make a post
                             </button>
@@ -139,9 +140,9 @@ export default function Header() {
                             <button className="text-2xl font-extrabold">
                                 Notifications
                             </button>
-                            <button className="text-2xl font-extrabold">
+                            <Link to="/groups" className="text-2xl font-extrabold">
                                 Groups
-                            </button>
+                            </Link>
                             <button
                                 onClick={() =>
                                     (window.location.href = '/profile')
