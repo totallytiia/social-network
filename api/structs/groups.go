@@ -74,7 +74,9 @@ func (g *Group) Get() error {
 }
 
 func GetGroups() (Groups, error) {
-	rows, err := db.DB.Query(`SELECT id, group_name, group_description, user_id, group_concat((SELECT user_id FROM group_members WHERE group_id = groups.id), ", ") AS members FROM groups`)
+	rows, err := db.DB.Query(`
+	SELECT *, (SELECT GROUP_CONCAT(gm.user_id) FROM group_members gm WHERE gm.group_id = g.id) AS members FROM groups g
+	`)
 	if err != nil {
 		return nil, err
 	}
