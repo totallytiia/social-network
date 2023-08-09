@@ -1,6 +1,6 @@
 import { useEffect, useState, useContext } from 'react';
 import { Link } from 'react-router-dom';
-import Groups from '../Group/Groups';
+import Groups from '../Group/GroupsPage';
 
 interface INotification {
     id: number;
@@ -10,7 +10,6 @@ interface INotification {
     follower_id: number;
     createdAt: string;
 }
-
 
 export default function Header() {
     const [isNavOpen, setIsNavOpen] = useState(false);
@@ -33,15 +32,8 @@ export default function Header() {
         getNotifications();
     }, []);
 
-
     //get users name from id and return it from database
-    const getUsersName = (id: number) => {
-
-
-    };
-
-
-
+    const getUsersName = (id: number) => {};
 
     // remove notification from database
     async function deleteNotification(id: number) {
@@ -57,10 +49,10 @@ export default function Header() {
         if (data.errors) {
             return;
         }
-        setNotifications(notifications.filter((notification: any) => notification.id !== id));
-    };
-
-
+        setNotifications(
+            notifications.filter((notification: any) => notification.id !== id)
+        );
+    }
 
     async function Logout() {
         const res = await fetch('http://localhost:8080/api/users/logout', {
@@ -76,29 +68,30 @@ export default function Header() {
     const [isNotificationsOpen, setNotificationsOpen] = useState(false);
 
     const handleButtonClick = () => {
-        setNotificationsOpen(prevOpen => !prevOpen);
+        setNotificationsOpen((prevOpen) => !prevOpen);
     };
 
     const handleOverlayClick = () => {
         setNotificationsOpen(false);
     };
 
-    const handleContainerClick = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    const handleContainerClick = (
+        event: React.MouseEvent<HTMLDivElement, MouseEvent>
+    ) => {
         event.stopPropagation();
         if ((event.target as Element).id === 'NOTIFICATIONS-BUTTON') {
             setNotificationsOpen(false);
         }
     };
 
-
-
-
     return (
         <header className="HEADER bg-white sticky top-0 shadow-lg z-50">
             <nav className="NAVIGATION grid grid-cols-2 gap-3 items-center px-2 py-2 mx-2">
                 <div className="LOGO">
-                    <h1 onClick={() => (window.location.href = '/')}
-                        className="LOGO-TEXT cursor-pointer text-black text-2xl font-bold">
+                    <h1
+                        onClick={() => (window.location.href = '/')}
+                        className="LOGO-TEXT cursor-pointer text-black text-2xl font-bold"
+                    >
                         SOCIAL NETWORK
                     </h1>
                 </div>
@@ -130,7 +123,10 @@ export default function Header() {
                                 <line x1="6" y1="6" x2="18" y2="18" />
                             </svg>
                         </div>
-                        <div onClick={() => setIsNavOpen((prev) => !prev)} className="NAVIGATION-MOBILE-OPEN flex flex-col items-center justify-between min-h-[250px]">
+                        <div
+                            onClick={() => setIsNavOpen((prev) => !prev)}
+                            className="NAVIGATION-MOBILE-OPEN flex flex-col items-center justify-between min-h-[250px]"
+                        >
                             <button className="text-2xl font-extrabold">
                                 Make a post
                             </button>
@@ -140,7 +136,10 @@ export default function Header() {
                             <button className="text-2xl font-extrabold">
                                 Notifications
                             </button>
-                            <Link to="/groups" className="text-2xl font-extrabold">
+                            <Link
+                                to="/groups"
+                                className="text-2xl font-extrabold"
+                            >
                                 Groups
                             </Link>
                             <button
@@ -162,9 +161,7 @@ export default function Header() {
                 </section>
                 <div className="DESKTOP-MENU space-x-2 text-xs justify-end  hidden lg:flex">
                     <div>
-                        <div
-                            className="text-black bg-gray-200 hover:bg-gray-300 focus:bg-gray-300  py-2 px-3 rounded-full"
-                        >
+                        <div className="text-black bg-gray-200 hover:bg-gray-300 focus:bg-gray-300  py-2 px-3 rounded-full">
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
                                 fill="none"
@@ -184,8 +181,9 @@ export default function Header() {
                     <div>
                         <div
                             onClick={handleButtonClick}
-                            id='NOTIFICATIONS-BUTTON'
-                            className=" cursor-pointer relative text-black bg-gray-200 hover:bg-gray-300 focus:bg-gray-300  py-2 px-3 rounded-full">
+                            id="NOTIFICATIONS-BUTTON"
+                            className=" cursor-pointer relative text-black bg-gray-200 hover:bg-gray-300 focus:bg-gray-300  py-2 px-3 rounded-full"
+                        >
                             Notifications
                             {notifications.length > 0 && (
                                 <div className="flex absolute right-2 -bottom-3 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs">
@@ -193,11 +191,21 @@ export default function Header() {
                                 </div>
                             )}
                         </div>
-                        <div className={`fixed left-0 top-0 bottom-0 right-0 w-full ${isNotificationsOpen ? '' : 'hidden'}`} onClick={handleOverlayClick}>
-
-
-                            <div onClick={handleContainerClick} id='NOTIFICATIONS-CONTAINER' className="flex absolute top-14 right-2 bg-white shadow-lg rounded-lg w-96">
-                                <div id='NOTIFICATIONS-CONTAINER-HEADER' className=" flex flex-col  w-full px-2 py-1 border-b border-gray-200">
+                        <div
+                            className={`fixed left-0 top-0 bottom-0 right-0 w-full ${
+                                isNotificationsOpen ? '' : 'hidden'
+                            }`}
+                            onClick={handleOverlayClick}
+                        >
+                            <div
+                                onClick={handleContainerClick}
+                                id="NOTIFICATIONS-CONTAINER"
+                                className="flex absolute top-14 right-2 bg-white shadow-lg rounded-lg w-96"
+                            >
+                                <div
+                                    id="NOTIFICATIONS-CONTAINER-HEADER"
+                                    className=" flex flex-col  w-full px-2 py-1 border-b border-gray-200"
+                                >
                                     <h1 className="text-lg font-bold">
                                         Notifications
                                     </h1>
@@ -207,18 +215,27 @@ export default function Header() {
                                             id={notification.id.toString()}
                                             className="NOTIFICATION flex flex-col"
                                         >
-                                            <div className="NOTIFICATION-TEXT flex flex-row justify-between bg-blue-50 p-2 my-1 rounded-md" >
-                                                <div className='flex flex-row gap-2'>
+                                            <div className="NOTIFICATION-TEXT flex flex-row justify-between bg-blue-50 p-2 my-1 rounded-md">
+                                                <div className="flex flex-row gap-2">
                                                     <p className="text-sm">
-                                                        {notification.follower_id}: {notification.message}
+                                                        {
+                                                            notification.follower_id
+                                                        }
+                                                        : {notification.message}
                                                     </p>
                                                     <p className="text-xs text-gray-500">
                                                         {notification.createdAt}
                                                     </p>
                                                 </div>
                                                 <div className="NOTIFICATION-ACTIONS flex-col flex">
-                                                    <button className="text-xs font-bold"
-                                                        onClick={(e) => deleteNotification(notification.id)}>
+                                                    <button
+                                                        className="text-xs font-bold"
+                                                        onClick={(e) =>
+                                                            deleteNotification(
+                                                                notification.id
+                                                            )
+                                                        }
+                                                    >
                                                         <svg
                                                             xmlns="http://www.w3.org/2000/svg"
                                                             fill="none"
@@ -235,7 +252,7 @@ export default function Header() {
                                                         </svg>
                                                     </button>
                                                 </div>
-                                            </div >
+                                            </div>
                                         </div>
                                     ))}
 
@@ -244,36 +261,20 @@ export default function Header() {
                                     </button> */}
                                 </div>
                             </div>
-
                         </div>
                     </div>
-                    <div
-                        className="text-black bg-gray-200 hover:bg-gray-300 focus:bg-gray-300  py-2 px-3 rounded-full"
-                    >
-                        <Link
-                            to="/groups"
-                        >
-                            Groups
-                        </Link>
+                    <div className="text-black bg-gray-200 hover:bg-gray-300 focus:bg-gray-300  py-2 px-3 rounded-full">
+                        <Link to="/groups">Groups</Link>
+                    </div>
+                    <div className="text-black bg-gray-200 hover:bg-gray-300 focus:bg-gray-300  py-2 px-3 rounded-full">
+                        <Link to="/profile">Profile</Link>
                     </div>
                     <div
-                        className="text-black bg-gray-200 hover:bg-gray-300 focus:bg-gray-300  py-2 px-3 rounded-full">
-                        <Link
-                            to="/profile"
-                        >
-                            Profile
-                        </Link>
-                    </div>
-                    <div onClick={Logout}
+                        onClick={Logout}
                         className="text-black bg-gray-200 hover:bg-gray-300 focus:bg-gray-300  py-2 px-3 rounded-full"
                     >
-                        <Link
-                            to="/"
-                        >
-                            Log out
-                        </Link>
+                        <Link to="/">Log out</Link>
                     </div>
-
                 </div>
             </nav>
             <style>{`
@@ -295,6 +296,6 @@ export default function Header() {
                             align-items: center;
       }
     `}</style>
-        </header >
+        </header>
     );
 }

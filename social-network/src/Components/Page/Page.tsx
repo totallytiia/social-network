@@ -5,7 +5,7 @@ import Login from '../Login/Login';
 import Register from '../Register/Register';
 import Profile from '../Profile/Profile';
 import FourOneFour from '../FourOneFour/FourOneFour';
-import Groups from '../Group/Groups';
+import Groups from '../Group/GroupsPage';
 
 import { Routes, Route } from 'react-router-dom';
 import User from '../Profile/User';
