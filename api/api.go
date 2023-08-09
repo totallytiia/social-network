@@ -20,7 +20,6 @@ func api(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Access-Control-Allow-Headers, X-Requested-With, Cookie")
 	w.Header().Set("Access-Control-Allow-Credentials", "true")
 
-	// TODO: Fix cookie renewal
 	cookie, err := r.Cookie("session")
 	if err == nil {
 		if len(cookie.Value) != 0 {
@@ -139,7 +138,17 @@ func api(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 	case "notifications":
-		ep.GetNotifications(w, r)
+		if len(reqUrl) == 1 {
+			ep.GetNotifications(w, r)
+			return
+		}
+		switch reqUrl[1] {
+		case "seen":
+			ep.MarkNotificationsSeen(w, r)
+		default:
+			http.NotFound(w, r)
+			return
+		}
 	case "validate":
 		ep.ValidateSession(w, r)
 	default:

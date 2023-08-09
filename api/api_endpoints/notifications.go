@@ -2,14 +2,12 @@ package endpoints
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 )
 
 func GetNotifications(w http.ResponseWriter, r *http.Request) {
 	v, u := ValidateCookie(w, r)
 	if !v {
-		fmt.Println("Not logged in")
 		BadRequest(w, r, "Bad Request")
 		return
 	}
@@ -32,4 +30,22 @@ func GetNotifications(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	w.Write(notificationsJson)
+}
+
+func MarkNotificationsSeen(w http.ResponseWriter, r *http.Request) {
+	v, u := ValidateCookie(w, r)
+	if !v {
+		BadRequest(w, r, "Bad Request")
+		return
+	}
+	if r.Method != "POST" {
+		BadRequest(w, r, "Bad Request")
+		return
+	}
+	err := u.MarkNotificationsSeen()
+	if err != nil {
+		BadRequest(w, r, "Bad Request")
+		return
+	}
+	w.WriteHeader(http.StatusOK)
 }
