@@ -6,6 +6,8 @@ export default function Group() {
         id: number;
         name: string;
         description: string;
+        members: number[];
+        owner: number;
     }
 
     const [groups, setGroups] = useState([] as Group[]);
@@ -20,10 +22,20 @@ export default function Group() {
                 return;
             }
             const data = await res.json();
-            if (!data.errors) {
-                setGroups(data);
+            if (data.errors) {
                 console.log(data);
+                return;
             }
+            const groupsData = data.map((group: any) => {
+                return {
+                    id: group.group_id,
+                    name: group.group_name,
+                    description: group.group_description,
+                    members: group.group_members,
+                    owner: group.group_owner,
+                } as Group;
+            });
+            setGroups(groupsData);
         }
         getGroups();
     }, []);

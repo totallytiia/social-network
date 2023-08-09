@@ -11,7 +11,7 @@ export default function GroupsSidebar() {
 
     return (
         <>
-            <div className="lg:mx-0 mx-auto w-9/12 lg:max-w-xs align-center w-1/2">
+            <div className="lg:mx-0 mx-auto lg:max-w-xs align-center w-1/2">
                 <div className="bg-blue-50 rounded-xl mt-6 p-4">
                     <h1 className="font-bold text-xl text-black mb-2">
                         GROUPS
