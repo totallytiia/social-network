@@ -1,17 +1,15 @@
+import { key } from 'localforage';
+import React, { useEffect } from 'react';
 import { useState } from 'react';
 
 interface iFormKeys {
-    [key: string]: {
-        [key: string]: string | number | boolean | undefined;
-    };
+    [key: string]: { [key: string]: string | number | boolean | undefined };
 }
 
 interface iForm extends iFormKeys {
     groupCreate: {
         name: string;
         description: string;
-        private: boolean;
-        [key: string]: string | number | boolean | undefined;
     };
 }
 
@@ -20,7 +18,6 @@ export default function CreateGroup() {
         groupCreate: {
             name: '',
             description: '',
-            private: false,
         },
     } as iForm);
 
@@ -48,7 +45,6 @@ export default function CreateGroup() {
         const FD = new FormData();
         FD.append('group_name', formData.groupCreate.name);
         FD.append('group_description', formData.groupCreate.description);
-        FD.append('private', formData.groupCreate.private.toString());
         console.log(formData);
         const url = 'http://localhost:8080/api/groups/create';
         const res = await fetch(url, {
@@ -62,12 +58,40 @@ export default function CreateGroup() {
         }
         console.log(data);
     }
+
+    const [formVisibility, setFormVisibility] = useState(true);
+
+    if (!formVisibility) {
+        return (
+            <div className="">
+                <button
+                    onClick={() => setFormVisibility(true)}
+                    className="flex flex-row text-lg font-bold items-center gap-1 bg-blue-50 py-2 pl-1 pr-4 rounded-full hover:bg-blue-100"
+                >
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        fill="currentColor"
+                        className="w-6 h-6"
+                    >
+                        <path
+                            fillRule="evenodd"
+                            d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25zM12.75 9a.75.75 0 00-1.5 0v2.25H9a.75.75 0 000 1.5h2.25V15a.75.75 0 001.5 0v-2.25H15a.75.75 0 000-1.5h-2.25V9z"
+                            clipRule="evenodd"
+                        />
+                    </svg>
+                    <p className="text-bold text-md">Create group</p>
+                </button>
+            </div>
+        );
+    }
+
     return (
-        <div className="create-group flex flex-col align-center justify-center items-center">
+        <div className="create-group flex flex-col align-center justify-center items-center bg-blue-50 rounded-xl p-6 border-2 border-white">
             <div className="create-group__header"></div>
             <div className="create-group__form w-full p-2">
                 <form onSubmit={handleFormSubmit} name="groupCreate">
-                    <label htmlFor="">Create group</label>
+                    <label htmlFor="">Create a group</label>
                     <div className="form__group mt-1">
                         <input
                             className="w-full"
@@ -89,19 +113,6 @@ export default function CreateGroup() {
                             value={formData.groupCreate.description}
                         />
                     </div>
-                    <div className="form__group flex flex-row items-center gap-1 mt-1">
-                        <label className="mb-0" htmlFor="private">
-                            Private
-                        </label>
-                        <input
-                            className="items-center"
-                            type="checkbox"
-                            name="private"
-                            id="private"
-                            onChange={formHandleChangeInput}
-                            checked={formData.groupCreate.private}
-                        />
-                    </div>
                     <div className="form__group mt-2">
                         <input
                             className="w-full"
@@ -112,8 +123,18 @@ export default function CreateGroup() {
                             onChange={formHandleChangeInput}
                         />
                     </div>
-                    <div className="form__group button-custom text-center bg-blue-100 font-bold rounded-xl mt-2 p-2">
-                        <button>Create group</button>
+                    <div className="flex flex-row gap-2 justify-center">
+                        <div
+                            onClick={() => setFormVisibility(false)}
+                            className="button-custom text-center bg-blue-100 font-bold text-sm rounded-full mt-2 py-2 px-4"
+                        >
+                            <button>Cancel</button>
+                        </div>
+                        <input
+                            type="submit"
+                            value="Submit"
+                            className="button-custom text-center bg-blue-100 font-bold text-sm rounded-full mt-2 py-2 px-4"
+                        />
                     </div>
                 </form>
             </div>

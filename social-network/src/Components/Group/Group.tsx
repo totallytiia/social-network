@@ -1,12 +1,11 @@
 import { useEffect, useState } from 'react';
+import GroupIcon from './GroupIcon';
 
 export default function Group() {
     interface Group {
         id: number;
         name: string;
         description: string;
-        owner: number;
-        members: number[];
     }
 
     const [groups, setGroups] = useState([] as Group[]);
@@ -21,41 +20,34 @@ export default function Group() {
                 return;
             }
             const data = await res.json();
-            if (data.errors) {
+            if (!data.errors) {
+                setGroups(data);
                 console.log(data);
-                return;
             }
-            const groupsData = data.map((group: any) => {
-                return {
-                    id: group.group_id,
-                    name: group.group_name,
-                    description: group.group_description,
-                    owner: group.group_owner,
-                    members: group.group_members,
-                } as Group;
-            });
-            setGroups(groupsData);
         }
         getGroups();
     }, []);
 
     return (
-        <>
+        <div>
             {groups.map((group) => {
                 return (
-                    <div
-                        key={group.id}
-                        className="flex flex-row items-center gap-2"
-                    >
-                        <a
-                            href={`/group/${group.id}`}
-                            className="text-xl font-bold text-blue-500"
+                    <div className="bg-blue-50 rounded-xl p-2">
+                        <div
+                            key={group.id}
+                            className="flex flex-row items-center gap-2"
                         >
-                            {group.name}
-                        </a>
+                            <a
+                                href={`/group/${group.id}`}
+                                className="p-1 text-sm font-normal flex flex-row gap-2"
+                            >
+                                <GroupIcon />
+                                <div className="my-auto">{group.name}</div>
+                            </a>
+                        </div>
                     </div>
                 );
             })}
-        </>
+        </div>
     );
 }

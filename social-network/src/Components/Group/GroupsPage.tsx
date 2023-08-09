@@ -25,11 +25,13 @@ export default function Groups() {
                 console.log('error');
                 return;
             }
+            if (res.status === 204) return;
             const data = await res.json();
-            if (!data.errors) {
-                setGroups(data);
+            if (data.errors) {
                 console.log(data);
+                return;
             }
+            setGroups(data);
         }
         getGroups();
     }, []);

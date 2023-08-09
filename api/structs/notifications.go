@@ -12,6 +12,7 @@ type Notification struct {
 	FollowerID int    `json:"follower_id"`
 	Message    string `json:"message"`
 	Type       string `json:"type"`
+	Seen       bool   `json:"seen"`
 	CreatedAt  string `json:"created_at"`
 	UpdatedAt  string `json:"updated_at"`
 }
@@ -28,7 +29,7 @@ func (u *User) GetNotifications() (Notifications, error) {
 	defer rows.Close()
 	for rows.Next() {
 		var n Notification
-		err := rows.Scan(&n.ID, &n.UserID, &n.FollowerID, &n.Message, &n.CreatedAt, &n.UpdatedAt, &n.Type)
+		err := rows.Scan(&n.ID, &n.UserID, &n.FollowerID, &n.Message, &n.CreatedAt, &n.UpdatedAt, &n.Type, &n.Seen)
 		if err != nil {
 			fmt.Println(err)
 			return notifications, err
@@ -64,6 +65,14 @@ func (u *User) AddNotification(followerID int, nType, message string) error {
 
 func DeleteNotification(id int) error {
 	_, err := db.DB.Exec("DELETE FROM notifications WHERE id = ?", id)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (u *User) MarkNotificationsSeen() error {
+	_, err := db.DB.Exec("UPDATE notifications SET seen = 1 WHERE user_id = ?", u.ID)
 	if err != nil {
 		return err
 	}

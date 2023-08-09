@@ -74,7 +74,9 @@ func (g *Group) Get() error {
 }
 
 func GetGroups() (Groups, error) {
-	rows, err := db.DB.Query(`SELECT id, group_name, group_description, user_id, group_concat((SELECT user_id FROM group_members WHERE group_id = groups.id), ", ") AS members FROM groups`)
+	rows, err := db.DB.Query(`
+	SELECT *, (SELECT GROUP_CONCAT(gm.user_id) FROM group_members gm WHERE gm.group_id = g.id) AS members FROM groups g
+	`)
 	if err != nil {
 		return nil, err
 	}
@@ -83,23 +85,17 @@ func GetGroups() (Groups, error) {
 	var groups Groups
 	for rows.Next() {
 		var group Group
-		var members interface{}
+		var members string
 		err := rows.Scan(&group.GroupID, &group.GroupName, &group.GroupDescription, &group.GroupOwner, &members)
 		if err != nil {
 			if group.GroupID == 0 {
 				return nil, errors.New("no groups found")
 			}
-			if members == nil {
-				group.GroupMembers = []int{}
-			}
 			return nil, err
 		}
-		group.GroupMembers = func(s interface{}) []int {
-			if s == nil {
-				return []int{}
-			}
+		group.GroupMembers = func(s string) []int {
 			var intSlice []int
-			for _, v := range strings.Split(s.(string), ", ") {
+			for _, v := range strings.Split(s, ", ") {
 				i, _ := strconv.Atoi(v)
 				intSlice = append(intSlice, i)
 			}
