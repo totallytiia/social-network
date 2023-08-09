@@ -2,6 +2,7 @@ package structs
 
 import (
 	"errors"
+	"fmt"
 	db "social_network_api/db"
 	"strconv"
 	"strings"
@@ -75,7 +76,7 @@ func (g *Group) Get() error {
 
 func GetGroups() (Groups, error) {
 	rows, err := db.DB.Query(`
-	SELECT *, (SELECT GROUP_CONCAT(gm.user_id) FROM group_members gm WHERE gm.group_id = g.id) AS members FROM groups g
+	SELECT g.id, g.group_name, g.group_description, g.user_id, (SELECT GROUP_CONCAT(gm.user_id) FROM group_members gm WHERE gm.group_id = g.id) AS members FROM groups g;
 	`)
 	if err != nil {
 		return nil, err
@@ -87,6 +88,7 @@ func GetGroups() (Groups, error) {
 		var group Group
 		var members string
 		err := rows.Scan(&group.GroupID, &group.GroupName, &group.GroupDescription, &group.GroupOwner, &members)
+		fmt.Println(group.GroupID, group.GroupName, group.GroupDescription, group.GroupOwner, members)
 		if err != nil {
 			if group.GroupID == 0 {
 				return nil, errors.New("no groups found")
