@@ -46,7 +46,7 @@ export default function Groups() {
             <div className="flex flex-col lg:flex-row lg:justify-center p-6">
                 <div className="flex flex-col lg:w-1/2 bg-white rounded-lg shadow-lg p-4 m-2 h-screen">
                     {!createNewGroup && (
-                        <div className="CREATE-GROUP flex justify-end">
+                        <div className="CREATE-GROUP flex justify-center">
                             <button
                                 onClick={() => handleCreateNewGroup()}
                                 className=" flex flex-row text-lg font-bold items-center gap-1  py-2 pl-1 pr-4 rounded-full hover:bg-blue-50"
@@ -75,7 +75,9 @@ export default function Groups() {
                     <h1 className="font-bold text-xl text-center my-2">
                         All Groups
                     </h1>
-                    <Group />
+                    <div className="[&>div]:m-1">
+                        <Group />
+                    </div>
                 </div>
             </div>
         </div>

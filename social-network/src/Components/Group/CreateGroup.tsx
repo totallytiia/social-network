@@ -78,14 +78,14 @@ export default function CreateGroup() {
                             clipRule="evenodd"
                         />
                     </svg>
-                    <p className="text-bold text-md">Create group</p>
+                    <p className="text-bold text-sm">Create group</p>
                 </button>
             </div>
         );
     }
 
     return (
-        <div className="create-group flex flex-col align-center justify-center items-center bg-blue-50 rounded-xl p-6 border-2 border-white">
+        <div className="create-group flex flex-col align-center justify-center items-center bg-blue-50 rounded-xl p-6 border-2 border-white mt-2">
             <div className="create-group__header"></div>
             <div className="create-group__form w-full p-2">
                 <form onSubmit={handleFormSubmit} name="groupCreate">
@@ -109,16 +109,6 @@ export default function CreateGroup() {
                             placeholder="Describe the group"
                             onChange={formHandleChangeInput}
                             value={formData.groupCreate.description}
-                        />
-                    </div>
-                    <div className="form__group mt-2">
-                        <input
-                            className="w-full"
-                            type="text"
-                            name="invite"
-                            id="invite"
-                            placeholder="Invite friends"
-                            onChange={formHandleChangeInput}
                         />
                     </div>
                     <div className="flex flex-row gap-2 justify-center">

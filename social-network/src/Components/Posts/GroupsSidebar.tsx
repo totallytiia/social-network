@@ -16,6 +16,7 @@ export default function GroupsSidebar() {
                     <h1 className="font-bold text-xl text-black mb-2">
                         GROUPS
                     </h1>
+                    <Group />
                     {!createGroup && (
                         <div className="CREATE-EVENT">
                             <button
@@ -34,8 +35,8 @@ export default function GroupsSidebar() {
                                         clipRule="evenodd"
                                     />
                                 </svg>
-                                <p className="text-bold text-md">
-                                    Create group
+                                <p className="text-bold text-sm">
+                                    Create a group
                                 </p>
                             </button>
                         </div>
@@ -43,7 +44,6 @@ export default function GroupsSidebar() {
                     <div className=" mx-auto">
                         {createGroup && <CreateGroup />}
                     </div>
-                    <Group />
                 </div>
             </div>
         </>

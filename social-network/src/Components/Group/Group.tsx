@@ -41,10 +41,10 @@ export default function Group() {
     }, []);
 
     return (
-        <div>
+        <>
             {groups.map((group) => {
                 return (
-                    <div className="bg-blue-50 rounded-xl p-2">
+                    <div className="bg-blue-50 rounded-xl">
                         <div
                             key={group.id}
                             className="flex flex-row items-center gap-2"
@@ -60,6 +60,6 @@ export default function Group() {
                     </div>
                 );
             })}
-        </div>
+        </>
     );
 }
