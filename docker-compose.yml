@@ -1,19 +1,20 @@
-# WIP
+version: "3"
 services:
-  api:
-    build: ./api/
-    ports:
-    - "8080:8080"
-    networks:
-      - backend
+  backend:
+    build:
+      context: api
+  frontend:
+    build:
+      context: social-network
+  nginx:
+    image: nginx:1.25.1-alpine
     volumes:
-      - ./api:/app
-  web:
-    build: ./social-network/
+      - ./nginx.conf:/etc/nginx/nginx.conf
     ports:
-    - "3000:3000"
-    networks:
+      - "80:80"
+      - "3000:3000"
+      - "8080:8080"
+    depends_on:
       - backend
       - frontend
-    volumes:
-      - ./social-network:/app
+

@@ -14,6 +14,7 @@ COPY . /app
 RUN apk update && apk add --no-cache gcc musl-dev
 # Build the Go app
 ENV CGO_ENABLED=1
+ENV ISDOCKER=true
 RUN go build -o main .
 
 # Expose port 8080 for the API
