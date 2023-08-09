@@ -1,9 +1,5 @@
 import { useEffect, useState } from 'react';
-<<<<<<< Updated upstream
-import { useHref } from 'react-router-dom';
-=======
 import GroupIcon from './GroupIcon';
->>>>>>> Stashed changes
 
 export default function Group() {
     interface Group {
@@ -32,9 +28,6 @@ export default function Group() {
         getGroups();
     }, []);
 
-<<<<<<< Updated upstream
-    return <><div></div></>;
-=======
     return (
         <div>
             {groups.map((group) => {
@@ -57,5 +50,4 @@ export default function Group() {
             })}
         </div>
     );
->>>>>>> Stashed changes
 }
