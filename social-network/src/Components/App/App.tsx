@@ -4,6 +4,7 @@ import Page from '../Page/Page';
 import '../../styles.css';
 import { BrowserRouter } from 'react-router-dom';
 import SignInOrRegister from '../SignInOrRegister/SignInOrRegister';
+import WSProvider from '../WSProvider/WSProvider';
 
 interface ApiUserContextInterface {
     id: number;
@@ -71,7 +72,9 @@ function App() {
         <>
             <BrowserRouter>
                 <UserContext.Provider value={{ userData, setUserData }}>
-                    <Page></Page>
+                    <WSProvider>
+                        <Page></Page>
+                    </WSProvider>
                 </UserContext.Provider>
             </BrowserRouter>
         </>
