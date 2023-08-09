@@ -11,7 +11,7 @@ export default function GroupsSidebar() {
 
     return (
         <>
-            <div className=" align-center w-1/2">
+            <div className="lg:mx-0 mx-auto w-9/12 lg:max-w-xs align-center w-1/2">
                 <div className="bg-blue-50 rounded-xl mt-6 p-4">
                     <h1 className="font-bold text-xl text-black mb-2">
                         GROUPS
@@ -20,13 +20,13 @@ export default function GroupsSidebar() {
                         <div className="CREATE-EVENT">
                             <button
                                 onClick={() => handleCreateGroup()}
-                                className="flex flex-row text-lg font-bold items-center gap-1 bg-blue-50 py-2 pl-2 pr-4 rounded-full hover:bg-blue-100"
+                                className="flex flex-row text-lg font-bold items-center gap-1 bg-blue-50 py-2 pl-1 pr-4 rounded-full hover:bg-blue-100"
                             >
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
                                     viewBox="0 0 24 24"
                                     fill="currentColor"
-                                    className="w-8 h-8"
+                                    className="w-6 h-6"
                                 >
                                     <path
                                         fillRule="evenodd"
@@ -34,7 +34,7 @@ export default function GroupsSidebar() {
                                         clipRule="evenodd"
                                     />
                                 </svg>
-                                <p className="text-bold font-lg">
+                                <p className="text-bold text-md">
                                     Create group
                                 </p>
                             </button>
