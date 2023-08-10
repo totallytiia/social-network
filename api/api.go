@@ -52,8 +52,8 @@ func api(w http.ResponseWriter, r *http.Request) {
 			ep.RegisterUser(w, r)
 		case "login":
 			ep.LoginUser(w, r)
-		case "update":
-			ep.UpdateUser(w, r)
+		case "private":
+			ep.UpdatePrivate(w, r)
 		case "logout":
 			ep.LogoutUser(w, r)
 		case "get":

@@ -99,7 +99,7 @@ func LoginUser(w http.ResponseWriter, r *http.Request) {
 	w.Write(okJSON)
 }
 
-func UpdateUser(w http.ResponseWriter, r *http.Request) {
+func UpdatePrivate(w http.ResponseWriter, r *http.Request) {
 	v, u := ValidateCookie(w, r)
 	if !v {
 		w.WriteHeader(http.StatusUnauthorized)
@@ -117,32 +117,12 @@ func UpdateUser(w http.ResponseWriter, r *http.Request) {
 		BadRequest(w, r, err.Error())
 		return
 	}
-	var testUser s.NewUser
-	testUser.Nickname = r.FormValue("nickname")
-	testUser.FName = r.FormValue("fname")
-	testUser.LName = r.FormValue("lname")
-	testUser.Email = r.FormValue("email")
-	testUser.DoB = r.FormValue("date_of_birth")
-	testUser.Avatar = r.FormValue("avatar")
-	testUser.AboutMe = r.FormValue("about_me")
-	testUser.Private, err = strconv.ParseBool(r.FormValue("private"))
+	private, err := strconv.ParseBool(r.FormValue("private"))
 	if err != nil {
 		BadRequest(w, r, err.Error())
 		return
 	}
-	err = testUser.Validate()
-	if err != nil {
-		BadRequest(w, r, err.Error())
-		return
-	}
-	u.Nickname = testUser.Nickname
-	u.FName = testUser.FName
-	u.LName = testUser.LName
-	u.Email = testUser.Email
-	u.DoB = testUser.DoB
-	u.Avatar = testUser.Avatar
-	u.AboutMe = testUser.AboutMe
-	u.Private = testUser.Private
+	u.Private = private
 	err = u.Update()
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)

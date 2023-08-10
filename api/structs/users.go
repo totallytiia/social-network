@@ -177,7 +177,7 @@ func (u User) Logout() error {
 }
 
 func (u *User) Get() error {
-	var query = "SELECT id, email, fname, lname, CAST(dob AS TEXT), nickname, avatar, about, created_at, updated_at, private FROM users WHERE id = ?"
+	var query = "SELECT id, email, fname, lname, CAST(dob AS TEXT), nickname, avatar, about, created_at, updated_at, CAST(private AS TEXT) FROM users WHERE id = ?"
 	err := db.DB.QueryRow(query, u.ID).Scan(&u.ID, &u.Email, &u.FName, &u.LName, &u.DoB, &u.Nickname, &u.Avatar, &u.AboutMe, &u.CreatedAt, &u.UpdatedAt, &u.Private)
 	if err != nil {
 		return err
