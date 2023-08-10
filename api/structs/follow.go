@@ -1,6 +1,9 @@
 package structs
 
-import db "social_network_api/db"
+import (
+	db "social_network_api/db"
+	"strconv"
+)
 
 func (u User) Follow(followingID int) error {
 	var query = "INSERT INTO follows (user_id, follow_id) VALUES (?, ?)"
@@ -20,43 +23,100 @@ func (u User) Unfollow(followingID int) error {
 	return nil
 }
 
-func (u User) GetFollowers() ([]User, error) {
-	var query = "SELECT id, email, fname, lname, CAST(dob AS TEXT), nickname, avatar, about, created_at, updated_at, private FROM users WHERE id IN (SELECT user_id FROM follows WHERE follow_id = ?)"
+func (u *User) GetFollowers() error {
+	var query = "SELECT user_id FROM follows WHERE follow_id = ?"
 	rows, err := db.DB.Query(query, u.ID)
 	if err != nil {
-		return nil, err
+		return err
 	}
-	var users []User
+	var followers []int
 	defer rows.Close()
 	for rows.Next() {
-		var u User
-		err := rows.Scan(&u.ID, &u.Email, &u.FName, &u.LName, &u.DoB, &u.Nickname, &u.Avatar, &u.AboutMe, &u.CreatedAt, &u.UpdatedAt, &u.Private)
+		var follower int
+		err := rows.Scan(&follower)
 		if err != nil {
-			return users, err
+			return err
 		}
-		users = append(users, u)
+		followers = append(followers, follower)
 	}
-	return users, nil
+
+	var strFollowers string
+	for i, v := range followers {
+		stringID := strconv.Itoa(v)
+		strFollowers += stringID
+		if i != len(followers)-1 {
+			strFollowers += ","
+		}
+	}
+	u.Followers = strFollowers
+	return nil
 }
 
-func (u User) GetFollowing() ([]User, error) {
-	var query = "SELECT id, email, fname, lname, CAST(dob AS TEXT), nickname, avatar, about, created_at, updated_at, private FROM users WHERE id IN (SELECT follow_id FROM follows WHERE user_id = ?)"
+func (u *User) GetFollowing() error {
+	var query = "SELECT follow_id FROM follows WHERE user_id = ?"
 	rows, err := db.DB.Query(query, u.ID)
 	if err != nil {
-		return nil, err
+		return err
 	}
-	var users []User
+	var following []int
 	defer rows.Close()
 	for rows.Next() {
-		var u User
-		err := rows.Scan(&u.ID, &u.Email, &u.FName, &u.LName, &u.DoB, &u.Nickname, &u.Avatar, &u.AboutMe, &u.CreatedAt, &u.UpdatedAt, &u.Private)
+		var follow int
+		err := rows.Scan(&follow)
 		if err != nil {
-			return users, err
+			return err
 		}
-		users = append(users, u)
+		following = append(following, follow)
 	}
-	return users, nil
+	var strFollowing string
+	for i, v := range following {
+		stringID := strconv.Itoa(v)
+		strFollowing += stringID
+		if i != len(following)-1 {
+			strFollowing += ","
+		}
+	}
+	u.Following = strFollowing
+	return nil
 }
+
+// func (u User) GetFollowers() ([]User, error) {
+// 	var query = "SELECT id, email, fname, lname, CAST(dob AS TEXT), nickname, avatar, about, created_at, updated_at, private FROM users WHERE id IN (SELECT user_id FROM follows WHERE follow_id = ?)"
+// 	rows, err := db.DB.Query(query, u.ID)
+// 	if err != nil {
+// 		return nil, err
+// 	}
+// 	var users []User
+// 	defer rows.Close()
+// 	for rows.Next() {
+// 		var u User
+// 		err := rows.Scan(&u.ID, &u.Email, &u.FName, &u.LName, &u.DoB, &u.Nickname, &u.Avatar, &u.AboutMe, &u.CreatedAt, &u.UpdatedAt, &u.Private)
+// 		if err != nil {
+// 			return users, err
+// 		}
+// 		users = append(users, u)
+// 	}
+// 	return users, nil
+// }
+
+// func (u User) GetFollowing() ([]User, error) {
+// 	var query = "SELECT id, email, fname, lname, CAST(dob AS TEXT), nickname, avatar, about, created_at, updated_at, private FROM users WHERE id IN (SELECT follow_id FROM follows WHERE user_id = ?)"
+// 	rows, err := db.DB.Query(query, u.ID)
+// 	if err != nil {
+// 		return nil, err
+// 	}
+// 	var users []User
+// 	defer rows.Close()
+// 	for rows.Next() {
+// 		var u User
+// 		err := rows.Scan(&u.ID, &u.Email, &u.FName, &u.LName, &u.DoB, &u.Nickname, &u.Avatar, &u.AboutMe, &u.CreatedAt, &u.UpdatedAt, &u.Private)
+// 		if err != nil {
+// 			return users, err
+// 		}
+// 		users = append(users, u)
+// 	}
+// 	return users, nil
+// }
 
 func (u User) FollowRequest(followingID int) error {
 	var query = "INSERT INTO follow_requests (user_id, follow_id) VALUES (?, ?)"

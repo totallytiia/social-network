@@ -212,6 +212,21 @@ func GetUser(w http.ResponseWriter, r *http.Request) {
 		w.Write(badReqJSON)
 		return
 	}
+	err = user.GetFollowers()
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		badReqJSON, _ := json.Marshal(s.ErrorResponse{Errors: "There was an error getting the followers", Details: err.Error()})
+		w.Write(badReqJSON)
+		return
+	}
+	err = user.GetFollowing()
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		badReqJSON, _ := json.Marshal(s.ErrorResponse{Errors: "There was an error getting the following", Details: err.Error()})
+		w.Write(badReqJSON)
+		return
+	}
+
 	w.WriteHeader(http.StatusOK)
 	var userJSON, _ = json.Marshal(user)
 	w.Write(userJSON)

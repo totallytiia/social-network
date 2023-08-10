@@ -38,6 +38,8 @@ type User struct {
 	Nickname  string  `json:"nickname"`
 	Avatar    string  `json:"avatar"`
 	AboutMe   string  `json:"aboutMe"`
+	Following string  `json:"follows"`
+	Followers string  `json:"followers"`
 	CreatedAt string  `json:"createdAt"`
 	UpdatedAt string  `json:"updatedAt"`
 	Private   bool    `json:"private"`
@@ -157,7 +159,6 @@ func (u *User) Login(password string) error {
 	if err != nil {
 		return errors.New("invalid password")
 	}
-	err = u.Get()
 	if err != nil {
 		return err
 	}
