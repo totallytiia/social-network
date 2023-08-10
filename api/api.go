@@ -41,6 +41,8 @@ func api(w http.ResponseWriter, r *http.Request) {
 
 	// Switch on first part after /api/
 	switch reqUrl[0] {
+	case "ws":
+		ep.WS(w, r)
 	case "users":
 		if len(reqUrl) == 1 {
 			ep.BadRequest(w, r, "Bad Request")

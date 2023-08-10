@@ -35,9 +35,10 @@ function App() {
                 credentials: 'include',
             });
             const data = await response.json();
-            if (!data.errors) {
-                setAuthenticated(true);
+            if (data.errors) {
+                return;
             }
+            setAuthenticated(true);
         }
         async function getUserData() {
             const response = await fetch(
@@ -48,9 +49,10 @@ function App() {
                 }
             );
             const data = await response.json();
-            if (!data.errors) {
-                setUserData(data);
+            if (data.errors) {
+                return;
             }
+            setUserData(data);
         }
         if (isAuthenticated) {
             getUserData();

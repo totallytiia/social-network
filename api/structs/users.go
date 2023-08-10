@@ -2,7 +2,6 @@ package structs
 
 import (
 	"errors"
-	"fmt"
 	"log"
 	"regexp"
 	db "social_network_api/db"
@@ -183,7 +182,6 @@ func (u *User) Get() error {
 	if err != nil {
 		return err
 	}
-	fmt.Println(u)
 	return nil
 }
 
