@@ -18,7 +18,6 @@ function Page() {
                 <Route path="/" element={<Posts />} />
                 <Route path="/register" element={<Register />} />
                 <Route path="/login" element={<Login />} />
-                <Route path="/profile" element={<Profile />} />
                 <Route path="/user/:id" element={<User />} />
                 {/*                 
                 <Route path="/chat" element={<Chat />} />

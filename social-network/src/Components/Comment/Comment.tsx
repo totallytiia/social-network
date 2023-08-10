@@ -24,7 +24,12 @@ export default function Comment({ comment, deleteComment }: ICommentProps) {
     return comment !== undefined ? (
         <>
             <div className="flex flex-row gap-2">
-                <div className="w-6 h-6 relative overflow-hidden shrink-0 rounded-full bg-pink-200 border-none outline-none">
+                <div
+                    onClick={() =>
+                        (window.location.href = `/user/${comment.user_id}`)
+                    }
+                    className="cursor-pointer mt-2 w-6 h-6 relative overflow-hidden shrink-0 rounded-full bg-pink-200 border-none outline-none"
+                >
                     <img
                         className="border-none outline-none"
                         src={comment.user_avatar.toString()}
@@ -34,7 +39,14 @@ export default function Comment({ comment, deleteComment }: ICommentProps) {
                 </div>
                 <div className="flex flex-col text-sm bg-gray-50 my-1 p-2 rounded-lg ">
                     <div className="flex font-bold gap-2 justify-between">
-                        <p>{comment.user_fname + ' ' + comment.user_lname}</p>
+                        <p
+                            className="cursor-pointer"
+                            onClick={() =>
+                                (window.location.href = `/user/${comment.user_id}`)
+                            }
+                        >
+                            {comment.user_fname + ' ' + comment.user_lname}
+                        </p>
                         {comment.user_id === userData.id ? (
                             <button
                                 onClick={() => deleteComment(comment.id)}
