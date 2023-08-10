@@ -129,7 +129,11 @@ export default function User() {
 
                         <div className="justify-center gap-6 flex mt-10 md:mt-0 border-b md:border-b-0 pb-8 md:pb-0">
                             <label className="my-auto relative items-center cursor-pointer">
-                                <div className="flex flex-row">
+                                <div
+                                    className={`flex flex-row ${
+                                        user.id !== userData.id ? 'hidden' : ''
+                                    }`}
+                                >
                                     <input
                                         type="checkbox"
                                         value=""
@@ -206,10 +210,10 @@ export default function User() {
                         <p className="mt-2 text-gray-500">{user.dateOfBirth}</p>
                     </div>
 
-                    <div className="mt-12 flex flex-col justify-center">
+                    <div className="mt-6 w-2/3 min-w-min max-w-xl">
                         {posts !== undefined && posts.length !== 0 ? (
                             posts.map((post: any) => (
-                                <div>
+                                <div className="">
                                     <div className="mt-4 mx-6 mb-0 p-5 bg-blue-50 rounded-xl">
                                         <div className="flex justify-between">
                                             <div className="flex">
