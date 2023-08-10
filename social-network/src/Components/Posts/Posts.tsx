@@ -2,8 +2,8 @@ import Post from './Post';
 import GroupSelection from './GroupSelection';
 import CreateAPost from '../CreateAPost/CreateAPost';
 import { useEffect, useState } from 'react';
-import GroupsSidebar from './GroupsSidebar';
-import UsersSidebar from './UsersSidebar';
+import GroupsSidebar from '../Sidebars/GroupsSidebar';
+import UsersSidebar from '../Sidebars/UsersSidebar';
 
 interface IPost {
     id: number;

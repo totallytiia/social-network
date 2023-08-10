@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import ProfileIcon from './ProfileIcon';
+import ProfileIcon from '../Posts/ProfileIcon';
 import { Link } from 'react-router-dom';
 interface IUser {
     id: number;
