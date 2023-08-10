@@ -1,6 +1,6 @@
 import { useContext } from 'react';
 import { UserContext } from '../App/App';
-import ProfileIcon from '../Posts/ProfileIcon';
+import ProfileIcon from '../Profile/ProfileIcon';
 
 interface IComment {
     id: number;

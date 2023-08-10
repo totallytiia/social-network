@@ -5,12 +5,14 @@
 ### Tiia
 
 #### Primary (front-end):
-- [ ] Show notifications (Header has them fetched and set (I hope))
+
+- [kinda] Show notifications (Header has them fetched and set (I hope))
 - [ ] Create group page
 - [ ] Choose users on "almost private" post
 - [ ] Display users posts on profile
 
 #### Extra:
+
 - [ ] Edit posts
 - [ ] Edit comments
 
@@ -35,5 +37,5 @@
 
 ### Göran
 
-- [X] Dockerfiles
-- [X] docker-compose.yaml
+- [x] Dockerfiles
+- [x] docker-compose.yaml

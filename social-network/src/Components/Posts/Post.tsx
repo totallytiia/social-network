@@ -3,7 +3,7 @@ import { useState, useContext } from 'react';
 import { UserContext } from '../App/App';
 import ErrorNotification from '../Notification/ErrorNotification';
 import { render } from '@testing-library/react';
-import ProfileIcon from './ProfileIcon';
+import ProfileIcon from '../Profile/ProfileIcon';
 interface PostProps {
     deletePost: (id: number) => void;
     postInput: {

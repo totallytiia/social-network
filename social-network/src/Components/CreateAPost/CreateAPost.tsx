@@ -1,6 +1,6 @@
 import { useContext, useState } from 'react';
 import { UserContext } from '../App/App';
-import ProfileIcon from '../Posts/ProfileIcon';
+import ProfileIcon from '../Profile/ProfileIcon';
 
 interface iFormKeys {
     [key: string]: {
