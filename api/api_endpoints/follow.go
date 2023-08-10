@@ -61,6 +61,7 @@ func FollowUser(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusCreated)
 		var okJSON, _ = json.Marshal(s.OKResponse{Message: "User request sent successfully"})
 		w.Write(okJSON)
+		return
 	}
 	err = u.Follow(followUser.ID)
 	if err != nil {
