@@ -1,4 +1,4 @@
-import Group from '../Group/Group';
+import Group from '../Group/GroupList';
 import CreateGroup from '../Group/CreateGroup';
 import { useState } from 'react';
 

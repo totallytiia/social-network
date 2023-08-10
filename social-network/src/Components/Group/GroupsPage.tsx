@@ -1,7 +1,7 @@
 import { useEffect, useState, useContext } from 'react';
 import { UserContext } from '../App/App';
 import CreateEvent from './CreateEvent';
-import Group from './Group';
+import Group from './GroupList';
 import GroupIcon from './GroupIcon';
 import CreateGroup from './CreateGroup';
 
