@@ -7,6 +7,7 @@
 #### Primary (front-end):
 
 - [kinda] Show notifications (Header has them fetched and set (I hope))
+- [ ] Create the notifications component HTML src/Components/Notifications/Notifications.tsx
 - [ ] Create group page
 - [ ] Choose users on "almost private" post
 - [ ] Display users posts on profile
