@@ -131,7 +131,12 @@ export default function Post({ postInput, deletePost }: PostProps) {
             <div className="mt-4 mx-6 mb-0 p-5 bg-blue-50 rounded-xl">
                 <div className="flex justify-between">
                     <div className="flex">
-                        <div className="h-8 w-8 relative overflow-hidden rounded-full bg-pink-200">
+                        <div
+                            onClick={() =>
+                                (window.location.href = `/user/${post.user_id}`)
+                            }
+                            className="cursor-pointer h-8 w-8 relative overflow-hidden rounded-full bg-pink-200"
+                        >
                             <img
                                 className="border-none outline-none"
                                 src={post.user_avatar}
@@ -140,7 +145,12 @@ export default function Post({ postInput, deletePost }: PostProps) {
                             <ProfileIcon classNames="w-10 h-10" />
                         </div>
                         <div className="ml-2">
-                            <h1 className="text-sm font-bold">
+                            <h1
+                                onClick={() =>
+                                    (window.location.href = `/user/${post.user_id}`)
+                                }
+                                className="cursor-pointer text-sm font-bold"
+                            >
                                 {post.user_fname + ' ' + post.user_lname}
                             </h1>
                             <p className="text-xs">

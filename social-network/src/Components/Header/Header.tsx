@@ -1,4 +1,5 @@
 import { useEffect, useState, useContext } from 'react';
+import { UserContext } from '../App/App';
 import { Link } from 'react-router-dom';
 import Groups from '../Group/GroupsPage';
 
@@ -32,8 +33,7 @@ export default function Header() {
         getNotifications();
     }, []);
 
-    //get users name from id and return it from database
-    const getUsersName = (id: number) => {};
+    const { userData } = useContext(UserContext);
 
     // remove notification from database
     async function deleteNotification(id: number) {
@@ -144,7 +144,7 @@ export default function Header() {
                             </Link>
                             <button
                                 onClick={() =>
-                                    (window.location.href = '/profile')
+                                    (window.location.href = `/user/${userData.id}`)
                                 }
                                 className="text-2xl font-extrabold"
                             >
@@ -267,7 +267,7 @@ export default function Header() {
                         <Link to="/groups">Groups</Link>
                     </div>
                     <div className="text-black bg-gray-200 hover:bg-gray-300 focus:bg-gray-300  py-2 px-3 rounded-full">
-                        <Link to="/profile">Profile</Link>
+                        <Link to={`/user/${userData.id}`}>Profile</Link>
                     </div>
                     <div
                         onClick={Logout}
