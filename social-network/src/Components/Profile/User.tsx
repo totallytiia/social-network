@@ -154,10 +154,7 @@ export default function User() {
                     </div>
 
                     <div className="mt-12 flex flex-col justify-center">
-                        <p className="text-gray-600 text-center lg:px-16">
-                            POSTS
-                        </p>
-                        {!posts || posts.length !== 0 ? (
+                        {posts !== undefined && posts.length !== 0 ? (
                             posts.map((post: any) => (
                                 <div>
                                     <div className="mt-4 mx-6 mb-0 p-5 bg-blue-50 rounded-xl">
