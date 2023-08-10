@@ -1,6 +1,8 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import { useParams } from 'react-router-dom';
 import ProfileIcon from './ProfileIcon';
+import { UserContext } from '../App/App';
+import { preProcessFile } from 'typescript';
 
 interface IUser {
     id: number;
@@ -32,6 +34,7 @@ interface IPost {
 export default function User() {
     const [user, setUser] = useState({} as IUser);
     const { id } = useParams();
+    const { userData } = useContext(UserContext);
     useEffect(() => {
         async function getUser(userId: string): Promise<void> {
             const url = `http://localhost:8080/api/users/get?id=${id}`;
@@ -69,7 +72,25 @@ export default function User() {
         }
         if (id) getPosts();
     }, [id]);
-    console.log(posts);
+
+    const [privacy, setPrivacy] = useState(user.private);
+
+    const handlePrivate = async () => {
+        const url = `http://localhost:8080/api/users/private`;
+        const FD = new FormData();
+        FD.append('private', (!privacy).toString());
+        const res = await fetch(url, {
+            method: 'POST',
+            credentials: 'include',
+            body: FD,
+        });
+        const data = await res.json();
+        if (data.errors) {
+            return;
+        }
+        setPrivacy(!privacy);
+    };
+
     return (
         <>
             <div className="p-16 bg-custom z-0 item-center justify-center">
@@ -78,13 +99,13 @@ export default function User() {
                         <div className="grid grid-cols-2 text-center order-last md:order-first mt-7 md:mt-0">
                             <div>
                                 <p className="font-bold text-gray-700 text-xl">
-                                    22
+                                    friendss
                                 </p>
                                 <p className="text-gray-400">Friends</p>
                             </div>
                             <div>
                                 <p className="font-bold text-gray-700 text-xl">
-                                    10
+                                    {posts.length}
                                 </p>
                                 <p className="text-gray-400">Posts</p>
                             </div>
@@ -107,7 +128,33 @@ export default function User() {
                         </div>
 
                         <div className="justify-center gap-6 flex mt-10 md:mt-0 border-b md:border-b-0 pb-8 md:pb-0">
-                            <button className="btn-custom">
+                            <label className="my-auto relative items-center cursor-pointer">
+                                <div className="flex flex-row">
+                                    <input
+                                        type="checkbox"
+                                        value=""
+                                        className="sr-only peer"
+                                        checked={privacy}
+                                    ></input>
+                                    <div
+                                        // on click send request to server to change private to true
+                                        onClick={() => {
+                                            handlePrivate();
+                                        }}
+                                        className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-green-500"
+                                    ></div>
+                                    <span className="my-auto ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">
+                                        Private
+                                    </span>
+                                </div>
+                            </label>
+                            <button
+                                className={`FOLLOW ${
+                                    user.id === userData.id
+                                        ? 'hidden'
+                                        : 'btn-custom'
+                                }`}
+                            >
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
                                     fill="none"
@@ -123,7 +170,13 @@ export default function User() {
                                     />
                                 </svg>
                             </button>
-                            <button className="btn-custom">
+                            <button
+                                className={`CHAT ${
+                                    user.id === userData.id
+                                        ? 'hidden'
+                                        : 'btn-custom'
+                                }`}
+                            >
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
                                     fill="none"
