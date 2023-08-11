@@ -44,11 +44,8 @@ export default function Group() {
         <>
             {groups.map((group) => {
                 return (
-                    <div className="bg-blue-50 rounded-xl">
-                        <div
-                            key={group.id}
-                            className="flex flex-row items-center gap-2"
-                        >
+                    <div className="bg-blue-50 rounded-xl" key={group.id}>
+                        <div className="flex flex-row items-center gap-2">
                             <a
                                 href={`/group/${group.id}`}
                                 className="p-1 text-sm font-normal flex flex-row gap-2"

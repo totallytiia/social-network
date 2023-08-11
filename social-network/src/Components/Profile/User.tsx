@@ -1,8 +1,7 @@
-import { useEffect, useState, useContext } from 'react';
+import { useEffect, useState, useContext, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
 import ProfileIcon from './ProfileIcon';
 import { UserContext } from '../App/App';
-import { preProcessFile } from 'typescript';
 
 interface IUser {
     id: number;
@@ -14,6 +13,9 @@ interface IUser {
     email: string;
     dateOfBirth: string;
     private: boolean;
+    followed: boolean;
+    followers: number[];
+    follows: number[];
 }
 
 interface IPost {
@@ -33,26 +35,46 @@ interface IPost {
 
 export default function User() {
     const [user, setUser] = useState({} as IUser);
+    const [posts, setPosts] = useState([] as IPost[]);
+    const [privacy, setPrivacy] = useState(user.private);
     const { id } = useParams();
     const { userData } = useContext(UserContext);
-    useEffect(() => {
-        async function getUser(userId: string): Promise<void> {
-            const url = `http://localhost:8080/api/users/get?id=${id}`;
-            const res = await fetch(url, {
-                method: 'GET',
-                credentials: 'include',
-            });
-            if (!res.ok) {
-                setUser({} as IUser);
-                return;
-            }
-            const data = await res.json();
-            setUser(data);
+    const getUser = useCallback(async () => {
+        const url = `http://localhost:8080/api/users/get?id=${id}`;
+        const res = await fetch(url, {
+            method: 'GET',
+            credentials: 'include',
+        });
+        if (!res.ok) {
+            setUser({} as IUser);
+            return;
         }
-        if (id) getUser(id);
-    }, [id]);
-
-    const [posts, setPosts] = useState([] as IPost[]);
+        const data = await res.json();
+        const user = {
+            id: data.id,
+            fName: data.fName,
+            nickname: data.nickname,
+            lName: data.lName,
+            avatar: data.avatar,
+            about: data.aboutMe,
+            email: data.email,
+            dateOfBirth: data.dateOfBirth,
+            private: data.private,
+            followers: (data.followers as string)
+                .split(',')
+                .map(Number)
+                .filter((id) => id !== 0),
+            follows: (data.follows as string)
+                .split(',')
+                .map(Number)
+                .filter((id) => id !== 0),
+            followed: (data.followers as string)
+                .split(',')
+                .map(Number)
+                .includes(userData.id),
+        } as IUser;
+        setUser(user);
+    }, [id, userData.id]);
 
     useEffect(() => {
         async function getPosts() {
@@ -67,13 +89,13 @@ export default function User() {
             if (data.errors) {
                 setPosts([] as IPost[]);
             }
-            console.log(data);
             setPosts(data);
         }
-        if (id) getPosts();
-    }, [id]);
-
-    const [privacy, setPrivacy] = useState(user.private);
+        if (id) {
+            getUser();
+            getPosts();
+        }
+    }, [id, getUser]);
 
     const handlePrivate = async () => {
         const url = `http://localhost:8080/api/users/private`;
@@ -91,6 +113,44 @@ export default function User() {
         setPrivacy(!privacy);
     };
 
+    useEffect(() => {
+        getUser();
+    }, [user.followed, getUser]);
+
+    async function followUser() {
+        if (id === undefined) return;
+        const url = `http://localhost:8080/api/users/follow`;
+        const FD = new FormData();
+        FD.append('id', id);
+        const res = await fetch(url, {
+            method: 'POST',
+            credentials: 'include',
+            body: FD,
+        });
+        const data = await res.json();
+        if (data.errors) {
+            return;
+        }
+        setUser({ ...user, followed: true });
+    }
+
+    async function unfollowUser() {
+        if (id === undefined) return;
+        const url = `http://localhost:8080/api/users/unfollow`;
+        const FD = new FormData();
+        FD.append('id', id);
+        const res = await fetch(url, {
+            method: 'POST',
+            credentials: 'include',
+            body: FD,
+        });
+        const data = await res.json();
+        if (data.errors) {
+            return;
+        }
+        setUser({ ...user, followed: false });
+    }
+
     return (
         <>
             <div className="p-16 bg-custom z-0 item-center justify-center">
@@ -99,9 +159,19 @@ export default function User() {
                         <div className="grid grid-cols-2 text-center order-last md:order-first mt-7 md:mt-0">
                             <div>
                                 <p className="font-bold text-gray-700 text-xl">
-                                    friendss
+                                    {user.followers !== undefined
+                                        ? user.followers.length
+                                        : 0}
                                 </p>
-                                <p className="text-gray-400">Friends</p>
+                                <p className="text-gray-400">Followers</p>
+                            </div>
+                            <div>
+                                <p className="font-bold text-gray-700 text-xl">
+                                    {user.follows !== undefined
+                                        ? user.follows.length
+                                        : 0}
+                                </p>
+                                <p className="text-gray-400">Follows</p>
                             </div>
                             <div>
                                 <p className="font-bold text-gray-700 text-xl">
@@ -141,7 +211,6 @@ export default function User() {
                                         checked={privacy}
                                     ></input>
                                     <div
-                                        // on click send request to server to change private to true
                                         onClick={() => {
                                             handlePrivate();
                                         }}
@@ -158,6 +227,9 @@ export default function User() {
                                         ? 'hidden'
                                         : 'btn-custom'
                                 }`}
+                                onClick={
+                                    user.followed ? unfollowUser : followUser
+                                }
                             >
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
@@ -167,13 +239,22 @@ export default function User() {
                                     stroke="currentColor"
                                     className="w-6 h-6"
                                 >
-                                    <path
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        d="M19 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zM4 19.235v-.11a6.375 6.375 0 0112.75 0v.109A12.318 12.318 0 0110.374 21c-2.331 0-4.512-.645-6.374-1.766z"
-                                    />
+                                    {user.followed ? (
+                                        <path
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            d="M22 10.5h-6m-2.25-4.125a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zM4 19.235v-.11a6.375 6.375 0 0112.75 0v.109A12.318 12.318 0 0110.374 21c-2.331 0-4.512-.645-6.374-1.766z"
+                                        />
+                                    ) : (
+                                        <path
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            d="M19 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zM4 19.235v-.11a6.375 6.375 0 0112.75 0v.109A12.318 12.318 0 0110.374 21c-2.331 0-4.512-.645-6.374-1.766z"
+                                        />
+                                    )}
                                 </svg>
                             </button>
+
                             <button
                                 className={`CHAT ${
                                     user.id === userData.id
@@ -213,7 +294,7 @@ export default function User() {
                     <div className="mt-6 w-2/3 min-w-min max-w-xl">
                         {posts !== undefined && posts.length !== 0 ? (
                             posts.map((post: any) => (
-                                <div className="">
+                                <div className="" key={`userPost-${post.id}`}>
                                     <div className="mt-4 mx-6 mb-0 p-5 bg-blue-50 rounded-xl">
                                         <div className="flex justify-between">
                                             <div className="flex">
