@@ -2,6 +2,7 @@ import { useEffect, useState, useContext } from 'react';
 import { UserContext } from '../App/App';
 import { Link } from 'react-router-dom';
 import Groups from '../Group/GroupsPage';
+import HeaderNotification from '../Notification/HeaderNotification';
 
 interface INotification {
     id: number;
@@ -34,25 +35,6 @@ export default function Header() {
     }, []);
 
     const { userData } = useContext(UserContext);
-
-    // remove notification from database
-    async function deleteNotification(id: number) {
-        const url = `http://localhost:8080/api/notifications/delete`;
-        const FD = new FormData();
-        FD.append('id', id.toString());
-        const res = await fetch(url, {
-            method: 'POST',
-            credentials: 'include',
-            body: FD,
-        });
-        const data = await res.json();
-        if (data.errors) {
-            return;
-        }
-        setNotifications(
-            notifications.filter((notification: any) => notification.id !== id)
-        );
-    }
 
     async function Logout() {
         const res = await fetch('http://localhost:8080/api/users/logout', {
@@ -210,50 +192,14 @@ export default function Header() {
                                         Notifications
                                     </h1>
                                     {notifications.map((notification) => (
-                                        <div
+                                        <HeaderNotification
+                                            notification={notification}
+                                            notificationsState={{
+                                                notifications,
+                                                setNotifications,
+                                            }}
                                             key={notification.id}
-                                            id={notification.id.toString()}
-                                            className="NOTIFICATION flex flex-col"
-                                        >
-                                            <div className="NOTIFICATION-TEXT flex flex-row justify-between bg-blue-50 p-2 my-1 rounded-md">
-                                                <div className="flex flex-row gap-2">
-                                                    <p className="text-sm">
-                                                        {
-                                                            notification.follower_id
-                                                        }
-                                                        : {notification.message}
-                                                    </p>
-                                                    <p className="text-xs text-gray-500">
-                                                        {notification.createdAt}
-                                                    </p>
-                                                </div>
-                                                <div className="NOTIFICATION-ACTIONS flex-col flex">
-                                                    <button
-                                                        className="text-xs font-bold"
-                                                        onClick={(e) =>
-                                                            deleteNotification(
-                                                                notification.id
-                                                            )
-                                                        }
-                                                    >
-                                                        <svg
-                                                            xmlns="http://www.w3.org/2000/svg"
-                                                            fill="none"
-                                                            viewBox="0 0 24 24"
-                                                            strokeWidth={1.5}
-                                                            stroke="#e50000"
-                                                            className="w-4 h-4"
-                                                        >
-                                                            <path
-                                                                strokeLinecap="round"
-                                                                strokeLinejoin="round"
-                                                                d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"
-                                                            />
-                                                        </svg>
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </div>
+                                        />
                                     ))}
 
                                     {/* <button className="text-xs font-bold">
