@@ -1,9 +1,6 @@
 import Header from '../Header/Header';
 import Posts from '../Posts/Posts';
 import Footer from '../Footer/Footer';
-import Login from '../Login/Login';
-import Register from '../Register/Register';
-import Profile from '../Profile/Profile';
 import FourOneFour from '../FourOneFour/FourOneFour';
 import Groups from '../Group/GroupsPage';
 
@@ -16,8 +13,6 @@ function Page() {
             <Header></Header>
             <Routes>
                 <Route path="/" element={<Posts />} />
-                <Route path="/register" element={<Register />} />
-                <Route path="/login" element={<Login />} />
                 <Route path="/user/:id" element={<User />} />
                 {/*                 
                 <Route path="/chat" element={<Chat />} />
