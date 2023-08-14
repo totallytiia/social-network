@@ -91,7 +91,11 @@ func GetGroups() (Groups, error) {
 			if group.GroupID == 0 {
 				return nil, errors.New("no groups found")
 			}
-			return nil, err
+			if strings.Contains(err.Error(), "Scan error on column index 4") {
+				members = ""
+			} else {
+				return nil, err
+			}
 		}
 		group.GroupMembers = func(s string) []int {
 			var intSlice []int
