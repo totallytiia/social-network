@@ -1,8 +1,8 @@
-import { useEffect, useState, useContext } from 'react';
+import { useEffect, useState, useContext, useRef } from 'react';
 import { UserContext } from '../App/App';
 import { Link } from 'react-router-dom';
-import Groups from '../Group/GroupsPage';
 import HeaderNotification from '../Notification/HeaderNotification';
+import { WSContext } from '../WSProvider/WSProvider';
 
 interface INotification {
     id: number;
@@ -10,12 +10,24 @@ interface INotification {
     type: string;
     user_id: number;
     follower_id: number;
-    createdAt: string;
+    created_at: string;
+    seen: boolean;
 }
 
 export default function Header() {
+    const { ws } = useContext(WSContext);
+
     const [isNavOpen, setIsNavOpen] = useState(false);
     const [notifications, setNotifications] = useState([] as INotification[]);
+    const [newNotification, setNewNotification] = useState(false);
+
+    const numUnseenNotifications = useRef(0);
+
+    if (ws !== null)
+        ws.addEventListener('message', () => {
+            setNewNotification(true);
+        });
+
     useEffect(() => {
         async function getNotifications() {
             const res = await fetch('http://localhost:8080/api/notifications', {
@@ -30,9 +42,16 @@ export default function Header() {
                 return;
             }
             setNotifications(data);
+            setNewNotification(false);
         }
         getNotifications();
-    }, []);
+    }, [newNotification]);
+
+    useEffect(() => {
+        numUnseenNotifications.current = notifications.filter(
+            (n) => !n.seen
+        ).length;
+    }, [notifications]);
 
     const { userData } = useContext(UserContext);
 
@@ -167,11 +186,11 @@ export default function Header() {
                             className=" cursor-pointer relative text-black bg-gray-200 hover:bg-gray-300 focus:bg-gray-300  py-2 px-3 rounded-full"
                         >
                             Notifications
-                            {notifications.length > 0 && (
-                                <div className="flex absolute right-2 -bottom-3 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs">
-                                    {notifications.length}
+                            {numUnseenNotifications.current > 0 ? (
+                                <div className="flex absolute right-2 -bottom-3 bg-red-500 text-white rounded-full w-5 h-5 items-center justify-center text-xs">
+                                    {numUnseenNotifications.current}
                                 </div>
-                            )}
+                            ) : null}
                         </div>
                         <div
                             className={`fixed left-0 top-0 bottom-0 right-0 w-full ${
@@ -182,7 +201,7 @@ export default function Header() {
                             <div
                                 onClick={handleContainerClick}
                                 id="NOTIFICATIONS-CONTAINER"
-                                className="flex absolute top-14 right-2 bg-white shadow-lg rounded-lg w-96"
+                                className="flex absolute top-14 right-2 bg-white shadow-lg rounded-lg w-96 overflow-scroll h-2/3"
                             >
                                 <div
                                     id="NOTIFICATIONS-CONTAINER-HEADER"
@@ -201,10 +220,6 @@ export default function Header() {
                                             key={notification.id}
                                         />
                                     ))}
-
-                                    {/* <button className="text-xs font-bold">
-                                        Mark all as read
-                                    </button> */}
                                 </div>
                             </div>
                         </div>

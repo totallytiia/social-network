@@ -3,14 +3,16 @@ interface INotificationProps {
         id: number;
         follower_id: number;
         message: string;
-        createdAt: string;
+        created_at: string;
+        seen: boolean;
     };
     notificationsState: {
         notifications: {
             id: number;
             follower_id: number;
             message: string;
-            createdAt: string;
+            created_at: string;
+            seen: boolean;
         }[];
         setNotifications: any;
     };
@@ -21,39 +23,46 @@ export default function HeaderNotification(props: INotificationProps) {
         notification,
         notificationsState: { notifications, setNotifications },
     } = props;
-    async function deleteNotification(id: number) {
-        const url = `http://localhost:8080/api/notifications/delete`;
-        const FD = new FormData();
-        FD.append('id', id.toString());
+    async function markAsSeen() {
+        const url = `http://localhost:8080/api/notifications/seen?id=${notification.id}`;
         const res = await fetch(url, {
-            method: 'POST',
             credentials: 'include',
-            body: FD,
         });
         const data = await res.json();
         if (data.errors) {
             return;
         }
+        notification.seen = true;
         setNotifications(
-            notifications.filter((notification: any) => notification.id !== id)
+            notifications.map((noti: any) => {
+                if (noti.id === notification.id) {
+                    return notification;
+                }
+                return noti;
+            })
         );
     }
 
     return (
         <div
-            id={notification.id.toString()}
+            id={`notification-${notification.id.toString()}`}
             className="NOTIFICATION flex flex-col"
+            onMouseOver={!notification.seen ? markAsSeen : undefined}
         >
-            <div className="NOTIFICATION-TEXT flex flex-row justify-between bg-blue-50 p-2 my-1 rounded-md">
+            <div
+                className={`NOTIFICATION-TEXT flex flex-row justify-between ${
+                    !notification.seen ? 'bg-blue-200' : 'bg-blue-50'
+                } p-2 my-1 rounded-md`}
+            >
                 <div className="flex flex-row gap-2">
                     <p className="text-sm">
                         {notification.follower_id}: {notification.message}
                     </p>
                     <p className="text-xs text-gray-500">
-                        {notification.createdAt}
+                        {new Date(notification.created_at).toLocaleString()}
                     </p>
                 </div>
-                <div className="NOTIFICATION-ACTIONS flex-col flex">
+                {/* <div className="NOTIFICATION-ACTIONS flex-col flex">
                     <button
                         className="text-xs font-bold"
                         onClick={(e) => deleteNotification(notification.id)}
@@ -73,7 +82,7 @@ export default function HeaderNotification(props: INotificationProps) {
                             />
                         </svg>
                     </button>
-                </div>
+                </div> */}
             </div>
         </div>
     );

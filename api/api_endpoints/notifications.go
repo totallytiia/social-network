@@ -3,6 +3,8 @@ package endpoints
 import (
 	"encoding/json"
 	"net/http"
+	s "social_network_api/structs"
+	"strconv"
 )
 
 func GetNotifications(w http.ResponseWriter, r *http.Request) {
@@ -38,14 +40,19 @@ func MarkNotificationsSeen(w http.ResponseWriter, r *http.Request) {
 		BadRequest(w, r, "Bad Request")
 		return
 	}
-	if r.Method != "POST" {
+	notificationID, err := strconv.Atoi(r.FormValue("id"))
+	if err != nil {
 		BadRequest(w, r, "Bad Request")
 		return
 	}
-	err := u.MarkNotificationsSeen()
+	var notification s.Notification
+	notification.ID = notificationID
+	err = u.MarkNotificationsSeen()
 	if err != nil {
 		BadRequest(w, r, "Bad Request")
 		return
 	}
 	w.WriteHeader(http.StatusOK)
+	okJSON, _ := json.Marshal(s.OKResponse{Message: "OK", Details: "Notification marked as seen"})
+	w.Write(okJSON)
 }
