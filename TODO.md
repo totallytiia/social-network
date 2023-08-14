@@ -10,7 +10,7 @@
 - [ ] Create the notifications component HTML src/Components/Notifications/Notifications.tsx
 - [ ] Create group page
 - [ ] Choose users on "almost private" post
-- [ ] Display users posts on profile
+- [x] Display users posts on profile
 
 #### Extra:
 

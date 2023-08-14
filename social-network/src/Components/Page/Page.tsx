@@ -3,6 +3,7 @@ import Posts from '../Posts/Posts';
 import Footer from '../Footer/Footer';
 import FourOneFour from '../FourOneFour/FourOneFour';
 import Groups from '../Group/GroupsPage';
+import Group from '../Group/Group';
 
 import { Routes, Route } from 'react-router-dom';
 import User from '../Profile/User';
@@ -18,6 +19,7 @@ function Page() {
                 <Route path="/chat" element={<Chat />} />
                 <Route path="/notifications" element={<Notifications />} /> */}
                 <Route path="/groups" element={<Groups />} />
+                <Route path="/group/:id" element={<Group />} />
                 {/* <Route path="/new-post" element={<NewPost />} /> */}
                 <Route path="*" element={<FourOneFour />} />
             </Routes>

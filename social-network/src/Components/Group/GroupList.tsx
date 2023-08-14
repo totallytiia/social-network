@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import GroupIcon from './GroupIcon';
+import { Link } from 'react-router-dom';
 
 export default function Group() {
     interface Group {
@@ -46,13 +47,17 @@ export default function Group() {
                 return (
                     <div className="bg-blue-50 rounded-xl" key={group.id}>
                         <div className="flex flex-row items-center gap-2">
-                            <a
-                                href={`/group/${group.id}`}
-                                className="p-1 text-sm font-normal flex flex-row gap-2"
-                            >
-                                <GroupIcon />
-                                <div className="my-auto">{group.name}</div>
-                            </a>
+                            <div className="p-1 text-sm font-normal flex flex-row gap-2">
+
+                                <Link
+                                    to={`/group/${group.id}`}
+                                    key={`groupLink-${group.id}`}
+                                >
+                                    <GroupIcon />
+                                    <div className="my-auto">{group.name}</div>
+                                </Link>
+                            </div>
+
                         </div>
                     </div>
                 );
