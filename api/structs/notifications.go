@@ -81,7 +81,7 @@ func (u *User) MarkNotificationsSeen() error {
 
 func FindNotification(user, follower int, notiType string) (Notification, error) {
 	var notification Notification
-	err := db.DB.QueryRow("SELECT * FROM notifications WHERE user_id = ? AND follower_id = ? AND type = ?", user, follower, notiType).Scan(&notification.ID, &notification.UserID, &notification.FollowerID, &notification.Message, &notification.CreatedAt, &notification.UpdatedAt, &notification.Type, &notification.Seen)
+	err := db.DB.QueryRow("SELECT * FROM notifications WHERE user_id = ? AND follow_id = ? AND type = ?", user, follower, notiType).Scan(&notification.ID, &notification.UserID, &notification.FollowerID, &notification.Message, &notification.CreatedAt, &notification.UpdatedAt, &notification.Type, &notification.Seen)
 	if err != nil {
 		fmt.Println(err)
 		return notification, err
