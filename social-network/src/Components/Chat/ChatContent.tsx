@@ -1,5 +1,14 @@
 import Avatar from "./Avatar";
 
+// interface Props {
+// 	messages: Message[];
+// }
+
+//here message handler 
+const handleNewMessage = () => {
+
+}
+
 const ChatContent = () => {
 	return (
 		<div className="max-h-64 h-64 px-6 py-1 overflow-auto">
