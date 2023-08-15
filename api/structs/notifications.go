@@ -78,3 +78,21 @@ func (u *User) MarkNotificationsSeen() error {
 	}
 	return nil
 }
+
+func FindNotification(user, follower int, notiType string) (Notification, error) {
+	var notification Notification
+	err := db.DB.QueryRow("SELECT * FROM notifications WHERE user_id = ? AND follower_id = ? AND type = ?", user, follower, notiType).Scan(&notification.ID, &notification.UserID, &notification.FollowerID, &notification.Message, &notification.CreatedAt, &notification.UpdatedAt, &notification.Type, &notification.Seen)
+	if err != nil {
+		fmt.Println(err)
+		return notification, err
+	}
+	return notification, nil
+}
+
+func (n *Notification) ChangeType(newType string) error {
+	_, err := db.DB.Exec("UPDATE notifications SET type = ? WHERE id = ?", newType, n.ID)
+	if err != nil {
+		return err
+	}
+	return nil
+}

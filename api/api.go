@@ -64,6 +64,8 @@ func api(w http.ResponseWriter, r *http.Request) {
 			ep.FollowUser(w, r)
 		case "unfollow":
 			ep.UnfollowUser(w, r)
+		case "respond":
+			ep.RespondToRequest(w, r)
 		default:
 			http.NotFound(w, r)
 			return

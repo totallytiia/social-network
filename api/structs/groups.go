@@ -60,7 +60,9 @@ func (g *Group) Get() error {
 	var members string
 	err := row.Scan(&g.GroupName, &g.GroupDescription, &g.GroupOwner, &members)
 	if err != nil {
-		return err
+		if !(err.Error() == "sql: Scan errir on column index 3: name \"members\"") {
+			return err
+		}
 	}
 	g.GroupMembers = func(s string) []int {
 		var intSlice []int
