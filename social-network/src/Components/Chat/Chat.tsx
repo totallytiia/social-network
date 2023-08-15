@@ -42,9 +42,13 @@ export default function Chat() {
 				</button>
 			</div>
 			<div className="bg-white border border-gray-200 rounded-lg shadow relative">
-				<ChatHeader />
-				<ChatContent />
-				<ChatInputBox />
+				<ChatHeader name={"name"} />
+				<ChatContent
+				//  messages={messages}
+				/>
+				<ChatInputBox
+				//sendANewMessage={sendANewMessage} 
+				/>
 			</div>
 		</div>
 	)
