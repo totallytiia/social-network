@@ -28,9 +28,7 @@ export default function CreateGroup() {
 			e.target.parentElement?.parentElement?.attributes.getNamedItem(
 				'name'
 			)?.value as string;
-		console.log(form);
 		const target = e.target;
-		console.dir(target);
 		const value = target.value;
 		const name = target.name;
 		const newFormData = formData;
@@ -38,24 +36,29 @@ export default function CreateGroup() {
 		setFormData({ ...newFormData });
 	}
 
+
 	async function handleFormSubmit(e: React.FormEvent<HTMLFormElement>) {
 		e.preventDefault();
 		const FD = new FormData();
 		FD.append('group_name', formData.groupCreate.name);
 		FD.append('group_description', formData.groupCreate.description);
-		console.log(formData);
 		const url = 'http://localhost:8080/api/groups/create';
 		const res = await fetch(url, {
 			method: 'POST',
 			credentials: 'include',
 			body: FD,
 		});
+		(document.getElementById('name') as HTMLInputElement).value = '';
+		(document.getElementById('description') as HTMLInputElement).value = '';
+
 		const data = await res.json();
 		if (data.errors) {
 			console.log(data);
 		}
-		console.log(data);
+		setFormVisibility(false);
 	}
+
+
 
 	const [formVisibility, setFormVisibility] = useState(true);
 
@@ -119,7 +122,6 @@ export default function CreateGroup() {
 							<button>Cancel</button>
 						</div>
 						<input
-							onClick={() => setFormVisibility(false)}
 							type="submit"
 							value="Submit"
 							className="button-custom text-center bg-blue-100 font-bold text-sm rounded-full mt-2 py-2 px-4"
