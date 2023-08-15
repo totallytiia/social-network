@@ -74,6 +74,7 @@ export default function User() {
                 .includes(userData.id),
         } as IUser;
         setUser(user);
+        setPrivacy(user.private);
     }, [id, userData.id]);
 
     useEffect(() => {
@@ -151,6 +152,7 @@ export default function User() {
         setUser({ ...user, followed: false });
     }
 
+    console.log(privacy);
     return (
         <>
             <div className="p-16 bg-custom z-0 item-center justify-center">

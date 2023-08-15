@@ -187,8 +187,8 @@ func (u *User) Get() error {
 }
 
 func (u User) Update() error {
-	var query = "UPDATE users SET fname = ?, lname = ?, dob = ?, nickname = ?, avatar = ?, about = ?, private = ? WHERE id = ?"
-	_, err := db.DB.Exec(query, u.FName, u.LName, u.DoB, u.Nickname, u.Avatar, u.AboutMe, u.Private, u.ID)
+	var query = "UPDATE users SET private = ? WHERE id = ?"
+	_, err := db.DB.Exec(query, u.Private, u.ID)
 	if err != nil {
 		return err
 	}
