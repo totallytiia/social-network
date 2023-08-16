@@ -107,11 +107,13 @@ func GetChat(w http.ResponseWriter, r *http.Request) {
 		BadRequest(w, r, "Invalid group ID")
 		return
 	}
+
 	var chat []structs.Chat
 	if (receiverID != 0 && groupID != 0) || (receiverID == 0 && groupID == 0) {
-		BadRequest(w, r, "Invalid receiver")
+		BadRequest(w, r, "Either receiver or group ID is required but not both")
 		return
-	} else if receiverID != 0 {
+	}
+	if receiverID != 0 {
 		chat, err = structs.GetChats(u.ID, receiverID)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
@@ -119,7 +121,8 @@ func GetChat(w http.ResponseWriter, r *http.Request) {
 			w.Write(badReqJSON)
 			return
 		}
-	} else if groupID != 0 {
+	}
+	if groupID != 0 {
 		chat, err = structs.GetChats(u.ID, groupID)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)

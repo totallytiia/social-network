@@ -1,4 +1,4 @@
-import Chat from '../Chat/Chat';
+import ChatList from '../Chat/ChatList';
 import { useEffect, useRef, useState, useContext } from 'react';
 import { WSContext } from '../WSProvider/WSProvider';
 import { ChatBubbleOvalLeftIcon } from '@heroicons/react/24/solid';
@@ -30,7 +30,7 @@ export default function Footer() {
                 return;
             }
             const data = await res.json();
-            if (!data) {
+            if (data) {
                 return;
             }
             setMessages(data);
@@ -47,7 +47,7 @@ export default function Footer() {
         <>
             <div id="notifications" className="absolute bottom-2 right-2">
                 {chatVisible ? (
-                    <Chat />
+                    <ChatList />
                 ) : (
                     <button onClick={() => setChatVisible(true)}>
                         <ChatBubbleOvalLeftIcon className="fill-white w-10 h-10 m-2 bg-blue-500 rounded-full shadow p-2" />

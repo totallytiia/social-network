@@ -8,7 +8,7 @@ import (
 )
 
 func CreateEvent(w http.ResponseWriter, r *http.Request) {
-	v, u := ValidateCookie(w, r)
+	v, _ := ValidateCookie(w, r)
 	if !v {
 		http.Error(w, "Unauthorized", http.StatusUnauthorized)
 	}
@@ -59,7 +59,7 @@ func CreateEvent(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetEvents(w http.ResponseWriter, r *http.Request) {
-	v, u := ValidateCookie(w, r)
+	v, _ := ValidateCookie(w, r)
 	if !v {
 		http.Error(w, "Unauthorized", http.StatusUnauthorized)
 	}
@@ -72,7 +72,13 @@ func GetEvents(w http.ResponseWriter, r *http.Request) {
 		BadRequest(w, r, "Invalid group_id")
 		return
 	}
-	var events, err2 = s.GetEvents(groupID)
+	var group = s.Group{GroupID: groupID}
+	err = group.Get()
+	if err != nil {
+		BadRequest(w, r, err.Error())
+		return
+	}
+	var events, err2 = group.GetEvents()
 	if err2 != nil {
 		BadRequest(w, r, err2.Error())
 		return
@@ -83,7 +89,7 @@ func GetEvents(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetEvent(w http.ResponseWriter, r *http.Request) {
-	v, u := ValidateCookie(w, r)
+	v, _ := ValidateCookie(w, r)
 	if !v {
 		http.Error(w, "Unauthorized", http.StatusUnauthorized)
 	}
@@ -108,7 +114,7 @@ func GetEvent(w http.ResponseWriter, r *http.Request) {
 }
 
 func UpdateEvent(w http.ResponseWriter, r *http.Request) {
-	v, u := ValidateCookie(w, r)
+	v, _ := ValidateCookie(w, r)
 	if !v {
 		http.Error(w, "Unauthorized", http.StatusUnauthorized)
 	}
@@ -146,7 +152,7 @@ func UpdateEvent(w http.ResponseWriter, r *http.Request) {
 }
 
 func DeleteEvent(w http.ResponseWriter, r *http.Request) {
-	v, u := ValidateCookie(w, r)
+	v, _ := ValidateCookie(w, r)
 	if !v {
 		http.Error(w, "Unauthorized", http.StatusUnauthorized)
 	}
