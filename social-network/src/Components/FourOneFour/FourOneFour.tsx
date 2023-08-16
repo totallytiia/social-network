@@ -10,7 +10,6 @@ export default function FourOneFour() {
                         <p className="font-semibold text-black text-center text-xl mb-4">
                             Page not found.
                         </p>
-
                         <a
                             className="text-black text-center bg-blue-100 p-2 rounded-lg"
                             href="/"

@@ -18,6 +18,7 @@ export default function GroupList(props: Props) {
 
     const { groupCreated, setGroupCreated } = props;
     const [groups, setGroups] = useState([] as Group[]);
+
     useEffect(() => {
         async function getGroups() {
             const url = `http://localhost:8080/api/groups/getall`;

@@ -5,6 +5,7 @@ import CreateAPost from '../CreateAPost/CreateAPost';
 import Post from '../Posts/Post';
 import { XMarkIcon } from '@heroicons/react/24/outline';
 import { UserContext } from '../App/App';
+import { PlusCircleIcon } from '@heroicons/react/24/solid';
 
 interface iGroup {
     id: number;
@@ -103,19 +104,7 @@ export default function Group() {
                                             setRequestSent(false);
                                         }}
                                     >
-                                        <svg
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            viewBox="0 0 24 24"
-                                            fill="currentColor"
-                                            className="w-6 h-6 shrink-0 my-auto"
-                                        >
-                                            <path
-                                                fillRule="evenodd"
-                                                d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm13.36-1.814a.75.75 0 10-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 00-1.06 1.06l2.25 2.25a.75.75 0 001.14-.094l3.75-5.25z"
-                                                clipRule="evenodd"
-                                            />
-                                        </svg>
-
+                                        <PlusCircleIcon className="w-6 h-6 shrink-0 my-auto" />
                                         <p>Requested</p>
                                     </div>
                                 ) : (
@@ -125,18 +114,7 @@ export default function Group() {
                                             setRequestSent(true);
                                         }}
                                     >
-                                        <svg
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            viewBox="0 0 24 24"
-                                            fill="currentColor"
-                                            className="w-6 h-6 shrink-0 my-auto"
-                                        >
-                                            <path
-                                                fillRule="evenodd"
-                                                d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25zM12.75 9a.75.75 0 00-1.5 0v2.25H9a.75.75 0 000 1.5h2.25V15a.75.75 0 001.5 0v-2.25H15a.75.75 0 000-1.5h-2.25V9z"
-                                                clipRule="evenodd"
-                                            />
-                                        </svg>
+                                        <PlusCircleIcon className="w-6 h-6 font-bold shrink-0 my-auto" />
                                         <p>Request</p>
                                     </div>
                                 )}
@@ -183,7 +161,7 @@ export default function Group() {
                     </div>
                     <div className="mt-12 flex flex-col justify-center">
                         {group.posts !== undefined &&
-                        group.posts.length !== 0 ? (
+                            group.posts.length !== 0 ? (
                             group.posts.map((post: any) => (
                                 <Post
                                     deletePost={deletePost}
@@ -206,18 +184,7 @@ export default function Group() {
                                     onClick={() => handleCreateEvent()}
                                     className="flex shrink-0 flex-row text-lg font-bold items-center gap-1 bg-blue-50 py-2 pl-1 pr-4 rounded-full hover:bg-blue-100"
                                 >
-                                    <svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        viewBox="0 0 24 24"
-                                        fill="currentColor"
-                                        className="w-6 h-6 shrink-0"
-                                    >
-                                        <path
-                                            fillRule="evenodd"
-                                            d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25zM12.75 9a.75.75 0 00-1.5 0v2.25H9a.75.75 0 000 1.5h2.25V15a.75.75 0 001.5 0v-2.25H15a.75.75 0 000-1.5h-2.25V9z"
-                                            clipRule="evenodd"
-                                        />
-                                    </svg>
+                                    <PlusCircleIcon className="w-6 h-6 shrink-0" />
                                     <p className="text-bold text-sm shrink-0">
                                         Create an event
                                     </p>
@@ -244,18 +211,8 @@ export default function Group() {
                                     onClick={() => handleCreateAPost()}
                                     className="flex shrink-0 flex-row text-lg font-bold items-center gap-1 bg-blue-50 py-2 pl-1 pr-4 rounded-full hover:bg-blue-100"
                                 >
-                                    <svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        viewBox="0 0 24 24"
-                                        fill="currentColor"
-                                        className="w-6 h-6 shrink-0"
-                                    >
-                                        <path
-                                            fillRule="evenodd"
-                                            d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25zM12.75 9a.75.75 0 00-1.5 0v2.25H9a.75.75 0 000 1.5h2.25V15a.75.75 0 001.5 0v-2.25H15a.75.75 0 000-1.5h-2.25V9z"
-                                            clipRule="evenodd"
-                                        />
-                                    </svg>
+                                    <PlusCircleIcon className="w-6 h-6 shrink-0" />
+
                                     <p className="text-bold shrink-0 text-sm">
                                         Create a post
                                     </p>
@@ -284,6 +241,6 @@ export default function Group() {
                     </div>
                 </div>
             </div>
-        </div>
+        </div >
     );
 }

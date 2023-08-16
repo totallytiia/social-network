@@ -1,3 +1,4 @@
+import { PlusIcon } from '@heroicons/react/24/solid';
 import { useState } from 'react';
 
 interface iFormKeys {
@@ -137,8 +138,8 @@ export default function Register() {
                     today.getFullYear() -
                     birthdate.getFullYear() -
                     (today.getMonth() < birthdate.getMonth() ||
-                    (today.getMonth() === birthdate.getMonth() &&
-                        today.getDate() < birthdate.getDate())
+                        (today.getMonth() === birthdate.getMonth() &&
+                            today.getDate() < birthdate.getDate())
                         ? 1
                         : 0);
                 if (age < 18) {
@@ -317,20 +318,7 @@ export default function Register() {
                                         className="absolute border-none"
                                         alt=""
                                     />
-                                    <svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        fill="none"
-                                        viewBox="0 0 24 24"
-                                        strokeWidth={2.5}
-                                        stroke="lightgray"
-                                        className="w-10 h-10 flex my-auto"
-                                    >
-                                        <path
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                            d="M12 4.5v15m7.5-7.5h-15"
-                                        />
-                                    </svg>
+                                    <PlusIcon className="w-10 h-10 flex my-auto stroke-gray-200 stroke-2" />
                                 </div>
                             </label>
                             <input
