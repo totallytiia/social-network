@@ -1,7 +1,7 @@
 --Create the events table
 CREATE TABLE IF NOT EXISTS events (
   id INTEGER PRIMARY KEY,
-  user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE,
+  group_id INTEGER NOT NULL,
   event_name TEXT NOT NULL,
   event_description TEXT NOT NULL,
   event_date DATE NOT NULL,

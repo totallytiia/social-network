@@ -18,6 +18,7 @@ interface iForm extends iFormKeys {
 }
 
 export default function CreateAPost(props: any) {
+    const [userList, setUserList] = useState([]);
     const { userData } = useContext(UserContext);
     const [userListVisible, setUserListVisible] = useState(false);
 
@@ -56,6 +57,21 @@ export default function CreateAPost(props: any) {
             console.log(response);
         }
     };
+
+
+    const getUserList = async () => {
+        const response = await fetch('http://localhost:8080/api/users',
+            {
+                method: 'GET',
+                credentials: 'include',
+            });
+        if (response.status === 200) {
+            const users = await response.json();
+            console.log(users);
+        } else {
+            console.log(response);
+        }
+    }
 
     const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files?.length === 0) return;
@@ -121,6 +137,7 @@ export default function CreateAPost(props: any) {
                                         setPostData(postCopy);
                                         if (e.target.value === '2') {
                                             setUserListVisible(true);
+                                            getUserList();
                                         }
                                     }}
                                 >
@@ -129,7 +146,8 @@ export default function CreateAPost(props: any) {
                                     <option value="1">Private</option>
                                 </select>
                                 <div className="USER_POPUP absolute bg-red-200 h-20 w-20">
-                                    <select name="" id=""></select>
+                                    {/* add userlist here */}
+
                                 </div>
                                 <label
                                     htmlFor="imgUpload"
