@@ -165,10 +165,12 @@ func api(w http.ResponseWriter, r *http.Request) {
 			ep.BadRequest(w, r, "Bad Request")
 		}
 		switch reqUrl[1] {
-		case "sendchat":
+		case "send":
 			ep.SendChat(w, r)
-		case "getall":
+		case "get":
 			ep.GetChat(w, r)
+		case "getall":
+			// ep.GetChats(w, r)
 		default:
 			http.NotFound(w, r)
 			return
@@ -178,18 +180,19 @@ func api(w http.ResponseWriter, r *http.Request) {
 			ep.BadRequest(w, r, "Bad Request")
 		}
 		switch reqUrl[1] {
-			case "create":
-				ep.CreateEvent(w, r)
-			case "delete":
-				ep.DeleteEvent(w, r)
-			case "getall":
-				ep.GetEvents(w, r)
-			case "get":
-				ep.GetEvent(w, r)
-
-
+		case "create":
+			ep.CreateEvent(w, r)
+		case "delete":
+			ep.DeleteEvent(w, r)
+		case "getall":
+			ep.GetEvents(w, r)
+		case "get":
+			ep.GetEvent(w, r)
+		default:
+			http.NotFound(w, r)
+			return
+		}
 	default:
 		http.NotFound(w, r)
-		return
 	}
 }

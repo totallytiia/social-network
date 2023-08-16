@@ -56,11 +56,11 @@ func (e *NewEvent) Create() (int, error) {
 	return int(id), nil
 }
 
-func GetEvents(groupID int) ([]Event, error) {
+func (g Group) GetEvents() ([]Event, error) {
 	var rows, err = db.DB.Query(`
 	SELECT e.id, e.group_id, e.start_date_time, e.end_date_time, e.location, e.description, (SELECT COUNT(*) FROM event_users eu WHERE eu.event_id = e.id AND eu.going = 1) AS user_going, (SELECT COUNT(*) FROM event_users eu WHERE eu.event_id = e.id AND eu.going = 0) AS user_not_going
 	FROM events e
-	WHERE e.group_id = ?`, groupID)
+	WHERE e.group_id = ?`, g.GroupID)
 	if err != nil {
 		return nil, err
 	}
@@ -74,16 +74,15 @@ func GetEvents(groupID int) ([]Event, error) {
 	return events, nil
 }
 
-func GetEvent(eventID int) (Event, error) {
-	var e Event
+func (e *Event) Get() error {
 	var err = db.DB.QueryRow(`
 	SELECT e.id, e.group_id, e.start_date_time, e.end_date_time, e.location, e.description, (SELECT COUNT(*) FROM event_users eu WHERE eu.event_id = e.id AND eu.going = 1) AS user_going, (SELECT COUNT(*) FROM event_users eu WHERE eu.event_id = e.id AND eu.going = 0) AS user_not_going
 	FROM events e
-	WHERE e.id = ?`, eventID).Scan(&e.ID, &e.GroupID, &e.StartDateTime, &e.EndDateTime, &e.Location, &e.Description, &e.UserGoing, &e.UserNotGoing)
+	WHERE e.id = ?`, e.ID).Scan(&e.ID, &e.GroupID, &e.StartDateTime, &e.EndDateTime, &e.Location, &e.Description, &e.UserGoing, &e.UserNotGoing)
 	if err != nil {
-		return e, err
+		return err
 	}
-	return e, nil
+	return nil
 }
 
 func (e *Event) Update() error {
