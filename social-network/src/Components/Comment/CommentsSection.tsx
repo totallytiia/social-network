@@ -1,5 +1,6 @@
 import { useState /*, useEffect*/ } from 'react';
 import Comment from './Comment';
+import { PaperAirplaneIcon } from '@heroicons/react/24/outline';
 
 interface IComment {
     id: number;
@@ -78,12 +79,12 @@ export default function CommentsSection({
             <div className="ml-8 mr-8 my-2">
                 {comments !== null
                     ? comments.map((comment: any) => (
-                          <Comment
-                              key={comment.id}
-                              comment={comment}
-                              deleteComment={deleteComment}
-                          />
-                      ))
+                        <Comment
+                            key={comment.id}
+                            comment={comment}
+                            deleteComment={deleteComment}
+                        />
+                    ))
                     : null}
                 <form
                     onSubmit={(e) => handleCommentSubmit(e)}
@@ -105,20 +106,7 @@ export default function CommentsSection({
                         className="my-auto cursor-pointer"
                         htmlFor={'commentSubmit-' + post_id}
                     >
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            strokeWidth={1.5}
-                            stroke="gray"
-                            className="w-5 h-5 ml-1 my-auto"
-                        >
-                            <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5"
-                            />
-                        </svg>
+                        <PaperAirplaneIcon className="w-5 h-5 ml-1 my-auto stroke-gray-400" />
                     </label>
                     <input
                         className="hidden"
