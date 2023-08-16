@@ -28,6 +28,8 @@ export default function CreateAPost(props: any) {
     const [userList, setUserList] = useState([] as iUser[]);
     const { userData } = useContext(UserContext);
     const [userListVisible, setUserListVisible] = useState(false);
+    const [selectedOption, setSelectedOption] = useState('0');
+    const [selectedInitialOption, setSelectedInitialOption] = useState('0');
 
     const [postData, setPostData] = useState({
         post: {
@@ -63,6 +65,9 @@ export default function CreateAPost(props: any) {
 
         (document.getElementById('content') as HTMLInputElement).value = '';
         (document.getElementById('imgUpload') as HTMLInputElement).value = '';
+
+        setUserListVisible(false);
+        setSelectedOption(selectedInitialOption);
 
         if (response.status === 201) {
             const post = await response.json();
@@ -158,16 +163,21 @@ export default function CreateAPost(props: any) {
                             ></textarea>
                             <div className="relative flex flex-rows justify-end gap-2 [&>*]:outline-none md:gap-6">
                                 <select
+                                    value={selectedOption}
                                     className="cursor-pointer border-r-8 border-blue-100 hover:border-blue-200 btn-custom text-center text-sm  font-semibold p-1"
                                     onChange={(e) => {
+
                                         const postCopy = postData;
                                         postCopy.post.privacy = parseInt(
                                             e.target.value
                                         );
                                         setPostData(postCopy);
+                                        setSelectedOption(e.target.value);
                                         if (e.target.value === '2') {
                                             setUserListVisible(true);
                                             getUserList();
+                                        } else {
+                                            setUserListVisible(false);
                                         }
                                     }}
                                 >
@@ -176,32 +186,32 @@ export default function CreateAPost(props: any) {
                                     <option value="1">Private</option>
                                 </select>
                                 <div className="USER_POPUP absolute top-10 right-32 bg-white rounded-xl overflow-scroll shadow-md max-h-36">
-                                    {/* add userlist here */}
-                                    {userList.map((user: any) => {
-                                        return (
-                                            <div
-                                                className="p-2 flex flex-row gap-1"
-                                                key={`userOption-${user.id}`}
-                                            >
-                                                <input
-                                                    type="checkbox"
-                                                    name="user"
-                                                    value={user.id}
-                                                    className="my-auto"
-                                                    onChange={
-                                                        handleCheckboxChange
-                                                    }
-                                                />
-                                                <label
-                                                    htmlFor="user"
-                                                    className="my-auto"
+                                    {userListVisible ? (
+                                        userList.map((user: any) => {
+                                            return (
+                                                <div
+                                                    className="p-2 flex flex-row gap-1"
+                                                    key={`userOption-${user.id}`}
                                                 >
-                                                    {user.fName} {user.lName}
-                                                </label>
-                                            </div>
-                                        );
-                                    })}
+                                                    <input
+                                                        type="checkbox"
+                                                        name="user"
+                                                        value={user.id}
+                                                        className="my-auto"
+                                                        onChange={handleCheckboxChange}
+                                                    />
+                                                    <label
+                                                        htmlFor="user"
+                                                        className="my-auto"
+                                                    >
+                                                        {user.fName} {user.lName}
+                                                    </label>
+                                                </div>
+                                            );
+                                        })
+                                    ) : null}
                                 </div>
+
                                 <label
                                     htmlFor="imgUpload"
                                     className="my-auto relative cursor-pointer"
