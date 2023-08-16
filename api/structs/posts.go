@@ -140,7 +140,7 @@ func GetPosts(IDs map[string]any, index, userFetching int) (Posts, error) {
 		(user_id = const.uid OR group_id = const.gid OR IIF(const.uid == -1 AND const.gid == -1, true, false)) AND 
 		(
 			(p.privacy = '0') OR 
-			(p.privacy = '1' AND p.user_id IN (SELECT f.follow_id FROM follows f where f.user_id = const.ufetching)) OR 
+			(p.privacy = '1' AND p.user_id IN (SELECT f.follow_id FROM follows f where f.user_id = const.ufetching) OR p.user_id = ufetching) OR 
 			(p.privacy = '2' AND p.privacy_settings LIKE '%'||const.ufetching||'%'))) OR 
 			(p.user_id = const.ufetching AND IIF(const.uid == -1 AND const.gid == -1, true, false)
 		)
