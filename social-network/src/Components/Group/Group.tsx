@@ -5,6 +5,7 @@ import CreateAPost from '../CreateAPost/CreateAPost';
 import Post from '../Posts/Post';
 
 interface iGroup {
+    id: number;
     name: string;
     description: string;
     created_at: string;
@@ -40,6 +41,12 @@ export default function Group() {
     const handleCreateAPost = () => {
         setCreateAPost((current) => !current);
     };
+
+    function postAdded(post: any) {
+        const groupCopy = { ...group };
+        groupCopy.posts.unshift(post);
+        setGroup(groupCopy);
+    }
 
     const deletePost = async (id: number) => {
         const url = `http://localhost:8080/api/posts/delete`;
@@ -83,9 +90,7 @@ export default function Group() {
                                 <p className="text-gray-400">Posts</p>
                             </div>
                         </div>
-
                         <CreateEvent />
-
                         <div className="justify-center gap-6 flex mt-10 md:mt-0 border-b md:border-b-0 pb-8 md:pb-0"></div>
                     </div>
 
@@ -124,7 +129,9 @@ export default function Group() {
                         </div>
                     )}
                     <div className=" mx-auto">
-                        {createAPost && <CreateAPost />}
+                        {createAPost && (
+                            <CreateAPost postAdded={postAdded} group={group} />
+                        )}
                     </div>
                     <div className="mt-12 flex flex-col justify-center">
                         <p className="text-gray-600 text-center lg:px-16">
