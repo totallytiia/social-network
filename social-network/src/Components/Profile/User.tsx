@@ -181,7 +181,7 @@ export default function User() {
                                 <p className="text-gray-400">Posts</p>
                             </div>
                         </div>
-                        <div className="relative w-48">
+                        <div className="relative w-48 mx-auto">
                             <div className="w-48 h-48 bg-indigo-100 mx-auto rounded-full shadow-2xl flex items-center justify-center text-indigo-500">
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
