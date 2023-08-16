@@ -18,6 +18,7 @@ interface iForm extends iFormKeys {
 
 export default function CreateAPost(props: any) {
     const { userData } = useContext(UserContext);
+    const [userListVisible, setUserListVisible] = useState(false);
 
     const [postData, setPostData] = useState({
         post: {
@@ -117,12 +118,16 @@ export default function CreateAPost(props: any) {
                                             e.target.value
                                         );
                                         setPostData(postCopy);
+                                        if (e.target.value === '2') {
+                                            setUserListVisible(true);
+                                        }
                                     }}
                                 >
                                     <option value="0">Public</option>
                                     <option value="2">Semi-private</option>
                                     <option value="1">Private</option>
                                 </select>
+                                <div className="USER_POPUP"></div>
                                 <label
                                     htmlFor="imgUpload"
                                     className="my-auto relative cursor-pointer"

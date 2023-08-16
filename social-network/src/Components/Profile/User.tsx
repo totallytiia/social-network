@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import ProfileIcon from './ProfileIcon';
 import { UserContext } from '../App/App';
 import {
+    ChatBubbleOvalLeftIcon,
     UserPlusIcon,
     UserMinusIcon,
     ClockIcon,
@@ -21,6 +22,7 @@ interface IUser {
     followed: boolean;
     followers: number[];
     follows: number[];
+    followReq?: boolean;
 }
 
 interface IPost {
@@ -77,6 +79,7 @@ export default function User() {
                 .split(',')
                 .map(Number)
                 .includes(userData.id),
+            followReq: data.followReq,
         } as IUser;
         setUser(user);
         setPrivacy(user.private);
@@ -157,6 +160,8 @@ export default function User() {
         setUser({ ...user, followed: false });
     }
 
+    console.log(user.followReq);
+
     return (
         <>
             <div className="p-10 bg-custom z-0 item-center justify-center">
@@ -229,28 +234,28 @@ export default function User() {
                             </label>
                             <button
                                 className={`FOLLOW ${
-                                    user.id === userData.id
-                                        ? 'hidden'
-                                        : 'btn-custom'
+                                    user.id === userData.id ? 'hidden' : ''
                                 }`}
                                 onClick={
-                                    user.followed ? unfollowUser : followUser
+                                    user.followReq
+                                        ? undefined
+                                        : user.followed
+                                        ? unfollowUser
+                                        : followUser
                                 }
                             >
                                 {user.followed ? (
-                                    <UserMinusIcon className="w-5 h-5" />
-                                ) : user.private ? (
-                                    <ClockIcon className="w-5 h-5" />
+                                    <UserMinusIcon className="w-10 h-10 bg-blue-100 rounded-full p-2" />
+                                ) : user.followReq ? (
+                                    <ClockIcon className="w-10 h-10 bg-blue-100 rounded-full p-2" />
                                 ) : (
-                                    <UserPlusIcon className="w-5 h-5" />
+                                    <UserPlusIcon className="w-10 h-10 bg-blue-100 rounded-full p-2" />
                                 )}
                             </button>
 
                             <button
                                 className={`CHAT ${
-                                    user.id === userData.id
-                                        ? 'hidden'
-                                        : 'btn-custom'
+                                    user.id === userData.id ? 'hidden' : ''
                                 }`}
                             >
                                 <svg
@@ -259,7 +264,7 @@ export default function User() {
                                     viewBox="0 0 24 24"
                                     strokeWidth={1.5}
                                     stroke="currentColor"
-                                    className="w-6 h-6"
+                                    className="w-10 h-10 bg-blue-100 rounded-full p-2"
                                 >
                                     <path
                                         strokeLinecap="round"
@@ -359,20 +364,7 @@ export default function User() {
                                                     <p>{post.dislikes}</p>
                                                 </div>
                                                 <div className="flex gap-2">
-                                                    <svg
-                                                        xmlns="http://www.w3.org/2000/svg"
-                                                        fill="none"
-                                                        viewBox="0 0 24 24"
-                                                        strokeWidth={1.5}
-                                                        stroke="currentColor"
-                                                        className="w-5 h-5 my-auto"
-                                                    >
-                                                        <path
-                                                            strokeLinecap="round"
-                                                            strokeLinejoin="round"
-                                                            d="M12 20.25c4.97 0 9-3.694 9-8.25s-4.03-8.25-9-8.25S3 7.444 3 12c0 2.104.859 4.023 2.273 5.48.432.447.74 1.04.586 1.641a4.483 4.483 0 01-.923 1.785A5.969 5.969 0 006 21c1.282 0 2.47-.402 3.445-1.087.81.22 1.668.337 2.555.337z"
-                                                        />
-                                                    </svg>
+                                                    <ChatBubbleOvalLeftIcon className="w-5 h-5 my-auto" />
                                                     <p>
                                                         {post.comments !== null
                                                             ? post.comments
