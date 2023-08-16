@@ -44,7 +44,13 @@ export default function CreateAPost(props: any) {
         FD.append('content', postData.post.content as string);
         FD.append('image', postData.post.imgUpload as string);
         FD.append('privacy', postData.post.privacy.toString() as string);
-        FD.append('privacy_settings', postData.post.privacy_settings as string);
+        FD.append(
+            'privacy_settings',
+            postData.post.privacy_settings.slice(
+                0,
+                postData.post.privacy_settings.length - 1
+            ) as string
+        );
         if (props.group !== undefined && props.group !== null) {
             FD.append('group_id', props.group.id as string);
         }
@@ -67,11 +73,10 @@ export default function CreateAPost(props: any) {
     };
 
     const getUserList = async () => {
-        const response = await fetch('http://localhost:8080/api/users/getall',
-            {
-                method: 'GET',
-                credentials: 'include',
-            });
+        const response = await fetch('http://localhost:8080/api/users/getall', {
+            method: 'GET',
+            credentials: 'include',
+        });
         if (!response.ok) {
             console.log(response);
             return;
@@ -82,7 +87,7 @@ export default function CreateAPost(props: any) {
             return;
         }
         setUserList(data);
-    }
+    };
 
     const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files?.length === 0) return;
@@ -99,6 +104,21 @@ export default function CreateAPost(props: any) {
             document.getElementById('uploadedImg')?.classList.remove('hidden');
         };
         reader.readAsDataURL(file as Blob);
+    };
+
+    const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const postCopy = postData;
+        if (e.target.checked) {
+            postCopy.post.privacy_settings += e.target.value + ',';
+        } else {
+            postCopy.post.privacy_settings =
+                postCopy.post.privacy_settings.replace(
+                    e.target.value + ',',
+                    ''
+                );
+        }
+        setPostData(postCopy);
+        console.log(postCopy.post.privacy_settings);
     };
 
     return (
@@ -159,19 +179,25 @@ export default function CreateAPost(props: any) {
                                     {/* add userlist here */}
                                     {userList.map((user: any) => {
                                         return (
-                                            <div className='p-2 flex flex-row gap-1' key={`userOption-${user.id}`}>
-                                                <input type="checkbox" name="user" value={user.id}
-                                                    className='my-auto'
+                                            <div
+                                                className="p-2 flex flex-row gap-1"
+                                                key={`userOption-${user.id}`}
+                                            >
+                                                <input
+                                                    type="checkbox"
+                                                    name="user"
+                                                    value={user.id}
+                                                    className="my-auto"
                                                     onChange={
-                                                        (e) => {
-                                                            const postCopy = postData;
-                                                            postCopy.post.privacy_settings = e.target.value;
-                                                            setPostData(postCopy);
-                                                            console.log(postCopy.post.privacy_settings)
-                                                        }
-                                                    } />
-                                                <label htmlFor="user"
-                                                    className='my-auto'>{user.fName} {user.lName}</label>
+                                                        handleCheckboxChange
+                                                    }
+                                                />
+                                                <label
+                                                    htmlFor="user"
+                                                    className="my-auto"
+                                                >
+                                                    {user.fName} {user.lName}
+                                                </label>
                                             </div>
                                         );
                                     })}
@@ -208,7 +234,7 @@ export default function CreateAPost(props: any) {
                         </div>
                     </div>
                 </div>
-            </form >
-        </div >
+            </form>
+        </div>
     );
 }
