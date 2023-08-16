@@ -199,7 +199,7 @@ export default function Group() {
                     </div>
                 </div>
                 <div className="p-6 order-0 lg:order-1 flex justify-center">
-                    <div className="flex flex-col shrink-0  gap-2 flex mt-2 md:mt-0 md:pb-0">
+                    <div className="flex flex-col shrink-0  gap-2 mt-2 md:mt-0 md:pb-0">
                         {!createEvent && (
                             <div className="CREATE-EVENT mt-2">
                                 <button
