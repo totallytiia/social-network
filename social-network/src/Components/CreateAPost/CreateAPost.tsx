@@ -13,6 +13,7 @@ interface iForm extends iFormKeys {
     post: {
         content: string;
         privacy: number;
+        privacy_settings: string;
         imgUpload: string;
     };
 }
@@ -32,6 +33,7 @@ export default function CreateAPost(props: any) {
         post: {
             content: '',
             privacy: 0,
+            privacy_settings: '',
             imgUpload: '',
         },
     } as iForm);
@@ -42,7 +44,7 @@ export default function CreateAPost(props: any) {
         FD.append('content', postData.post.content as string);
         FD.append('image', postData.post.imgUpload as string);
         FD.append('privacy', postData.post.privacy.toString() as string);
-        FD.append('privacy_settings', '' as string);
+        FD.append('privacy_settings', postData.post.privacy_settings as string);
         if (props.group !== undefined && props.group !== null) {
             FD.append('group_id', props.group.id as string);
         }
@@ -157,13 +159,20 @@ export default function CreateAPost(props: any) {
                                     {/* add userlist here */}
                                     {userList.map((user: any) => {
                                         return (
-                                            <div className='p-2 flex flex-row gap-1'>
+                                            <div className='p-2 flex flex-row gap-1' key={`userOption-${user.id}`}>
                                                 <input type="checkbox" name="user" value={user.id}
-                                                    className='my-auto' />
+                                                    className='my-auto'
+                                                    onChange={
+                                                        (e) => {
+                                                            const postCopy = postData;
+                                                            postCopy.post.privacy_settings = e.target.value;
+                                                            setPostData(postCopy);
+                                                            console.log(postCopy.post.privacy_settings)
+                                                        }
+                                                    } />
                                                 <label htmlFor="user"
                                                     className='my-auto'>{user.fName} {user.lName}</label>
                                             </div>
-
                                         );
                                     })}
                                 </div>
