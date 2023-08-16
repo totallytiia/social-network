@@ -103,9 +103,11 @@ func api(w http.ResponseWriter, r *http.Request) {
 		case "getall":
 			ep.GetGroups(w, r)
 		case "join":
-			// joinGroup(w, r)
+			ep.GroupJoinRequest(w, r)
 		case "leave":
 			// leaveGroup(w, r)
+		case "respond":
+			ep.RespondToGroupRequest(w, r)
 		case "invite":
 			// inviteToGroup(w, r)
 		case "accept":

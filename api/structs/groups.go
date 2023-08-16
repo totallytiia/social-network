@@ -206,3 +206,18 @@ func (g Group) JoinRequest(userID int) error {
 	_, err := db.DB.Exec("INSERT INTO group_requests(group_id, user_id) VALUES(?, ?)", g.GroupID, userID)
 	return err
 }
+
+func (g Group) AcceptRequest(userID int) error {
+	_, err := db.DB.Exec("INSERT INTO group_members(group_id, user_id) VALUES(?, ?)", g.GroupID, userID)
+	return err
+}
+
+func (g Group) RemoveRequest(userID int) error {
+	_, err := db.DB.Exec("DELETE FROM group_requests WHERE group_id = ? AND user_id = ?", g.GroupID, userID)
+	return err
+}
+
+func (g Group) RejectRequest(userID int) error {
+	_, err := db.DB.Exec("DELETE FROM group_requests WHERE group_id = ? AND user_id = ?", g.GroupID, userID)
+	return err
+}
