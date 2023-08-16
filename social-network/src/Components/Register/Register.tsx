@@ -43,10 +43,16 @@ export default function Register() {
             | React.ChangeEvent<HTMLInputElement>
             | React.ChangeEvent<HTMLTextAreaElement>
     ) {
-        const form = e.target.parentElement?.attributes.getNamedItem('name')
-            ?.value as string;
+        const form =
+            e.target.parentElement?.tagName !== 'DIV'
+                ? (e.target.parentElement?.attributes.getNamedItem('name')
+                      ?.value as string)
+                : (e.target.parentElement?.parentElement?.attributes.getNamedItem(
+                      'name'
+                  )?.value as string);
         const target = e.target;
         var value = target.value;
+        console.log(e.target.parentElement?.tagName);
         // VALIDATE VALUE, WHAT TARGET IS, ETC
         switch (target.name) {
             case 'fName':
@@ -138,8 +144,8 @@ export default function Register() {
                     today.getFullYear() -
                     birthdate.getFullYear() -
                     (today.getMonth() < birthdate.getMonth() ||
-                        (today.getMonth() === birthdate.getMonth() &&
-                            today.getDate() < birthdate.getDate())
+                    (today.getMonth() === birthdate.getMonth() &&
+                        today.getDate() < birthdate.getDate())
                         ? 1
                         : 0);
                 if (age < 18) {
