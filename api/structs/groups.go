@@ -8,12 +8,12 @@ import (
 )
 
 type Group struct {
-	GroupID          int    `json:"group_id"`
-	GroupName        string `json:"group_name"`
-	GroupDescription string `json:"group_description"`
-	GroupOwner       int    `json:"group_owner"`
-	GroupMembers     []int  `json:"group_members"`
-	GroupPosts       Posts  `json:"group_posts"`
+	GroupID          int              `json:"id"`
+	GroupName        string           `json:"name"`
+	GroupDescription string           `json:"description"`
+	GroupOwner       int              `json:"owner"`
+	GroupMembers     []map[int]string `json:"members"`
+	GroupPosts       Posts            `json:"posts"`
 }
 
 type Groups []Group
@@ -60,13 +60,38 @@ func (g *Group) Get() error {
 	var members string
 	err := row.Scan(&g.GroupName, &g.GroupDescription, &g.GroupOwner, &members)
 	if err != nil {
+		if !(err.Error() == "sql: Scan error on column index 3: name \"members\"") {
+			return err
+		}
+	}
+	rows, err := db.DB.Query(`SELECT id, fname, lname FROM users`)
+	if err != nil {
 		return err
 	}
-	g.GroupMembers = func(s string) []int {
-		var intSlice []int
+	var users []User
+	defer rows.Close()
+
+	for rows.Next() {
+		var user User
+		//       ⬇️ stupid s, s is stupid cuz wasn't there and was making Viktor very confuse
+		err = rows.Scan(&user.ID, &user.FName, &user.LName)
+		if err != nil {
+			if err.Error() == "sql: no rows in result set" {
+				break
+			}
+			return err
+		}
+		users = append(users, user)
+	}
+	g.GroupMembers = func(s string) []map[int]string {
+		var intSlice []map[int]string
 		for _, v := range strings.Split(s, ", ") {
 			i, _ := strconv.Atoi(v)
-			intSlice = append(intSlice, i)
+			for _, u := range users {
+				if u.ID == i {
+					intSlice = append(intSlice, map[int]string{i: u.FName + " " + u.LName})
+				}
+			}
 		}
 		return intSlice
 	}(members)
@@ -74,19 +99,19 @@ func (g *Group) Get() error {
 }
 
 func GetGroups() (Groups, error) {
-	rows, err := db.DB.Query(`
+	groupRows, err := db.DB.Query(`
 	SELECT g.id, g.group_name, g.group_description, g.user_id, (SELECT GROUP_CONCAT(gm.user_id, ", ") FROM group_members gm WHERE gm.group_id = g.id) AS members FROM groups g;
 	`)
 	if err != nil {
 		return nil, err
 	}
-	defer rows.Close()
+	defer groupRows.Close()
 
 	var groups Groups
-	for rows.Next() {
+	for groupRows.Next() {
 		var group Group
 		var members string
-		err := rows.Scan(&group.GroupID, &group.GroupName, &group.GroupDescription, &group.GroupOwner, &members)
+		err := groupRows.Scan(&group.GroupID, &group.GroupName, &group.GroupDescription, &group.GroupOwner, &members)
 		if err != nil {
 			if group.GroupID == 0 {
 				return nil, errors.New("no groups found")
@@ -97,11 +122,22 @@ func GetGroups() (Groups, error) {
 				return nil, err
 			}
 		}
-		group.GroupMembers = func(s string) []int {
-			var intSlice []int
+		rows, _ := db.DB.Query(`SELECT id, fname, lname FROM users`)
+		var users []User
+		for rows.Next() {
+			var user User
+			rows.Scan(&user.ID, &user.FName, &user.LName)
+			users = append(users, user)
+		}
+		group.GroupMembers = func(s string) []map[int]string {
+			var intSlice []map[int]string
 			for _, v := range strings.Split(s, ", ") {
 				i, _ := strconv.Atoi(v)
-				intSlice = append(intSlice, i)
+				for _, u := range users {
+					if u.ID == i {
+						intSlice = append(intSlice, map[int]string{i: u.FName + " " + u.LName})
+					}
+				}
 			}
 			return intSlice
 		}(members)
@@ -147,8 +183,10 @@ func (g *Group) DeletePosts() error {
 
 func (g Group) IsMember(user int) bool {
 	for _, v := range g.GroupMembers {
-		if v == user {
-			return true
+		for k := range v {
+			if k == user {
+				return true
+			}
 		}
 	}
 	return false

@@ -1,4 +1,4 @@
-import Group from '../Group/GroupList';
+import GroupList from '../Group/GroupList';
 import CreateGroup from '../Group/CreateGroup';
 import { useState } from 'react';
 
@@ -16,7 +16,7 @@ export default function GroupsSidebar() {
                     <h1 className="font-bold text-xl text-black mb-2">
                         GROUPS
                     </h1>
-                    <Group />
+                    <GroupList />
                     {!createGroup && (
                         <div className="CREATE-EVENT">
                             <button

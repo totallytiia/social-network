@@ -146,12 +146,23 @@ export default function Post({ postInput, deletePost }: PostProps) {
                         </div>
                         <div className="ml-2">
                             <h1
-                                onClick={() =>
+                                onClick={(e) =>
+                                    e.target === e.currentTarget &&
                                     (window.location.href = `/user/${post.user_id}`)
                                 }
                                 className="cursor-pointer text-sm font-bold"
                             >
-                                {post.user_fname + ' ' + post.user_lname}
+                                {`${post.user_fname} ${post.user_lname}`}
+                                {post.group_id !== null ? (
+                                    <span
+                                        className="text-xs"
+                                        onClick={() =>
+                                            (window.location.href = `/group/${post.group_id}`)
+                                        }
+                                    >
+                                        {` in group ${post.group_id}`}
+                                    </span>
+                                ) : null}
                             </h1>
                             <p className="text-xs">
                                 {new Date(post.created_at).toLocaleString()}

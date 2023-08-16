@@ -17,7 +17,7 @@ func CreatePost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	// Extract the Form data from the request
-	var err = r.ParseMultipartForm(2000)
+	var err = r.ParseMultipartForm(4000)
 	if err != nil {
 		BadRequest(w, r, err.Error())
 		return

@@ -43,6 +43,19 @@ func FollowUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	if followUser.Private {
+		exists, err := u.FollowReqExists(followUser.ID)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			badReqJSON, _ := json.Marshal(s.ErrorResponse{Errors: "There was an error following the user", Details: err.Error()})
+			w.Write(badReqJSON)
+			return
+		}
+		if exists {
+			w.WriteHeader(http.StatusBadRequest)
+			badReqJSON, _ := json.Marshal(s.ErrorResponse{Errors: "There was an error following the user", Details: "Follow request already exists"})
+			w.Write(badReqJSON)
+			return
+		}
 		err = u.FollowRequest(followUser.ID)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
@@ -219,6 +232,27 @@ func RespondToRequest(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		WSSendToUser(followUser.ID, `{"type": "followReqRes", "message": "Your follow request was rejected", "user_id": `+strconv.Itoa(u.ID)+`}`)
+	}
+	err = u.RemoveRequest(followUser.ID)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		badReqJSON, _ := json.Marshal(s.ErrorResponse{Errors: "There was an error responding to the follow request", Details: err.Error()})
+		w.Write(badReqJSON)
+		return
+	}
+	notification, err := s.FindNotification(u.ID, followUser.ID, "followReq")
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		badReqJSON, _ := json.Marshal(s.ErrorResponse{Errors: "There was an error responding to the follow request", Details: err.Error()})
+		w.Write(badReqJSON)
+		return
+	}
+	err = notification.ChangeType("follow")
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		badReqJSON, _ := json.Marshal(s.ErrorResponse{Errors: "There was an error responding to the follow request", Details: err.Error()})
+		w.Write(badReqJSON)
+		return
 	}
 	w.WriteHeader(http.StatusOK)
 	var okJSON, _ = json.Marshal(s.OKResponse{Message: "Follow request responded to successfully"})

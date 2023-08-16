@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import GroupIcon from './GroupIcon';
+import { Link } from 'react-router-dom';
 
 export default function Group() {
     interface Group {
@@ -26,16 +27,7 @@ export default function Group() {
                 console.log(data);
                 return;
             }
-            const groupsData = data.map((group: any) => {
-                return {
-                    id: group.group_id,
-                    name: group.group_name,
-                    description: group.group_description,
-                    members: group.group_members,
-                    owner: group.group_owner,
-                } as Group;
-            });
-            setGroups(groupsData);
+            setGroups(data);
         }
         getGroups();
     }, []);
@@ -46,13 +38,16 @@ export default function Group() {
                 return (
                     <div className="bg-blue-50 rounded-xl" key={group.id}>
                         <div className="flex flex-row items-center gap-2">
-                            <a
-                                href={`/group/${group.id}`}
-                                className="p-1 text-sm font-normal flex flex-row gap-2"
-                            >
-                                <GroupIcon />
-                                <div className="my-auto">{group.name}</div>
-                            </a>
+                            <div className="p-1 text-sm font-normal">
+                                <Link
+                                    to={`/group/${group.id}`}
+                                    key={`groupLink-${group.id}`}
+                                    className="flex flex-row items-center gap-2"
+                                >
+                                    <GroupIcon />
+                                    <div className="my-auto">{group.name}</div>
+                                </Link>
+                            </div>
                         </div>
                     </div>
                 );

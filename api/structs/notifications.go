@@ -9,6 +9,8 @@ import (
 type Notification struct {
 	ID         int    `json:"id"`
 	UserID     int    `json:"user_id"`
+	UserFName  string `json:"fname"`
+	UserLName  string `json:"lname"`
 	FollowerID int    `json:"follower_id"`
 	Message    string `json:"message"`
 	Type       string `json:"type"`
@@ -21,7 +23,7 @@ type Notifications []Notification
 
 func (u *User) GetNotifications() (Notifications, error) {
 	var notifications Notifications
-	rows, err := db.DB.Query("SELECT * FROM notifications WHERE user_id = ?", u.ID)
+	rows, err := db.DB.Query("SELECT n.*, u.fname, u.lname FROM notifications n INNER JOIN users u ON u.id = n.follow_id WHERE user_id = ?", u.ID)
 	if err != nil {
 		fmt.Println(err)
 		return notifications, err
@@ -29,7 +31,7 @@ func (u *User) GetNotifications() (Notifications, error) {
 	defer rows.Close()
 	for rows.Next() {
 		var n Notification
-		err := rows.Scan(&n.ID, &n.UserID, &n.FollowerID, &n.Message, &n.CreatedAt, &n.UpdatedAt, &n.Type, &n.Seen)
+		err := rows.Scan(&n.ID, &n.UserID, &n.FollowerID, &n.Message, &n.CreatedAt, &n.UpdatedAt, &n.Type, &n.Seen, &n.UserFName, &n.UserLName)
 		if err != nil {
 			fmt.Println(err)
 			return notifications, err
@@ -73,6 +75,24 @@ func DeleteNotification(id int) error {
 
 func (u *User) MarkNotificationsSeen() error {
 	_, err := db.DB.Exec("UPDATE notifications SET seen = 1 WHERE user_id = ?", u.ID)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func FindNotification(user, follower int, notiType string) (Notification, error) {
+	var notification Notification
+	err := db.DB.QueryRow("SELECT * FROM notifications WHERE user_id = ? AND follow_id = ? AND type = ?", user, follower, notiType).Scan(&notification.ID, &notification.UserID, &notification.FollowerID, &notification.Message, &notification.CreatedAt, &notification.UpdatedAt, &notification.Type, &notification.Seen)
+	if err != nil {
+		fmt.Println(err)
+		return notification, err
+	}
+	return notification, nil
+}
+
+func (n *Notification) ChangeType(newType string) error {
+	_, err := db.DB.Exec("UPDATE notifications SET type = ? WHERE id = ?", newType, n.ID)
 	if err != nil {
 		return err
 	}

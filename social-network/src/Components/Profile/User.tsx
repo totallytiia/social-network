@@ -74,6 +74,7 @@ export default function User() {
                 .includes(userData.id),
         } as IUser;
         setUser(user);
+        setPrivacy(user.private);
     }, [id, userData.id]);
 
     useEffect(() => {
@@ -285,10 +286,19 @@ export default function User() {
                             {`${user.fName} "${user.nickname}" ${user.lName}`}
                             <span className="text-gray-500"></span>
                         </h1>
-                        <p className="text-gray-600 mt-3">{user.about}</p>
-
-                        <p className="mt-8 text-gray-500">{user.email}</p>
-                        <p className="mt-2 text-gray-500">{user.dateOfBirth}</p>
+                        {!user.private ? (
+                            <>
+                                <p className="text-gray-600 mt-3">
+                                    {user.about}
+                                </p>
+                                <p className="mt-8 text-gray-500">
+                                    {user.email}
+                                </p>
+                                <p className="mt-2 text-gray-500">
+                                    {user.dateOfBirth}
+                                </p>
+                            </>
+                        ) : null}
                     </div>
 
                     <div className="mt-6 w-2/3 min-w-min max-w-xl">

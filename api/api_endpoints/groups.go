@@ -74,6 +74,14 @@ func GetGroup(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Unauthorized", http.StatusUnauthorized)
 		return
 	}
+	IDs := make(map[string]any)
+	IDs["group_id"] = g.GroupID
+	posts, err := s.GetPosts(IDs, 0, u.ID)
+	if err != nil {
+		BadRequest(w, r, err.Error())
+		return
+	}
+	g.GroupPosts = posts
 	w.WriteHeader(http.StatusOK)
 	okJSON, _ := json.Marshal(g)
 	w.Write(okJSON)

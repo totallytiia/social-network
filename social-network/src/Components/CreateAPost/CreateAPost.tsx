@@ -34,6 +34,9 @@ export default function CreateAPost(props: any) {
         FD.append('image', postData.post.imgUpload as string);
         FD.append('privacy', postData.post.privacy.toString() as string);
         FD.append('privacy_settings', '' as string);
+        if (props.group !== undefined && props.group !== null) {
+            FD.append('group_id', props.group.id as string);
+        }
 
         const response = await fetch('http://localhost:8080/api/posts/create', {
             method: 'POST',
