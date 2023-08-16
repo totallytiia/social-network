@@ -158,6 +158,19 @@ func api(w http.ResponseWriter, r *http.Request) {
 		}
 	case "validate":
 		ep.ValidateSession(w, r)
+	case "chat":
+		if len(reqUrl) == 1 {
+			ep.BadRequest(w, r, "Bad Request")
+		}
+		switch reqUrl[1] {
+		case "sent":
+			ep.SendChat(w, r)
+		case "getall":
+			ep.GetChat(w, r)
+		default:
+			http.NotFound(w, r)
+			return
+		}
 	default:
 		http.NotFound(w, r)
 		return
