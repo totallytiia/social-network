@@ -173,6 +173,21 @@ func api(w http.ResponseWriter, r *http.Request) {
 			http.NotFound(w, r)
 			return
 		}
+	case "event":
+		if len(reqUrl) == 1 {
+			ep.BadRequest(w, r, "Bad Request")
+		}
+		switch reqUrl[1] {
+			case "create":
+				ep.CreateEvent(w, r)
+			case "delete":
+				ep.DeleteEvent(w, r)
+			case "getall":
+				ep.GetEvents(w, r)
+			case "get":
+				ep.GetEvent(w, r)
+
+
 	default:
 		http.NotFound(w, r)
 		return
