@@ -1,6 +1,7 @@
 import { useEffect, useState, useContext, useRef } from 'react';
 import { UserContext } from '../App/App';
 import { Link } from 'react-router-dom';
+import Chat from '../Chat/Chat';
 import HeaderNotification from '../Notification/HeaderNotification';
 import { WSContext } from '../WSProvider/WSProvider';
 
@@ -129,12 +130,6 @@ export default function Header() {
                             className="NAVIGATION-MOBILE-OPEN flex flex-col items-center justify-between min-h-[250px]"
                         >
                             <button className="text-2xl font-extrabold">
-                                Make a post
-                            </button>
-                            <button className="text-2xl font-extrabold">
-                                Chat
-                            </button>
-                            <button className="text-2xl font-extrabold">
                                 Notifications
                             </button>
                             <Link
@@ -161,24 +156,6 @@ export default function Header() {
                     </div>
                 </section>
                 <div className="DESKTOP-MENU space-x-2 text-xs justify-end  hidden lg:flex">
-                    <div>
-                        <div className="text-black bg-gray-200 hover:bg-gray-300 focus:bg-gray-300  py-2 px-3 rounded-full">
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                strokeWidth="2"
-                                stroke="currentColor"
-                                className="w-4 h-4"
-                            >
-                                <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    d="M12 20.25c4.97 0 9-3.694 9-8.25s-4.03-8.25-9-8.25S3 7.444 3 12c0 2.104.859 4.023 2.273 5.48.432.447.74 1.04.586 1.641a4.483 4.483 0 01-.923 1.785A5.969 5.969 0 006 21c1.282 0 2.47-.402 3.445-1.087.81.22 1.668.337 2.555.337z"
-                                />
-                            </svg>
-                        </div>
-                    </div>
                     <div>
                         <div
                             onClick={handleButtonClick}
