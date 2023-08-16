@@ -2,6 +2,12 @@ import { useEffect, useState, useContext, useRef } from 'react';
 import { UserContext } from '../App/App';
 import { Link } from 'react-router-dom';
 import Chat from '../Chat/Chat';
+import {
+    BellIcon,
+    ArrowRightOnRectangleIcon,
+    UserIcon,
+    UserGroupIcon,
+} from '@heroicons/react/24/solid';
 import HeaderNotification from '../Notification/HeaderNotification';
 import { WSContext } from '../WSProvider/WSProvider';
 
@@ -157,14 +163,14 @@ export default function Header() {
                         </div>
                     </div>
                 </section>
-                <div className="DESKTOP-MENU space-x-2 text-xs justify-end  hidden lg:flex">
+                <div className="DESKTOP-MENU space-x-3 text-xs justify-end  hidden lg:flex">
                     <div>
                         <div
                             onClick={handleButtonClick}
                             id="NOTIFICATIONS-BUTTON"
-                            className=" cursor-pointer relative text-black bg-gray-200 hover:bg-gray-300 focus:bg-gray-300  py-2 px-3 rounded-full"
+                            className=" cursor-pointer relative bg-gray-100 hover:bg-gray-200 focus:bg-gray-200 rounded-full p-2"
                         >
-                            Notifications
+                            <BellIcon className="text-black w-6 h-6 " />
                             {numUnseenNotifications.current > 0 ? (
                                 <div className="flex absolute right-2 -bottom-3 bg-red-500 text-white rounded-full w-5 h-5 items-center justify-center text-xs">
                                     {numUnseenNotifications.current}
@@ -203,17 +209,23 @@ export default function Header() {
                             </div>
                         </div>
                     </div>
-                    <div className="text-black bg-gray-200 hover:bg-gray-300 focus:bg-gray-300  py-2 px-3 rounded-full">
-                        <Link to="/groups">Groups</Link>
+                    <div className="text-black bg-gray-100 hover:bg-gray-200 focus:bg-gray-200 p-2 rounded-full">
+                        <Link to="/groups">
+                            <UserGroupIcon className="w-6 h-6" />
+                        </Link>
                     </div>
-                    <div className="text-black bg-gray-200 hover:bg-gray-300 focus:bg-gray-300  py-2 px-3 rounded-full">
-                        <Link to={`/user/${userData.id}`}>Profile</Link>
+                    <div className="text-black bg-gray-100 hover:bg-gray-200 focus:bg-gray-200 p-2 rounded-full">
+                        <Link to={`/user/${userData.id}`}>
+                            <UserIcon className="w-6 h-6" />
+                        </Link>
                     </div>
                     <div
                         onClick={Logout}
-                        className="text-black bg-gray-200 hover:bg-gray-300 focus:bg-gray-300  py-2 px-3 rounded-full"
+                        className="text-black bg-gray-100 hover:bg-gray-200 focus:bg-gray-200 p-2 rounded-full"
                     >
-                        <Link to="/">Log out</Link>
+                        <Link to="/">
+                            <ArrowRightOnRectangleIcon className="w-6 h-6" />
+                        </Link>
                     </div>
                 </div>
             </nav>
