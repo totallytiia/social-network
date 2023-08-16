@@ -19,11 +19,9 @@ interface iForm extends iFormKeys {
 
 export default function CreateEvent(props: any) {
 
-	const { userData } = useContext(UserContext);
-
 	const [eventData, setEventData] = useState<iForm>({
 		event: {
-			group_id: 0,
+			group_id: props.groupId,
 			description: "",
 			start_date_time: "",
 			end_date_time: "",
