@@ -2,6 +2,7 @@ package structs
 
 import (
 	"errors"
+	"fmt"
 	db "social_network_api/db"
 	"strconv"
 	"strings"
@@ -14,6 +15,7 @@ type Group struct {
 	GroupOwner       int              `json:"owner"`
 	GroupMembers     []map[int]string `json:"members"`
 	GroupPosts       Posts            `json:"posts"`
+	GroupEvents      Events           `json:"events"`
 }
 
 type Groups []Group
@@ -95,6 +97,37 @@ func (g *Group) Get() error {
 		}
 		return intSlice
 	}(members)
+	rows, err = db.DB.Query(`SELECT e.id, e.group_id, e.start_date_time, e.end_date_time, e.description, e.location, e.created_at, e.updated_at, GROUP_CONCAT((SELECT eug.user_id FROM event_users eug WHERE going = 1 AND eug.event_id = e.id), ", ") AS going, GROUP_CONCAT((SELECT eung.user_id FROM event_users eung WHERE eung.going = 0 AND eung.event_id = e.id), ", ") AS not_going FROM events e INNER JOIN event_users eu ON e.id = eu.event_id WHERE group_id = ?`, g.GroupID)
+	if err != nil {
+		return err
+	}
+	defer rows.Close()
+	for rows.Next() {
+		var event Event
+		var going, notGoing string
+		err = rows.Scan(&event.ID, &event.GroupID, &event.StartDateTime, &event.EndDateTime, &event.Description, &event.Location, &event.CreatedAt, &event.UpdatedAt, &going, &notGoing)
+		if err != nil {
+			fmt.Println(err.Error())
+			return err
+		}
+		event.UserGoing = func(s string) []int {
+			var intSlice []int
+			for _, v := range strings.Split(s, ", ") {
+				i, _ := strconv.Atoi(v)
+				intSlice = append(intSlice, i)
+			}
+			return intSlice
+		}(going)
+		event.UserNotGoing = func(s string) []int {
+			var intSlice []int
+			for _, v := range strings.Split(s, ", ") {
+				i, _ := strconv.Atoi(v)
+				intSlice = append(intSlice, i)
+			}
+			return intSlice
+		}(notGoing)
+		g.GroupEvents = append(g.GroupEvents, event)
+	}
 	return nil
 }
 

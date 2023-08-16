@@ -12,8 +12,10 @@ type Event struct {
 	EndDateTime   string `json:"end_date_time"`
 	Location      string `json:"location"`
 	Description   string `json:"description"`
-	UserGoing     int    `json:"user_going"`
-	UserNotGoing  int    `json:"user_not_going"`
+	UserGoing     []int  `json:"user_going"`
+	UserNotGoing  []int  `json:"user_not_going"`
+	CreatedAt     string `json:"created_at"`
+	UpdatedAt     string `json:"updated_at"`
 }
 
 type NewEvent struct {
@@ -24,9 +26,7 @@ type NewEvent struct {
 	Description   string `json:"description"`
 }
 
-type Events struct {
-	Events []Event `json:"events"`
-}
+type Events []Event
 
 func (e *NewEvent) Validate() error {
 	if e.GroupID == 0 {
