@@ -60,7 +60,7 @@ func CreateComment(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	var postOwner = s.User{ID: p.UserID}
-	err = postOwner.Get()
+	err = postOwner.Get(nil)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		badReqJSON, _ := json.Marshal(s.ErrorResponse{Errors: "There was an error with your request", Details: err.Error()})

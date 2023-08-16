@@ -43,6 +43,7 @@ type User struct {
 	CreatedAt string  `json:"createdAt"`
 	UpdatedAt string  `json:"updatedAt"`
 	Private   bool    `json:"private"`
+	FollowReq bool    `json:"followReq,omitempty"`
 	Session   Session `json:"-"`
 }
 
@@ -177,9 +178,12 @@ func (u User) Logout() error {
 	return nil
 }
 
-func (u *User) Get() error {
-	var query = "SELECT id, email, fname, lname, CAST(dob AS TEXT), nickname, avatar, about, created_at, updated_at, private FROM users WHERE id = ?"
-	err := db.DB.QueryRow(query, u.ID).Scan(&u.ID, &u.Email, &u.FName, &u.LName, &u.DoB, &u.Nickname, &u.Avatar, &u.AboutMe, &u.CreatedAt, &u.UpdatedAt, &u.Private)
+func (u *User) Get(uFetching any) error {
+	if uFetching == nil {
+		uFetching = 0
+	}
+	var query = "SELECT u.id, u.email, u.fname, u.lname, CAST(u.dob AS TEXT), u.nickname, u.avatar, u.about, u.created_at, u.updated_at, u.private, EXISTS(SELECT fr.* FROM follow_requests fr WHERE fr.follow_id = u.id AND fr.user_id = ?) AS followreq FROM users u WHERE u.id = ?"
+	err := db.DB.QueryRow(query, uFetching, u.ID).Scan(&u.ID, &u.Email, &u.FName, &u.LName, &u.DoB, &u.Nickname, &u.Avatar, &u.AboutMe, &u.CreatedAt, &u.UpdatedAt, &u.Private, &u.FollowReq)
 	if err != nil {
 		return err
 	}

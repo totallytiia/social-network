@@ -166,16 +166,18 @@ func LogoutUser(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetUser(w http.ResponseWriter, r *http.Request) {
+	v, u := ValidateCookie(w, r)
+	if !v {
+		w.WriteHeader(http.StatusUnauthorized)
+		badReqJSON, _ := json.Marshal(s.ErrorResponse{Errors: "There was an error with your request", Details: "Invalid session"})
+		w.Write(badReqJSON)
+		return
+	}
 	if r.Method != "GET" {
 		MethodNotAllowed(w, r)
 		return
 	}
-	var sessionCookie, err = r.Cookie("session")
-	if err != nil {
-		BadRequest(w, r, err.Error())
-		return
-	}
-	err = r.ParseForm()
+	err := r.ParseForm()
 	if err != nil {
 		BadRequest(w, r, err.Error())
 		return
@@ -186,20 +188,14 @@ func GetUser(w http.ResponseWriter, r *http.Request) {
 	}
 	userId, _ := strconv.Atoi(r.FormValue("id"))
 	if userId == 0 {
-		user, err := s.UserFromSession(sessionCookie.Value)
-		if err != nil {
-			BadRequest(w, r, err.Error())
-			return
-		}
-
 		w.WriteHeader(http.StatusOK)
-		var userJSON, _ = json.Marshal(user)
+		var userJSON, _ = json.Marshal(u)
 		w.Write(userJSON)
 		return
 	}
 	var user s.User
 	user.ID = userId
-	err = user.Get()
+	err = user.Get(u.ID)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		badReqJSON, _ := json.Marshal(s.ErrorResponse{Errors: "There was an error getting the user", Details: err.Error()})

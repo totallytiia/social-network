@@ -66,7 +66,7 @@ func AddReaction(w http.ResponseWriter, r *http.Request) {
 		p.ID = reaction.PostID.(int)
 		p.Get(u.ID)
 		var postOwner = s.User{ID: p.UserID}
-		postOwner.Get()
+		postOwner.Get(nil)
 		err = postOwner.AddNotification(u.ID, "reaction", "Someone reacted on your post")
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)

@@ -318,7 +318,7 @@ func GroupJoinRequest(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	var groupOwner = s.User{ID: g.GroupOwner}
-	err = groupOwner.Get()
+	err = groupOwner.Get(nil)
 	if err != nil {
 		BadRequest(w, r, err.Error())
 		return
@@ -380,7 +380,7 @@ func RespondToGroupRequest(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		var user = s.User{ID: userID}
-		err = user.Get()
+		err = user.Get(nil)
 		if err != nil {
 			BadRequest(w, r, err.Error())
 			return
@@ -403,7 +403,7 @@ func RespondToGroupRequest(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		var user = s.User{ID: userID}
-		err = user.Get()
+		err = user.Get(nil)
 		if err != nil {
 			BadRequest(w, r, err.Error())
 			return
@@ -490,7 +490,7 @@ func InviteToGroup(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	var user = s.User{ID: userID}
-	err = user.Get()
+	err = user.Get(nil)
 	if err != nil {
 		BadRequest(w, r, err.Error())
 		return
@@ -558,7 +558,7 @@ func RespondToInvite(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		var user = s.User{ID: g.GroupOwner}
-		err = user.Get()
+		err = user.Get(nil)
 		if err != nil {
 			BadRequest(w, r, err.Error())
 			return
@@ -576,7 +576,7 @@ func RespondToInvite(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		var user = s.User{ID: g.GroupOwner}
-		err = user.Get()
+		err = user.Get(nil)
 		if err != nil {
 			BadRequest(w, r, err.Error())
 			return

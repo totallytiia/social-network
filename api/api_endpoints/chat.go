@@ -66,7 +66,7 @@ func SendChat(w http.ResponseWriter, r *http.Request) {
 	}
 	//send message to receiver
 	var receiver = structs.User{ID: receiverID}
-	err = receiver.Get()
+	err = receiver.Get(nil)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		badReqJSON, _ := json.Marshal(structs.ErrorResponse{Errors: "There was an error with your request", Details: err.Error()})
