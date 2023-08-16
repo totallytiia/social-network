@@ -165,7 +165,7 @@ func api(w http.ResponseWriter, r *http.Request) {
 			ep.BadRequest(w, r, "Bad Request")
 		}
 		switch reqUrl[1] {
-		case "sent":
+		case "sendchat":
 			ep.SendChat(w, r)
 		case "getall":
 			ep.GetChat(w, r)
