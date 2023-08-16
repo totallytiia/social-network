@@ -110,7 +110,7 @@ export default function CreateAPost(props: any) {
                                 className="rounded-md text-sm p-1.5 outline-none"
                                 required
                             ></textarea>
-                            <div className="flex flex-rows justify-end gap-2 [&>*]:outline-none md:gap-6">
+                            <div className="relative flex flex-rows justify-end gap-2 [&>*]:outline-none md:gap-6">
                                 <select
                                     className="cursor-pointer border-r-8 border-blue-100 hover:border-blue-200 btn-custom text-center text-sm  font-semibold p-1"
                                     onChange={(e) => {
@@ -128,7 +128,9 @@ export default function CreateAPost(props: any) {
                                     <option value="2">Semi-private</option>
                                     <option value="1">Private</option>
                                 </select>
-                                <div className="USER_POPUP"></div>
+                                <div className="USER_POPUP absolute bg-red-200 h-20 w-20">
+                                    <select name="" id=""></select>
+                                </div>
                                 <label
                                     htmlFor="imgUpload"
                                     className="my-auto relative cursor-pointer"
