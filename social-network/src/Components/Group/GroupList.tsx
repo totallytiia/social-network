@@ -27,16 +27,7 @@ export default function Group() {
                 console.log(data);
                 return;
             }
-            const groupsData = data.map((group: any) => {
-                return {
-                    id: group.group_id,
-                    name: group.group_name,
-                    description: group.group_description,
-                    members: group.group_members,
-                    owner: group.group_owner,
-                } as Group;
-            });
-            setGroups(groupsData);
+            setGroups(data);
         }
         getGroups();
     }, []);

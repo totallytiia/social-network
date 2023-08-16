@@ -5,8 +5,8 @@ import CreateAPost from '../CreateAPost/CreateAPost';
 import Post from '../Posts/Post';
 
 interface iGroup {
-    group_name: string;
-    group_description: string;
+    name: string;
+    description: string;
     created_at: string;
     updated_at: string;
     posts: any[];
@@ -29,7 +29,9 @@ export default function Group() {
             if (data.errors) {
                 console.log(data);
             }
-            console.log(data);
+            if (data.posts === null) {
+                data.posts = [];
+            }
             setGroup(data);
         }
         getGroupData();
@@ -89,11 +91,11 @@ export default function Group() {
 
                     <div className="mt-10 text-center border-b pb-12">
                         <h1 className="text-4xl font-medium text-gray-700">
-                            {group.group_name} GROUP NAME
+                            {group.name}
                             <span className="text-gray-500"></span>
                         </h1>
                         <p className="text-gray-600 mt-3">
-                            {group.group_description} TEXT HERE
+                            {group.description}
                         </p>
                     </div>
 
