@@ -1,6 +1,7 @@
 import { useState /*, useEffect*/ } from 'react';
 import Comment from './Comment';
 import { PaperAirplaneIcon } from '@heroicons/react/24/outline';
+import { PlusIcon } from '@heroicons/react/24/outline';
 
 interface IComment {
     id: number;
@@ -90,6 +91,7 @@ export default function CommentsSection({
                     onSubmit={(e) => handleCommentSubmit(e)}
                     className="flex flex-cols mt-1"
                 >
+                    <PlusIcon className="cursor-pointer stroke-2 w-8 h-8 mr-1 my-auto bg-blue-400 shrink-0 stroke-white rounded-full p-1" />
                     <input
                         className="bg-gray-50 px-4 text-sm outline-none rounded-full w-full"
                         type="text"
