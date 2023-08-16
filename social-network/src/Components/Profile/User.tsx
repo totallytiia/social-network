@@ -197,7 +197,7 @@ export default function User() {
                             <div className="w-48 h-48 bg-indigo-100 mx-auto rounded-full shadow-2xl flex items-center justify-center">
                                 {user.avatar !== undefined && user.avatar.toString() !== '' ? (
                                     <img
-                                        className="border-none rounded-full w-48 h-48 object-cover outline-none"
+                                        className="border-none rounded-full overflow-hidden w-48 h-48 object-cover outline-none"
                                         src={user.avatar.toString()}
                                         alt="" />
                                 ) : (

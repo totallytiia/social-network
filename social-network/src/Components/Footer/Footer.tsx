@@ -45,7 +45,7 @@ export default function Footer() {
 
     return (
         <>
-            <div id="notifications" className="absolute bottom-2 right-2">
+            <div id="notifications" className="fixed bottom-2 right-2">
                 {chatVisible ? (
                     <ChatList />
                 ) : (
