@@ -152,7 +152,6 @@ export default function User() {
         setUser({ ...user, followed: false });
     }
 
-    console.log(privacy);
     return (
         <>
             <div className="p-16 bg-custom z-0 item-center justify-center">

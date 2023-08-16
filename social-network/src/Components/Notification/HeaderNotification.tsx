@@ -6,6 +6,8 @@ interface INotificationProps {
         created_at: string;
         seen: boolean;
         type: string;
+        fname: string;
+        lname: string;
     };
     notificationsState: {
         notifications: {
@@ -15,6 +17,8 @@ interface INotificationProps {
             created_at: string;
             seen: boolean;
             type: string;
+            fname: string;
+            lname: string;
         }[];
         setNotifications: any;
     };
@@ -73,7 +77,8 @@ export default function HeaderNotification(props: INotificationProps) {
             >
                 <div className="flex flex-row gap-2">
                     <p className="text-sm">
-                        {notification.follower_id}: {notification.message}
+                        {notification.fname} {notification.lname}:{' '}
+                        {notification.message}
                     </p>
                     <p className="text-xs text-gray-500">
                         {new Date(notification.created_at).toLocaleString()}

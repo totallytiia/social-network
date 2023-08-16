@@ -22,8 +22,8 @@
 ### Viktor
 
 - [X] Follow user (request for private)
-  - [ ] Accept/deny follow request
-- [ ] Notifications on follow request (accept/deny)
+  - [X] Accept/deny follow request
+- [X] Notifications on follow request (accept/deny)
 - [X] Display users follows and followers on profile
 - [ ] Group invites, owner and members
 - [ ] Group requests

@@ -12,6 +12,8 @@ interface INotification {
     follower_id: number;
     created_at: string;
     seen: boolean;
+    fname: string;
+    lname: string;
 }
 
 export default function Header() {

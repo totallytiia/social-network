@@ -9,6 +9,8 @@ import (
 type Notification struct {
 	ID         int    `json:"id"`
 	UserID     int    `json:"user_id"`
+	UserFName  string `json:"fname"`
+	UserLName  string `json:"lname"`
 	FollowerID int    `json:"follower_id"`
 	Message    string `json:"message"`
 	Type       string `json:"type"`
@@ -21,7 +23,7 @@ type Notifications []Notification
 
 func (u *User) GetNotifications() (Notifications, error) {
 	var notifications Notifications
-	rows, err := db.DB.Query("SELECT * FROM notifications WHERE user_id = ?", u.ID)
+	rows, err := db.DB.Query("SELECT n.*, u.fname, u.lname FROM notifications n INNER JOIN users u ON u.id = n.follow_id WHERE user_id = ?", u.ID)
 	if err != nil {
 		fmt.Println(err)
 		return notifications, err
@@ -29,7 +31,7 @@ func (u *User) GetNotifications() (Notifications, error) {
 	defer rows.Close()
 	for rows.Next() {
 		var n Notification
-		err := rows.Scan(&n.ID, &n.UserID, &n.FollowerID, &n.Message, &n.CreatedAt, &n.UpdatedAt, &n.Type, &n.Seen)
+		err := rows.Scan(&n.ID, &n.UserID, &n.FollowerID, &n.Message, &n.CreatedAt, &n.UpdatedAt, &n.Type, &n.Seen, &n.UserFName, &n.UserLName)
 		if err != nil {
 			fmt.Println(err)
 			return notifications, err
