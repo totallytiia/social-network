@@ -17,8 +17,14 @@ interface iForm extends iFormKeys {
     };
 }
 
+interface iUser {
+    id: number;
+    fname: string;
+    lname: string;
+}
+
 export default function CreateAPost(props: any) {
-    const [userList, setUserList] = useState([]);
+    const [userList, setUserList] = useState([] as iUser[]);
     const { userData } = useContext(UserContext);
     const [userListVisible, setUserListVisible] = useState(false);
 
@@ -59,17 +65,22 @@ export default function CreateAPost(props: any) {
     };
 
     const getUserList = async () => {
-        const response = await fetch('http://localhost:8080/api/users', {
-            method: 'GET',
-            credentials: 'include',
-        });
-        if (response.status === 200) {
-            const users = await response.json();
-            console.log(users);
-        } else {
+        const response = await fetch('http://localhost:8080/api/users/getall',
+            {
+                method: 'GET',
+                credentials: 'include',
+            });
+        if (!response.ok) {
             console.log(response);
+            return;
         }
-    };
+        const data = await response.json();
+        if (data === null) {
+            console.log('no users found');
+            return;
+        }
+        setUserList(data);
+    }
 
     const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files?.length === 0) return;
@@ -142,8 +153,19 @@ export default function CreateAPost(props: any) {
                                     <option value="2">Semi-private</option>
                                     <option value="1">Private</option>
                                 </select>
-                                <div className="USER_POPUP absolute bg-red-200 h-20 w-20">
+                                <div className="USER_POPUP absolute top-10 right-32 bg-white rounded-xl overflow-scroll shadow-md max-h-36">
                                     {/* add userlist here */}
+                                    {userList.map((user: any) => {
+                                        return (
+                                            <div className='p-2 flex flex-row gap-1'>
+                                                <input type="checkbox" name="user" value={user.id}
+                                                    className='my-auto' />
+                                                <label htmlFor="user"
+                                                    className='my-auto'>{user.fName} {user.lName}</label>
+                                            </div>
+
+                                        );
+                                    })}
                                 </div>
                                 <label
                                     htmlFor="imgUpload"
@@ -177,7 +199,7 @@ export default function CreateAPost(props: any) {
                         </div>
                     </div>
                 </div>
-            </form>
-        </div>
+            </form >
+        </div >
     );
 }
