@@ -6,8 +6,6 @@ CREATE TABLE IF NOT EXISTS events (
   end_date_time text NOT NULL,
   description TEXT NOT NULL,
   location text NOT NULL,
-  event_users text DEFAULT NULL,
-
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
   updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
