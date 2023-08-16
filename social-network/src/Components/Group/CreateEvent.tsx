@@ -9,40 +9,34 @@ interface iFormKeys {
 
 interface iForm extends iFormKeys {
 	event: {
-		name: string;
+		group_id: number;
 		description: string;
-		date: string;
-		startTime: string;
-		endTime: string;
-		creator: string;
+		start_date_time: string;
+		end_date_time: string;
 	};
 }
 
 
-export default function CreateEvent() {
+export default function CreateEvent(props: any) {
 
 	const { userData } = useContext(UserContext);
 
 	const [eventData, setEventData] = useState<iForm>({
 		event: {
-			name: "",
+			group_id: 0,
 			description: "",
-			date: "",
-			startTime: "",
-			endTime: "",
-			creator: "",
+			start_date_time: "",
+			end_date_time: "",
 		},
 	});
 
 	const handleEventSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 		const FD = new FormData();
-		FD.append("name", eventData.event.name);
+		FD.append("group_id", eventData.event.group_id.toString());
 		FD.append("description", eventData.event.description);
-		FD.append("date", eventData.event.date);
-		FD.append("startTime", eventData.event.startTime);
-		FD.append("endTime", eventData.event.endTime);
-		FD.append("creator", userData.id.toString());
+		FD.append("start_date_time", eventData.event.start_date_time);
+		FD.append("end_date_time", eventData.event.end_date_time);
 		const response = await fetch("http://localhost:8080/api/event/create", {
 			method: "POST",
 			credentials: "include",
@@ -55,7 +49,6 @@ export default function CreateEvent() {
 			console.log("something went wrong");
 		}
 	};
-
 
 
 	return (
@@ -71,14 +64,6 @@ export default function CreateEvent() {
 						}
 						}
 						className="bg-blue-50 p-6 rounded-xl">
-						<div className="form__group mt-1 ">
-							<input className="w-full" type="text" name="name" id="name" placeholder="Event name"
-								onChange={(e) => {
-									const eventCopy = eventData;
-									eventCopy.event.name = e.target.value;
-									setEventData(eventCopy);
-								}} />
-						</div>
 						<div className="form__group mt-2">
 							<textarea
 								onChange={(e) => {
@@ -93,16 +78,7 @@ export default function CreateEvent() {
 							<input
 								onChange={(e) => {
 									const eventCopy = eventData;
-									eventCopy.event.date = e.target.value;
-									setEventData(eventCopy);
-								}}
-								type="date" className="mt-0 w-full" name="date" id="date" placeholder="date" />
-						</div>
-						<div className="form__group mt-1">
-							<input
-								onChange={(e) => {
-									const eventCopy = eventData;
-									eventCopy.event.startTime = e.target.value;
+									eventCopy.event.start_date_time = e.target.value;
 									setEventData(eventCopy);
 								}
 								}
@@ -112,7 +88,7 @@ export default function CreateEvent() {
 							<input
 								onChange={(e) => {
 									const eventCopy = eventData;
-									eventCopy.event.endTime = e.target.value;
+									eventCopy.event.end_date_time = e.target.value;
 									setEventData(eventCopy);
 								}
 								}

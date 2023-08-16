@@ -203,7 +203,7 @@ export default function Group() {
                                     </button>
                                 </div>
                             )}
-                            {createEvent && <CreateEvent />}
+                            {createEvent && <CreateEvent GrpupId={group.id} />}
                         </div>
                         {!createAPost && (
                             <div className="CREATE-EVENT shrink-0 flex mt-2 mx-auto lg:mx-0">
