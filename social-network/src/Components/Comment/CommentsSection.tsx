@@ -91,7 +91,7 @@ export default function CommentsSection({
                     onSubmit={(e) => handleCommentSubmit(e)}
                     className="flex flex-cols mt-1"
                 >
-                    <PlusIcon className="cursor-pointer stroke-2 w-8 h-8 mr-1 my-auto bg-blue-400 shrink-0 stroke-white rounded-full p-1" />
+                    <PlusIcon className="cursor-pointer stroke-2 w-8 h-8 mr-1 my-auto bg-blue-500 shrink-0 stroke-white rounded-full p-1" />
                     <input
                         className="bg-gray-50 px-4 text-sm outline-none rounded-full w-full"
                         type="text"
@@ -108,7 +108,7 @@ export default function CommentsSection({
                         className="my-auto cursor-pointer"
                         htmlFor={'commentSubmit-' + post_id}
                     >
-                        <PaperAirplaneIcon className="w-5 h-5 ml-1 my-auto stroke-gray-400" />
+                        <PaperAirplaneIcon className="w-6 h-6 ml-1 my-auto stroke-1.5 stroke-gray-400" />
                     </label>
                     <input
                         className="hidden"

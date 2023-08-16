@@ -162,7 +162,7 @@ export default function User() {
         setUser({ ...user, followed: false });
     }
 
-    console.log(user.followReq);
+    console.log(user);
 
     return (
         <>
@@ -194,8 +194,15 @@ export default function User() {
                             </div>
                         </div>
                         <div className="relative w-48 mx-auto">
-                            <div className="w-48 h-48 bg-indigo-100 mx-auto rounded-full shadow-2xl flex items-center justify-center text-indigo-500">
-                                <ProfileIcon classNames="w-48 h-48" />
+                            <div className="w-48 h-48 bg-indigo-100 mx-auto rounded-full shadow-2xl flex items-center justify-center">
+                                {user.avatar !== undefined && user.avatar.toString() !== '' ? (
+                                    <img
+                                        className="border-none rounded-full w-48 h-48 object-cover outline-none"
+                                        src={user.avatar.toString()}
+                                        alt="" />
+                                ) : (
+                                    <ProfileIcon classNames="w-48 h-48" />
+                                )}
                             </div>
                         </div>
 
