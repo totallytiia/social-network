@@ -7,16 +7,20 @@ LABEL version="0.1"
 
 WORKDIR /social-network
 # Copy project files including package.json and package-lock.json
+COPY package*.json ./
+# Install dependencies
+RUN npm install
+# Copy the rest of the application files
 COPY . .
-# Install dependencies and build the app
-RUN npm ci --force && npm run build
+# Build the app
+RUN npm run build
 
 # --- Stage 2: Run stage ---
-FROM node:alpine
-WORKDIR /app
+FROM nginx:alpine
+WORKDIR /usr/share/nginx/html
 # Copy only the built application from stage 1
-COPY --from=builder /social-network/ ./
-# Expose port
-EXPOSE 3000
+COPY --from=builder /social-network/build/ .
+# Expose the default HTTP port
+EXPOSE 80
 # Run the web service
-ENTRYPOINT ["npm", "run", "start"]
+CMD ["nginx", "-g", "daemon off;"]
