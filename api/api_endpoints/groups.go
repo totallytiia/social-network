@@ -368,12 +368,12 @@ func RespondToGroupRequest(w http.ResponseWriter, r *http.Request) {
 		BadRequest(w, r, err.Error())
 		return
 	}
-	accept, err := strconv.ParseBool(r.FormValue("accept"))
+	response, err := strconv.ParseBool(r.FormValue("response"))
 	if err != nil {
 		BadRequest(w, r, err.Error())
 		return
 	}
-	if accept {
+	if response {
 		err = g.AcceptRequest(userID)
 		if err != nil {
 			BadRequest(w, r, err.Error())
@@ -397,7 +397,7 @@ func RespondToGroupRequest(w http.ResponseWriter, r *http.Request) {
 		}
 		WSSendToUser(user.ID, fmt.Sprintf(`{"type": "groupJoinAccept", "message": "Your request to join %s's group %s has been accepted", "group_id": %d}`, user.FName, g.GroupName, g.GroupID))
 	} else {
-		err = g.RejectRequest(userID)
+		err = g.RemoveRequest(userID)
 		if err != nil {
 			BadRequest(w, r, err.Error())
 			return
@@ -417,5 +417,178 @@ func RespondToGroupRequest(w http.ResponseWriter, r *http.Request) {
 	}
 	w.WriteHeader(http.StatusOK)
 	okJSON, _ := json.Marshal(s.OKResponse{Message: "Request responded to successfully"})
+	w.Write(okJSON)
+}
+
+func LeaveGroup(w http.ResponseWriter, r *http.Request) {
+	v, u := ValidateCookie(w, r)
+	if !v {
+		http.Error(w, "Unauthorized", http.StatusUnauthorized)
+	}
+	if r.Method != "POST" {
+		MethodNotAllowed(w, r)
+		return
+	}
+	var err = r.ParseMultipartForm(128)
+	if err != nil {
+		BadRequest(w, r, err.Error())
+		return
+	}
+	groupID, err := strconv.Atoi(r.FormValue("group_id"))
+	if err != nil {
+		BadRequest(w, r, err.Error())
+		return
+	}
+	var g = s.Group{GroupID: groupID}
+	err = g.Get()
+	if err != nil {
+		BadRequest(w, r, err.Error())
+		return
+	}
+	err = g.RemoveMember(u.ID)
+	if err != nil {
+		BadRequest(w, r, err.Error())
+		return
+	}
+	w.WriteHeader(http.StatusOK)
+	okJSON, _ := json.Marshal(s.OKResponse{Message: "Left group successfully"})
+	w.Write(okJSON)
+}
+
+func InviteToGroup(w http.ResponseWriter, r *http.Request) {
+	v, u := ValidateCookie(w, r)
+	if !v {
+		http.Error(w, "Unauthorized", http.StatusUnauthorized)
+	}
+	if r.Method != "POST" {
+		MethodNotAllowed(w, r)
+		return
+	}
+	var err = r.ParseMultipartForm(128)
+	if err != nil {
+		BadRequest(w, r, err.Error())
+		return
+	}
+	groupID, err := strconv.Atoi(r.FormValue("group_id"))
+	if err != nil {
+		BadRequest(w, r, err.Error())
+		return
+	}
+	var g = s.Group{GroupID: groupID}
+	err = g.Get()
+	if err != nil {
+		BadRequest(w, r, err.Error())
+		return
+	}
+	if g.GroupOwner != u.ID {
+		http.Error(w, "Unauthorized", http.StatusUnauthorized)
+		return
+	}
+	userID, err := strconv.Atoi(r.FormValue("user_id"))
+	if err != nil {
+		BadRequest(w, r, err.Error())
+		return
+	}
+	var user = s.User{ID: userID}
+	err = user.Get()
+	if err != nil {
+		BadRequest(w, r, err.Error())
+		return
+	}
+	exists := g.InviteExists(userID)
+	if exists {
+		BadRequest(w, r, "User already invited to group")
+		return
+	}
+	err = g.InviteMember(userID)
+	if err != nil {
+		BadRequest(w, r, err.Error())
+		return
+	}
+	err = user.AddNotification(g.GroupOwner, "groupInvite", fmt.Sprintf("%s %s has invited you to join their group %s", u.FName, u.LName, g.GroupName))
+	if err != nil {
+		BadRequest(w, r, err.Error())
+		return
+	}
+	WSSendToUser(user.ID, fmt.Sprintf(`{"type": "groupInvite", "message": "%s %s has invited you to join their group %s", "group_id": %d}`, u.FName, u.LName, g.GroupName, g.GroupID))
+	w.WriteHeader(http.StatusOK)
+	okJSON, _ := json.Marshal(s.OKResponse{Message: "Invited user to group successfully"})
+	w.Write(okJSON)
+}
+
+func RespondToInvite(w http.ResponseWriter, r *http.Request) {
+	v, u := ValidateCookie(w, r)
+	if !v {
+		http.Error(w, "Unauthorized", http.StatusUnauthorized)
+	}
+	if r.Method != "POST" {
+		MethodNotAllowed(w, r)
+		return
+	}
+	var err = r.ParseMultipartForm(128)
+	if err != nil {
+		BadRequest(w, r, err.Error())
+		return
+	}
+	groupID, err := strconv.Atoi(r.FormValue("group_id"))
+	if err != nil {
+		BadRequest(w, r, err.Error())
+		return
+	}
+	var g = s.Group{GroupID: groupID}
+	err = g.Get()
+	if err != nil {
+		BadRequest(w, r, err.Error())
+		return
+	}
+	response, err := strconv.ParseBool(r.FormValue("response"))
+	if err != nil {
+		BadRequest(w, r, err.Error())
+		return
+	}
+	if response {
+		err = g.InsertMember(u.ID)
+		if err != nil {
+			BadRequest(w, r, err.Error())
+			return
+		}
+		err = g.RemoveInvite(u.ID)
+		if err != nil {
+			BadRequest(w, r, err.Error())
+			return
+		}
+		var user = s.User{ID: g.GroupOwner}
+		err = user.Get()
+		if err != nil {
+			BadRequest(w, r, err.Error())
+			return
+		}
+		err = user.AddNotification(u.ID, "groupInviteAccept", fmt.Sprintf("%s %s has accepted your invitation to join your group %s", u.FName, u.LName, g.GroupName))
+		if err != nil {
+			BadRequest(w, r, err.Error())
+			return
+		}
+		WSSendToUser(user.ID, fmt.Sprintf(`{"type": "groupInviteAccept", "message": "%s %s has accepted your invitation to join your group %s", "group_id": %d}`, u.FName, u.LName, g.GroupName, g.GroupID))
+	} else {
+		err = g.RemoveInvite(u.ID)
+		if err != nil {
+			BadRequest(w, r, err.Error())
+			return
+		}
+		var user = s.User{ID: g.GroupOwner}
+		err = user.Get()
+		if err != nil {
+			BadRequest(w, r, err.Error())
+			return
+		}
+		err = user.AddNotification(u.ID, "groupInviteDecline", fmt.Sprintf("%s %s has declined your invitation to join your group %s", u.FName, u.LName, g.GroupName))
+		if err != nil {
+			BadRequest(w, r, err.Error())
+			return
+		}
+		WSSendToUser(user.ID, fmt.Sprintf(`{"type": "groupInviteDecline", "message": "%s %s has declined your invitation to join your group %s", "group_id": %d}`, u.FName, u.LName, g.GroupName, g.GroupID))
+	}
+	w.WriteHeader(http.StatusOK)
+	okJSON, _ := json.Marshal(s.OKResponse{Message: "Responded to invite successfully"})
 	w.Write(okJSON)
 }

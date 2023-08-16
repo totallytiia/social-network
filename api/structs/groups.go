@@ -217,7 +217,23 @@ func (g Group) RemoveRequest(userID int) error {
 	return err
 }
 
-func (g Group) RejectRequest(userID int) error {
-	_, err := db.DB.Exec("DELETE FROM group_requests WHERE group_id = ? AND user_id = ?", g.GroupID, userID)
+func (g Group) InviteMember(userID int) error {
+	_, err := db.DB.Exec("INSERT INTO group_invites(group_id, user_id) VALUES(?, ?)", g.GroupID, userID)
+	return err
+}
+
+func (g Group) InviteExists(userID int) bool {
+	var id int
+	err := db.DB.QueryRow("SELECT id FROM group_invites WHERE group_id = ? AND user_id = ?", g.GroupID, userID).Scan(&id)
+	return err == nil
+}
+
+func (g Group) AcceptInvite(userID int) error {
+	_, err := db.DB.Exec("INSERT INTO group_members(group_id, user_id) VALUES(?, ?)", g.GroupID, userID)
+	return err
+}
+
+func (g Group) RemoveInvite(userID int) error {
+	_, err := db.DB.Exec("DELETE FROM group_invites WHERE group_id = ? AND user_id = ?", g.GroupID, userID)
 	return err
 }
