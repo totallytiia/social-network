@@ -1,0 +1,11 @@
+--Create the events table
+CREATE TABLE IF NOT EXISTS events (
+  id INTEGER PRIMARY KEY,
+  user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE,
+  event_name TEXT NOT NULL,
+  event_description TEXT NOT NULL,
+  event_date DATE NOT NULL,
+  event_time TIME NOT NULL,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
