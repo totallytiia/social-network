@@ -106,14 +106,12 @@ func api(w http.ResponseWriter, r *http.Request) {
 			ep.GroupJoinRequest(w, r)
 		case "leave":
 			ep.LeaveGroup(w, r)
-		case "respond":
+		case "respond-group":
 			ep.RespondToGroupRequest(w, r)
 		case "invite":
-			// inviteToGroup(w, r)
-		case "accept":
-			// acceptGroupInvite(w, r)
-		case "decline":
-			// declineGroupInvite(w, r)
+			ep.InviteToGroup(w, r)
+		case "respond-invite":
+			ep.RespondToInvite(w, r)
 		default:
 			http.NotFound(w, r)
 			return
