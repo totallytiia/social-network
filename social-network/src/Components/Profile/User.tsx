@@ -154,8 +154,8 @@ export default function User() {
 
     return (
         <>
-            <div className="p-16 bg-custom z-0 item-center justify-center">
-                <div className="p-10 shadow-xl flex flex-col items-center bg-white rounded-xl">
+            <div className="p-10 bg-custom z-0 item-center justify-center">
+                <div className="p-10 shadow-xl flex flex-col items-center bg-white max-w-7xl rounded-xl mx-auto">
                     <div className="grid grid-cols-1 items-center justify-between md:grid-cols-3 ">
                         <div className="grid grid-cols-2 text-center order-last md:order-first mt-7 md:mt-0">
                             <div>
