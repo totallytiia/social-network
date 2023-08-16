@@ -1,10 +1,10 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import CreateEvent from './CreateEvent';
 import { useParams } from 'react-router-dom';
 import CreateAPost from '../CreateAPost/CreateAPost';
 import Post from '../Posts/Post';
 import { XMarkIcon } from '@heroicons/react/24/outline';
-import { createEvent } from '@testing-library/react';
+import { UserContext } from '../App/App';
 
 interface iGroup {
     id: number;
@@ -17,6 +17,8 @@ interface iGroup {
 }
 
 export default function Group() {
+    const { userData } = useContext(UserContext);
+    const [requestSent, setRequestSent] = useState(false);
     const [createAPost, setCreateAPost] = useState(false);
     const [createEvent, setCreateEvent] = useState(false);
     const [group, setGroup] = useState({} as iGroup);
@@ -73,6 +75,78 @@ export default function Group() {
             return { ...current, posts: newPosts };
         });
     };
+
+    if (
+        !group.members
+            ?.map((member) => parseInt(Object.keys(member)[0]))
+            .includes(userData?.id)
+    ) {
+        return (
+            <div className="bg-custom">
+                <div className="p-16 bg-custom item-center justify-center flex flex-col lg:flex-row gap-2">
+                    <div className="p-6 order-1 lg:order-0 shadow-xl flex flex-col items-center bg-white lg:w-2/3 rounded-xl">
+                        <div className="items-center justify-between md:grid-cols-3 ">
+                            <div className="relative mt-10  text-center border-b pb-8">
+                                <h1 className="text-4xl font-medium text-gray-700">
+                                    {group.name}
+                                    <span className="text-gray-500"></span>
+                                </h1>
+                                <p className="text-gray-600 mt-3">
+                                    {group.description}
+                                </p>
+                            </div>
+                            <button className="flex shrink-0 text-lg font-semibold mx-auto mt-4 gap-1 bg-blue-200 py-2 pl-2 pr-4 rounded-full hover:bg-blue-300">
+                                {requestSent ? (
+                                    <div
+                                        className="flex flex-row gap-1 shrink-0"
+                                        onClick={() => {
+                                            setRequestSent(false);
+                                        }}
+                                    >
+                                        <svg
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            viewBox="0 0 24 24"
+                                            fill="currentColor"
+                                            className="w-6 h-6 shrink-0 my-auto"
+                                        >
+                                            <path
+                                                fillRule="evenodd"
+                                                d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm13.36-1.814a.75.75 0 10-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 00-1.06 1.06l2.25 2.25a.75.75 0 001.14-.094l3.75-5.25z"
+                                                clipRule="evenodd"
+                                            />
+                                        </svg>
+
+                                        <p>Requested</p>
+                                    </div>
+                                ) : (
+                                    <div
+                                        className="flex flex-row gap-1 shrink-0"
+                                        onClick={() => {
+                                            setRequestSent(true);
+                                        }}
+                                    >
+                                        <svg
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            viewBox="0 0 24 24"
+                                            fill="currentColor"
+                                            className="w-6 h-6 shrink-0 my-auto"
+                                        >
+                                            <path
+                                                fillRule="evenodd"
+                                                d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25zM12.75 9a.75.75 0 00-1.5 0v2.25H9a.75.75 0 000 1.5h2.25V15a.75.75 0 001.5 0v-2.25H15a.75.75 0 000-1.5h-2.25V9z"
+                                                clipRule="evenodd"
+                                            />
+                                        </svg>
+                                        <p>Request</p>
+                                    </div>
+                                )}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="bg-custom">
