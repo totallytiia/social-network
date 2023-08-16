@@ -1,7 +1,6 @@
 import { useEffect, useState, useContext, useRef } from 'react';
 import { UserContext } from '../App/App';
 import { Link } from 'react-router-dom';
-import Chat from '../Chat/Chat';
 import {
     BellIcon,
     ArrowRightOnRectangleIcon,
