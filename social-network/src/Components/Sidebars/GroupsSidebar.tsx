@@ -4,6 +4,7 @@ import { useState } from 'react';
 
 export default function GroupsSidebar() {
     const [createGroup, setCreateGroup] = useState(false);
+    const [groupCreated, setGroupCreated] = useState(false);
 
     function handleCreateGroup() {
         setCreateGroup((current) => !current);
@@ -16,7 +17,10 @@ export default function GroupsSidebar() {
                     <h1 className="font-bold text-xl text-black mb-2">
                         GROUPS
                     </h1>
-                    <GroupList />
+                    <GroupList
+                        groupCreated={groupCreated}
+                        setGroupCreated={setGroupCreated}
+                    />
                     {!createGroup && (
                         <div className="CREATE-EVENT">
                             <button
@@ -42,7 +46,9 @@ export default function GroupsSidebar() {
                         </div>
                     )}
                     <div className=" mx-auto">
-                        {createGroup && <CreateGroup />}
+                        {createGroup && (
+                            <CreateGroup setGroupCreated={setGroupCreated} />
+                        )}
                     </div>
                 </div>
             </div>

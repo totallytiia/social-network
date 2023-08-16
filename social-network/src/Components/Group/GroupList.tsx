@@ -2,7 +2,12 @@ import { useEffect, useState } from 'react';
 import GroupIcon from './GroupIcon';
 import { Link } from 'react-router-dom';
 
-export default function GroupList() {
+interface Props {
+    groupCreated: boolean;
+    setGroupCreated: (value: boolean) => void;
+}
+
+export default function GroupList(props: Props) {
     interface Group {
         id: number;
         name: string;
@@ -11,6 +16,7 @@ export default function GroupList() {
         owner: number;
     }
 
+    const { groupCreated, setGroupCreated } = props;
     const [groups, setGroups] = useState([] as Group[]);
     useEffect(() => {
         async function getGroups() {
@@ -28,9 +34,10 @@ export default function GroupList() {
                 return;
             }
             setGroups(data);
+            if (setGroupCreated !== undefined) setGroupCreated(false);
         }
         getGroups();
-    }, []);
+    }, [groupCreated, setGroupCreated]);
 
     return (
         <>

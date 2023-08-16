@@ -4,6 +4,7 @@ import CreateGroup from './CreateGroup';
 
 export default function Groups() {
     const [createNewGroup, setCreateNewGroup] = useState(false);
+    const [groupCreated, setGroupCreated] = useState(false);
     function handleCreateNewGroup() {
         setCreateNewGroup((current) => !current);
     }
@@ -37,13 +38,18 @@ export default function Groups() {
                         </div>
                     )}
                     <div className="mx-auto">
-                        {createNewGroup && <CreateGroup />}
+                        {createNewGroup && (
+                            <CreateGroup setGroupCreated={setCreateNewGroup} />
+                        )}
                     </div>
                     <h1 className="font-bold text-xl text-center my-2">
                         All Groups
                     </h1>
                     <div className="[&>div]:m-1">
-                        <GroupList />
+                        <GroupList
+                            groupCreated={groupCreated}
+                            setGroupCreated={setGroupCreated}
+                        />
                     </div>
                 </div>
             </div>
