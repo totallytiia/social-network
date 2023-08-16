@@ -131,3 +131,12 @@ func (u User) RespondToRequest(requesterID int, accept bool) error {
 	}
 	return nil
 }
+
+func (u User) RemoveRequest(requesterID int) error {
+	var query = "DELETE FROM follow_requests WHERE user_id = ? AND follow_id = ?"
+	_, err := db.DB.Exec(query, requesterID, u.ID)
+	if err != nil {
+		return err
+	}
+	return nil
+}

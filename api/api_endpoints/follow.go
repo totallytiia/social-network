@@ -233,6 +233,13 @@ func RespondToRequest(w http.ResponseWriter, r *http.Request) {
 		}
 		WSSendToUser(followUser.ID, `{"type": "followReqRes", "message": "Your follow request was rejected", "user_id": `+strconv.Itoa(u.ID)+`}`)
 	}
+	err = u.RemoveRequest(followUser.ID)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		badReqJSON, _ := json.Marshal(s.ErrorResponse{Errors: "There was an error responding to the follow request", Details: err.Error()})
+		w.Write(badReqJSON)
+		return
+	}
 	notification, err := s.FindNotification(u.ID, followUser.ID, "followReq")
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
