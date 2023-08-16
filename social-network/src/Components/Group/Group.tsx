@@ -77,9 +77,9 @@ export default function Group() {
     return (
         <div className="bg-custom">
             <div className="p-16 bg-custom item-center justify-center flex flex-col lg:flex-row gap-2">
-                <div className="p-6 order-1 shadow-xl flex flex-col items-center bg-white lg:w-2/3 rounded-xl">
+                <div className="p-6 order-1 lg:order-0 shadow-xl flex flex-col items-center bg-white lg:w-2/3 rounded-xl">
                     <div className="items-center justify-between md:grid-cols-3 ">
-                        <div className="relative mt-10 text-center border-b pb-8">
+                        <div className="relative mt-10  text-center border-b pb-8">
                             <h1 className="text-4xl font-medium text-gray-700">
                                 {group.name}
                                 <span className="text-gray-500"></span>
@@ -124,19 +124,19 @@ export default function Group() {
                         )}
                     </div>
                 </div>
-                <div className="p-6">
-                    <div className="flex flex-col  gap-2 flex mt-2 md:mt-0 md:pb-0">
+                <div className="p-6 order-0 lg:order-1 flex justify-center">
+                    <div className="flex flex-col shrink-0  gap-2 flex mt-2 md:mt-0 md:pb-0">
                         {!createEvent && (
                             <div className="CREATE-EVENT mt-2">
                                 <button
                                     onClick={() => handleCreateEvent()}
-                                    className="flex flex-row text-lg font-bold items-center gap-1 bg-blue-50 py-2 pl-1 pr-4 rounded-full hover:bg-blue-100"
+                                    className="flex shrink-0 flex-row text-lg font-bold items-center gap-1 bg-blue-50 py-2 pl-1 pr-4 rounded-full hover:bg-blue-100"
                                 >
                                     <svg
                                         xmlns="http://www.w3.org/2000/svg"
                                         viewBox="0 0 24 24"
                                         fill="currentColor"
-                                        className="w-6 h-6"
+                                        className="w-6 h-6 shrink-0"
                                     >
                                         <path
                                             fillRule="evenodd"
@@ -144,13 +144,13 @@ export default function Group() {
                                             clipRule="evenodd"
                                         />
                                     </svg>
-                                    <p className="text-bold text-sm">
+                                    <p className="text-bold text-sm shrink-0">
                                         Create an event
                                     </p>
                                 </button>
                             </div>
                         )}
-                        <div className=" mx-auto">
+                        <div className="mx-auto">
                             {createEvent && (
                                 <div className="CLOSE_CREATEPOST flex justify-end">
                                     <button
@@ -165,16 +165,16 @@ export default function Group() {
                             {createEvent && <CreateEvent />}
                         </div>
                         {!createAPost && (
-                            <div className="CREATE-EVENT mt-2">
+                            <div className="CREATE-EVENT shrink-0 flex mt-2 mx-auto lg:mx-0">
                                 <button
                                     onClick={() => handleCreateAPost()}
-                                    className="flex flex-row text-lg font-bold items-center gap-1 bg-blue-50 py-2 pl-1 pr-4 rounded-full hover:bg-blue-100"
+                                    className="flex shrink-0 flex-row text-lg font-bold items-center gap-1 bg-blue-50 py-2 pl-1 pr-4 rounded-full hover:bg-blue-100"
                                 >
                                     <svg
                                         xmlns="http://www.w3.org/2000/svg"
                                         viewBox="0 0 24 24"
                                         fill="currentColor"
-                                        className="w-6 h-6"
+                                        className="w-6 h-6 shrink-0"
                                     >
                                         <path
                                             fillRule="evenodd"
@@ -182,7 +182,7 @@ export default function Group() {
                                             clipRule="evenodd"
                                         />
                                     </svg>
-                                    <p className="text-bold text-sm">
+                                    <p className="text-bold shrink-0 text-sm">
                                         Create a post
                                     </p>
                                 </button>
