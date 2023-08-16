@@ -72,7 +72,9 @@ func GetGroup(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	if !g.IsMember(u.ID) {
-		http.Error(w, "Unauthorized", http.StatusUnauthorized)
+		w.WriteHeader(http.StatusOK)
+		okJSON, _ := json.Marshal(g)
+		w.Write(okJSON)
 		return
 	}
 	IDs := make(map[string]any)
