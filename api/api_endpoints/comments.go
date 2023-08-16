@@ -16,7 +16,7 @@ func CreateComment(w http.ResponseWriter, r *http.Request) {
 		MethodNotAllowed(w, r)
 		return
 	}
-	var err = r.ParseMultipartForm(2000)
+	var err = r.ParseMultipartForm(5000)
 	if err != nil {
 		BadRequest(w, r, err.Error())
 		return
