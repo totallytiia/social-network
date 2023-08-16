@@ -1,41 +1,8 @@
-import { useEffect, useState, useContext } from 'react';
-import { UserContext } from '../App/App';
-import CreateEvent from './CreateEvent';
-import Group from './GroupList';
-import GroupIcon from './GroupIcon';
+import { useState } from 'react';
+import GroupList from './GroupList';
 import CreateGroup from './CreateGroup';
 
-interface IGroup {
-    id: number;
-    user_id: number;
-    group_name: string;
-    group_description: string;
-}
-
 export default function Groups() {
-    const [groups, setGroups] = useState([] as IGroup[]);
-    useEffect(() => {
-        async function getGroups() {
-            const url = `http://localhost:8080/api/groups/getall`;
-            const res = await fetch(url, {
-                method: 'GET',
-                credentials: 'include',
-            });
-            if (!res.ok) {
-                console.log('error');
-                return;
-            }
-            if (res.status === 204) return;
-            const data = await res.json();
-            if (data.errors) {
-                console.log(data);
-                return;
-            }
-            setGroups(data);
-        }
-        getGroups();
-    }, []);
-
     const [createNewGroup, setCreateNewGroup] = useState(false);
     function handleCreateNewGroup() {
         setCreateNewGroup((current) => !current);
@@ -76,7 +43,7 @@ export default function Groups() {
                         All Groups
                     </h1>
                     <div className="[&>div]:m-1">
-                        <Group />
+                        <GroupList />
                     </div>
                 </div>
             </div>

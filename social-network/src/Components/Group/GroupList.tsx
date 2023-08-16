@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import GroupIcon from './GroupIcon';
 import { Link } from 'react-router-dom';
 
-export default function Group() {
+export default function GroupList() {
     interface Group {
         id: number;
         name: string;
