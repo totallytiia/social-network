@@ -58,20 +58,18 @@ export default function CreateAPost(props: any) {
         }
     };
 
-
     const getUserList = async () => {
-        const response = await fetch('http://localhost:8080/api/users',
-            {
-                method: 'GET',
-                credentials: 'include',
-            });
+        const response = await fetch('http://localhost:8080/api/users', {
+            method: 'GET',
+            credentials: 'include',
+        });
         if (response.status === 200) {
             const users = await response.json();
             console.log(users);
         } else {
             console.log(response);
         }
-    }
+    };
 
     const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files?.length === 0) return;
@@ -82,16 +80,15 @@ export default function CreateAPost(props: any) {
             postData.post.imgUpload = reader.result as string;
             setPostData(postCopy);
             document
-                .getElementById('imgUpload')!
-                .setAttribute('src', postData.post.imgUpload as string);
-            document.getElementById('svgUpload')!.classList.add('hidden');
-            document.getElementById('uploadedImg')!.classList.remove('hidden');
+                .getElementById('uploadedImg')
+                ?.setAttribute('src', postData.post.imgUpload as string);
+            document.getElementById('uploadImgIcon')?.classList.add('hidden');
+            document.getElementById('uploadedImg')?.classList.remove('hidden');
         };
         reader.readAsDataURL(file as Blob);
     };
 
     return (
-        // create a post (form), needs to have body, and group selection, upload image, and submit button
         <div className="mt-4 mx-6 mb-0 p-5 pb-3 bg-blue-50 rounded-xl">
             <form
                 onSubmit={(e) => handlePostSubmit(e)}
@@ -147,7 +144,6 @@ export default function CreateAPost(props: any) {
                                 </select>
                                 <div className="USER_POPUP absolute bg-red-200 h-20 w-20">
                                     {/* add userlist here */}
-
                                 </div>
                                 <label
                                     htmlFor="imgUpload"
@@ -159,13 +155,16 @@ export default function CreateAPost(props: any) {
                                         className=" hidden border-none w-8 h-8 rounded-full object-cover shadow-lg"
                                         alt=""
                                     />
-                                    <PhotoIcon className="w-8 h-8" />
+                                    <PhotoIcon
+                                        className="w-8 h-8"
+                                        id="uploadImgIcon"
+                                    />
                                 </label>
                                 <input
                                     id="imgUpload"
                                     className="btn-custom hidden"
                                     type="file"
-                                    accept="image/png, image/jpg, image/jpeg"
+                                    accept="image/png, image/jpg, image/jpeg, image/gif"
                                     onChange={(e) => handleImageUpload(e)}
                                 />
                                 <input
