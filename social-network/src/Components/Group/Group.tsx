@@ -161,7 +161,7 @@ export default function Group() {
                     </div>
                     <div className="mt-12 flex flex-col justify-center">
                         {group.posts !== undefined &&
-                            group.posts.length !== 0 ? (
+                        group.posts.length !== 0 ? (
                             group.posts.map((post: any) => (
                                 <Post
                                     deletePost={deletePost}
@@ -203,7 +203,7 @@ export default function Group() {
                                     </button>
                                 </div>
                             )}
-                            {createEvent && <CreateEvent GrpupId={group.id} />}
+                            {createEvent && <CreateEvent groupID={group.id} />}
                         </div>
                         {!createAPost && (
                             <div className="CREATE-EVENT shrink-0 flex mt-2 mx-auto lg:mx-0">
@@ -241,6 +241,6 @@ export default function Group() {
                     </div>
                 </div>
             </div>
-        </div >
+        </div>
     );
 }
