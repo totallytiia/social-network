@@ -57,6 +57,22 @@ export default function CommentsSection({
         (
             document.getElementById('commentBox' + post_id) as HTMLInputElement
         ).value = '';
+        (
+            document.getElementById(
+                'commentImgUpload' + post_id
+            ) as HTMLInputElement
+        ).value = '';
+
+        setComment({
+            post_id: 0,
+            comment: '',
+            image: '',
+        } as IComment);
+
+        document.getElementById('CheckIcon' + post_id)?.classList.add('hidden');
+        document
+            .getElementById('PlusIcon' + post_id)
+            ?.classList.remove('hidden');
         const commentsCopy = comments !== null ? Array.from(comments) : [];
         commentsCopy.push(data);
         setComments(commentsCopy);
@@ -92,10 +108,12 @@ export default function CommentsSection({
             commentCopy.image = reader.result as string;
             console.log(commentCopy.image);
             setComment(commentCopy);
-            document.getElementById('PlusIcon')?.classList.toggle('hidden');
-            document.getElementById('CheckIcon')?.classList.toggle('hidden');
         };
         reader.readAsDataURL(file as Blob);
+        document.getElementById('PlusIcon' + post_id)?.classList.add('hidden');
+        document
+            .getElementById('CheckIcon' + post_id)
+            ?.classList.remove('hidden');
     };
 
     return (
@@ -114,13 +132,13 @@ export default function CommentsSection({
                     onSubmit={(e) => handleCommentSubmit(e)}
                     className="flex flex-cols mt-1"
                 >
-                    <label htmlFor="commentImgUpload">
+                    <label htmlFor={'commentImgUpload' + post_id}>
                         <PlusIcon
-                            id="PlusIcon"
+                            id={'PlusIcon' + post_id}
                             className="cursor-pointer stroke-2 w-8 h-8 mr-1 my-auto bg-blue-500 shrink-0 stroke-white rounded-full p-1"
                         />
                         <CheckIcon
-                            id="CheckIcon"
+                            id={'CheckIcon' + post_id}
                             className="hidden cursor-pointer stroke-2 w-8 h-8 mr-1 my-auto bg-green-500 shrink-0 stroke-white rounded-full p-1"
                         />
                     </label>
@@ -129,7 +147,7 @@ export default function CommentsSection({
                             handleCommentImageUpload(e);
                         }}
                         type="file"
-                        id="commentImgUpload"
+                        id={'commentImgUpload' + post_id}
                         className="hidden"
                         accept="image/png, image/jpg, image/jpeg, image/gif"
                     />

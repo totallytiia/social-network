@@ -1,7 +1,8 @@
 import { useContext, useState } from 'react';
 import { UserContext } from '../App/App';
 import ProfileIcon from '../Profile/ProfileIcon';
-import { PhotoIcon } from '@heroicons/react/24/solid';
+import { PlusIcon } from '@heroicons/react/24/outline';
+import { CheckIcon } from '@heroicons/react/24/solid';
 
 interface iFormKeys {
     [key: string]: {
@@ -65,6 +66,17 @@ export default function CreateAPost(props: any) {
 
         (document.getElementById('content') as HTMLInputElement).value = '';
         (document.getElementById('imgUpload') as HTMLInputElement).value = '';
+        setPostData({
+            post: {
+                content: '',
+                privacy: 0,
+                privacy_settings: '',
+                imgUpload: '',
+            },
+        });
+
+        document.getElementById('PostPlusIcon')?.classList.remove('hidden');
+        document.getElementById('PostCheckIcon')?.classList.add('hidden');
 
         setUserListVisible(false);
         setSelectedOption(selectedInitialOption);
@@ -102,11 +114,10 @@ export default function CreateAPost(props: any) {
             const postCopy = postData;
             postData.post.imgUpload = reader.result as string;
             setPostData(postCopy);
+            document.getElementById('PostPlusIcon')?.classList.add('hidden');
             document
-                .getElementById('uploadedImg')
-                ?.setAttribute('src', postData.post.imgUpload as string);
-            document.getElementById('uploadImgIcon')?.classList.add('hidden');
-            document.getElementById('uploadedImg')?.classList.remove('hidden');
+                .getElementById('PostCheckIcon')
+                ?.classList.remove('hidden');
         };
         reader.readAsDataURL(file as Blob);
     };
@@ -218,15 +229,13 @@ export default function CreateAPost(props: any) {
                                     htmlFor="imgUpload"
                                     className="my-auto relative cursor-pointer"
                                 >
-                                    <img
-                                        id="uploadedImg"
-                                        src={postData.post.imgUpload}
-                                        className=" hidden border-none w-8 h-8 rounded-full object-cover shadow-lg"
-                                        alt=""
+                                    <PlusIcon
+                                        id={'PostPlusIcon'}
+                                        className="cursor-pointer stroke-2 w-8 h-8 mr-1 my-auto bg-blue-500 shrink-0 stroke-white rounded-full p-1"
                                     />
-                                    <PhotoIcon
-                                        className="w-8 h-8"
-                                        id="uploadImgIcon"
+                                    <CheckIcon
+                                        id={'PostCheckIcon'}
+                                        className="hidden cursor-pointer stroke-2 w-8 h-8 mr-1 my-auto bg-green-500 shrink-0 stroke-white rounded-full p-1"
                                     />
                                 </label>
                                 <input
