@@ -45,9 +45,10 @@ export default function Footer() {
 
     return (
         <>
-            <div id="notifications" className="fixed bottom-2 right-2">
+            <div id="notifications" className="fixed bottom-2 left-2"></div>
+            <div id="chat" className="fixed bottom-2 right-2">
                 {chatVisible ? (
-                    <ChatList />
+                    <ChatList numUnseenMessages={numUnseenMessages.current} />
                 ) : (
                     <button onClick={() => setChatVisible(true)}>
                         <ChatBubbleOvalLeftIcon className="fill-white w-10 h-10 m-2 bg-blue-500 rounded-full shadow p-2" />
