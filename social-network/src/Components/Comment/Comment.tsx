@@ -63,7 +63,11 @@ export default function Comment({ comment, deleteComment }: ICommentProps) {
                     </div>
                     <div>
                         {comment.image !== '' ? (
-                            <img src={comment.image} alt="" />
+                            <img
+                                src={comment.image}
+                                alt=""
+                                className="max-h-[20rem]"
+                            />
                         ) : null}
                     </div>
                 </div>

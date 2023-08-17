@@ -191,8 +191,12 @@ export default function Post({ postInput, deletePost }: PostProps) {
                     <p className="text-sm">{post.content}</p>
                 </div>
                 {post.image !== '' ? (
-                    <div className="mt-2">
-                        <img src={post.image} alt="" />
+                    <div className="mt-2 bg-blue-100 rounded-xl shadow-md">
+                        <img
+                            src={post.image}
+                            alt=""
+                            className="max-h-[50rem] mx-auto"
+                        />
                     </div>
                 ) : null}
 
