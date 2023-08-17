@@ -14,9 +14,9 @@ type Chat struct {
 	Message        string `json:"message"`
 	Image          string `json:"image"`
 	SentAt         string `json:"sent_at"`
-	ReceiverAvatar string `json:"receiver_avatar"`
-	ReceiverFname  string `json:"receiver_fname"`
-	ReceiverLname  string `json:"receiver_lname"`
+	ReceiverAvatar string `json:"receiver_avatar,omitempty"`
+	ReceiverFname  string `json:"receiver_fname,omitempty"`
+	ReceiverLname  string `json:"receiver_lname,omitempty"`
 }
 
 type NewChat struct {
@@ -38,6 +38,27 @@ func (c *NewChat) Validate() error {
 	if !imageRegEx.MatchString(c.Image) && c.Image != "" {
 		return errors.New("invalid image")
 	}
+	if c.ReceiverID == 0 && c.GroupID == 0 {
+		return errors.New("receiver_id or group_id must be set")
+	}
+	if c.ReceiverID != 0 && c.GroupID != 0 {
+		return errors.New("receiver_id and group_id cannot both be set")
+	}
+	if c.ReceiverID != 0 {
+		var user = User{ID: c.ReceiverID}
+		err := user.Get(nil)
+		if err != nil {
+			return errors.New("invalid receiver_id")
+		}
+	}
+	if c.GroupID != 0 {
+		var group = Group{GroupID: c.GroupID}
+		err := group.Get()
+		if err != nil {
+			return errors.New("invalid group_id")
+		}
+	}
+	//check if receiver_id or group_id is set a
 	return nil
 }
 

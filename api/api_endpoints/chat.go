@@ -2,6 +2,7 @@ package endpoints
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"social_network_api/structs"
 	"strconv"
@@ -11,6 +12,7 @@ func SendChat(w http.ResponseWriter, r *http.Request) {
 	v, u := ValidateCookie(w, r)
 	if !v {
 		http.Error(w, "Unauthorized", http.StatusUnauthorized)
+		return
 	}
 	if r.Method != "POST" {
 		BadRequest(w, r, "Bad Request")
@@ -22,18 +24,12 @@ func SendChat(w http.ResponseWriter, r *http.Request) {
 		BadRequest(w, r, err.Error())
 		return
 	}
-	receiverID, err := strconv.Atoi(r.FormValue("receiver_id"))
-	if err != nil {
-		BadRequest(w, r, "Invalid receiver ID")
-		return
-	}
-	groupID, err := strconv.Atoi(r.FormValue("group_id"))
-	if err != nil {
-		BadRequest(w, r, "Invalid group ID")
-		return
-	}
-	if (receiverID != 0 && groupID != 0) || (receiverID == 0 && groupID == 0) {
-		BadRequest(w, r, "Invalid receiver")
+
+	receiverID, errReceiver := strconv.Atoi(r.FormValue("receiver_id"))
+	groupID, errGroup := strconv.Atoi(r.FormValue("group_id"))
+
+	if (errReceiver == nil && errGroup == nil) || (errReceiver != nil && errGroup != nil) {
+		BadRequest(w, r, "There was an error with your request")
 		return
 	}
 
@@ -52,6 +48,7 @@ func SendChat(w http.ResponseWriter, r *http.Request) {
 	id, err := chat.Create()
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
+		fmt.Println("Error creating chat")
 		badReqJSON, _ := json.Marshal(structs.ErrorResponse{Errors: "There was an error with your request", Details: err.Error()})
 		w.Write(badReqJSON)
 		return
@@ -60,26 +57,71 @@ func SendChat(w http.ResponseWriter, r *http.Request) {
 	err = c.Get()
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
+		fmt.Println("Error getting chat")
 		badReqJSON, _ := json.Marshal(structs.ErrorResponse{Errors: "There was an error with your request", Details: err.Error()})
 		w.Write(badReqJSON)
 		return
 	}
 	//send message to receiver
 	var receiver = structs.User{ID: receiverID}
-	err = receiver.Get(nil)
-	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		badReqJSON, _ := json.Marshal(structs.ErrorResponse{Errors: "There was an error with your request", Details: err.Error()})
-		w.Write(badReqJSON)
-		return
-	}
+	if receiverID != 0 {
+		err = receiver.Get(nil)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			fmt.Println("Error getting receiver")
+			badReqJSON, _ := json.Marshal(structs.ErrorResponse{Errors: "There was an error with your request", Details: err.Error()})
+			w.Write(badReqJSON)
+			return
+		}
 
-	err = receiver.AddNotification(u.ID, "chat", "You have a new message")
-	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		badReqJSON, _ := json.Marshal(structs.ErrorResponse{Errors: "There was an error with your request", Details: err.Error()})
-		w.Write(badReqJSON)
-		return
+		err = receiver.AddNotification(u.ID, "chat", "You have a new message")
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			fmt.Println("Error adding notification")
+			badReqJSON, _ := json.Marshal(structs.ErrorResponse{Errors: "There was an error with your request", Details: err.Error()})
+			w.Write(badReqJSON)
+			return
+		}
+	}
+	var group = structs.Group{GroupID: groupID}
+	if groupID != 0 {
+		err = group.Get()
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			fmt.Println("Error getting group")
+			badReqJSON, _ := json.Marshal(structs.ErrorResponse{Errors: "There was an error with your request", Details: err.Error()})
+			w.Write(badReqJSON)
+			return
+		}
+		var members = group.GroupMembers
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			fmt.Println("Error getting group members")
+			badReqJSON, _ := json.Marshal(structs.ErrorResponse{Errors: "There was an error with your request", Details: err.Error()})
+			w.Write(badReqJSON)
+			return
+		}
+		for id := range members {
+			if id != u.ID {
+				var member = structs.User{ID: id}
+				err = member.Get(nil)
+				if err != nil {
+					w.WriteHeader(http.StatusInternalServerError)
+					fmt.Println("Error getting group member")
+					badReqJSON, _ := json.Marshal(structs.ErrorResponse{Errors: "There was an error with your request", Details: err.Error()})
+					w.Write(badReqJSON)
+					return
+				}
+				err = member.AddNotification(u.ID, "chat", "You have a new message")
+				if err != nil {
+					w.WriteHeader(http.StatusInternalServerError)
+					fmt.Println("Error adding notification")
+					badReqJSON, _ := json.Marshal(structs.ErrorResponse{Errors: "There was an error with your request", Details: err.Error()})
+					w.Write(badReqJSON)
+					return
+				}
+			}
+		}
 	}
 
 	w.WriteHeader(http.StatusCreated)
@@ -91,6 +133,7 @@ func GetChat(w http.ResponseWriter, r *http.Request) {
 	v, u := ValidateCookie(w, r)
 	if !v {
 		http.Error(w, "Unauthorized", http.StatusUnauthorized)
+		return
 	}
 	if r.Method != "GET" {
 		BadRequest(w, r, "Bad Request")
@@ -144,6 +187,7 @@ func GetChats(w http.ResponseWriter, r *http.Request) {
 	v, u := ValidateCookie(w, r)
 	if !v {
 		http.Error(w, "Unauthorized", http.StatusUnauthorized)
+		return
 	}
 	if r.Method != "GET" {
 		BadRequest(w, r, "Bad Request")

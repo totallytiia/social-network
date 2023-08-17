@@ -11,6 +11,7 @@ func CreateComment(w http.ResponseWriter, r *http.Request) {
 	v, u := ValidateCookie(w, r)
 	if !v {
 		http.Error(w, "Unauthorized", http.StatusUnauthorized)
+		return
 	}
 	if r.Method != "POST" {
 		MethodNotAllowed(w, r)
@@ -84,6 +85,7 @@ func GetComments(w http.ResponseWriter, r *http.Request) {
 	v, _ := ValidateCookie(w, r)
 	if !v {
 		http.Error(w, "Unauthorized", http.StatusUnauthorized)
+		return
 	}
 	if r.Method != "GET" {
 		MethodNotAllowed(w, r)
@@ -115,6 +117,7 @@ func UpdateComment(w http.ResponseWriter, r *http.Request) {
 	v, u := ValidateCookie(w, r)
 	if !v {
 		http.Error(w, "Unauthorized", http.StatusUnauthorized)
+		return
 	}
 	if r.Method != "POST" {
 		MethodNotAllowed(w, r)
@@ -159,6 +162,7 @@ func DeleteComment(w http.ResponseWriter, r *http.Request) {
 	v, u := ValidateCookie(w, r)
 	if !v {
 		http.Error(w, "Unauthorized", http.StatusUnauthorized)
+		return
 	}
 	if r.Method != "POST" {
 		MethodNotAllowed(w, r)
