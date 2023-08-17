@@ -81,8 +81,8 @@ export default function ChatList({ numUnseenMessages }: Props) {
     }
 
     return (
-        <>
-            <div className="CLOSE_CHAT flex flex-row justify-end items-center">
+        <div className="mb-2 mr-2">
+            <div className="CLOSE_CHAT flex flex-row justify-end items-center p-0.5">
                 <button
                     type="button"
                     className=""
@@ -91,7 +91,7 @@ export default function ChatList({ numUnseenMessages }: Props) {
                     <XMarkIcon className="text-gray-600 w-5 h-5" />
                 </button>
             </div>
-            <div className="CHAT_LIST bg-white rounded-xl flex flex-col justify-between shadow-xl shadow-slate-300 w-60">
+            <div className="CHAT_LIST bg-white rounded-xl flex flex-col justify-between shadow-xl w-60">
                 <div className="CHAT_LIST_HEADER_AND_USERS">
                     <div className="CHAT_LIST__HEADER shadow-[0px_2px_4px_0px_#EDF2F7]">
                         <div className="CHAT_LIST__HEADER__TITLE py-2 bg-blue-500 rounded-t-lg">
@@ -155,6 +155,6 @@ export default function ChatList({ numUnseenMessages }: Props) {
                 </div>
             </div>
             {/* <Chat setChatVisible={setChatVisible} /> */}
-        </>
+        </div>
     );
 }
