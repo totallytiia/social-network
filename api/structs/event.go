@@ -12,8 +12,8 @@ type Event struct {
 	EndDateTime   string `json:"end_date_time"`
 	Location      string `json:"location"`
 	Description   string `json:"description"`
-	UserGoing     []int  `json:"user_going"`
-	UserNotGoing  []int  `json:"user_not_going"`
+	UserGoing     int    `json:"user_going"`
+	UserNotGoing  int    `json:"user_not_going"`
 	CreatedAt     string `json:"created_at"`
 	UpdatedAt     string `json:"updated_at"`
 }

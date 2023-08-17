@@ -2,13 +2,14 @@ package endpoints
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 	s "social_network_api/structs"
 	"strconv"
 )
 
 func CreateEvent(w http.ResponseWriter, r *http.Request) {
-	v, _ := ValidateCookie(w, r)
+	v, u := ValidateCookie(w, r)
 	if !v {
 		http.Error(w, "Unauthorized", http.StatusUnauthorized)
 	}
@@ -24,6 +25,12 @@ func CreateEvent(w http.ResponseWriter, r *http.Request) {
 	groupID, err := strconv.Atoi(r.FormValue("group_id"))
 	if err != nil {
 		BadRequest(w, r, "Invalid group_id")
+		return
+	}
+	var group = s.Group{GroupID: groupID}
+	err = group.Get()
+	if err != nil {
+		BadRequest(w, r, err.Error())
 		return
 	}
 	var event = s.NewEvent{
@@ -52,6 +59,24 @@ func CreateEvent(w http.ResponseWriter, r *http.Request) {
 		badReqJSON, _ := json.Marshal(s.ErrorResponse{Errors: "There was an error with your request", Details: err.Error()})
 		w.Write(badReqJSON)
 		return
+	}
+	for member := range group.GroupMembers {
+		var user = s.User{ID: member}
+		err = user.Get(nil)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			badReqJSON, _ := json.Marshal(s.ErrorResponse{Errors: "There was an error with your request", Details: err.Error()})
+			w.Write(badReqJSON)
+			return
+		}
+		err = user.AddNotification(u.ID, "newEvent", fmt.Sprintf(`%s %s created a new event in %s`, u.FName, u.LName, group.GroupName))
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			badReqJSON, _ := json.Marshal(s.ErrorResponse{Errors: "There was an error with your request", Details: err.Error()})
+			w.Write(badReqJSON)
+			return
+		}
+		WSSendToUser(user.ID, `{"type": "newEvent", "message": "You have a new event in group `+group.GroupName+`", "event_id": `+strconv.Itoa(id)+`, "group_id": `+strconv.Itoa(groupID)+`}`)
 	}
 	w.WriteHeader(http.StatusCreated)
 	eventJSON, _ := json.Marshal(e)
