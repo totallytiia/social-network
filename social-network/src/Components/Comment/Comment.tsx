@@ -1,7 +1,7 @@
 import { useContext } from 'react';
 import { UserContext } from '../App/App';
 import ProfileIcon from '../Profile/ProfileIcon';
-import { TrashIcon } from '@heroicons/react/24/solid';
+import { TrashIcon } from '@heroicons/react/24/outline';
 
 interface IComment {
     id: number;
@@ -14,6 +14,7 @@ interface IComment {
     comment: string;
     created_at: string;
     updated_at: string;
+    image: string;
 }
 interface ICommentProps {
     comment: IComment;
@@ -53,12 +54,17 @@ export default function Comment({ comment, deleteComment }: ICommentProps) {
                                 onClick={() => deleteComment(comment.id)}
                                 className="mb-4"
                             >
-                                <TrashIcon className="w-4 h-4" />
+                                <TrashIcon className="w-4 h-4 stroke-red-600" />
                             </button>
                         ) : null}
                     </div>
                     <div className="flex">
                         <p>{comment.comment}</p>
+                    </div>
+                    <div>
+                        {comment.image !== '' ? (
+                            <img src={comment.image} alt="" />
+                        ) : null}
                     </div>
                 </div>
             </div>

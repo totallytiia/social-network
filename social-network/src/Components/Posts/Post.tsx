@@ -190,6 +190,12 @@ export default function Post({ postInput, deletePost }: PostProps) {
                 <div className="mt-2">
                     <p className="text-sm">{post.content}</p>
                 </div>
+                {post.image !== '' ? (
+                    <div className="mt-2">
+                        <img src={post.image} alt="" />
+                    </div>
+                ) : null}
+
                 <div className="flex justify-between mt-4">
                     <div className="flex gap-4">
                         <button
@@ -197,8 +203,9 @@ export default function Post({ postInput, deletePost }: PostProps) {
                             className="flex gap-1"
                         >
                             <HandThumbUpIcon
-                                className={`w-5 h-5 my-auto ${post.liked === 1 ? 'fill-green-500' : ''
-                                    }`}
+                                className={`w-5 h-5 my-auto ${
+                                    post.liked === 1 ? 'fill-green-500' : ''
+                                }`}
                             />
                             <p>{post.likes}</p>
                         </button>
@@ -207,8 +214,9 @@ export default function Post({ postInput, deletePost }: PostProps) {
                             className="flex gap-1"
                         >
                             <HandThumbDownIcon
-                                className={`w-5 h-5 my-auto ${post.liked === -1 ? 'fill-red-600' : ''
-                                    }`}
+                                className={`w-5 h-5 my-auto ${
+                                    post.liked === -1 ? 'fill-red-600' : ''
+                                }`}
                             />
                             <p>{post.dislikes}</p>
                         </button>
