@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { ChatBubbleOvalLeftIcon } from '@heroicons/react/24/outline';
+import { ChatBubbleOvalLeftIcon, XMarkIcon } from '@heroicons/react/24/solid';
 import Chat from './Chat';
 
 interface IReceiver {
@@ -82,48 +82,76 @@ export default function ChatList({ numUnseenMessages }: Props) {
 
     return (
         <>
-            <div className="CHAT_LIST">
-                <div className="CHAT_LIST__HEADER">
-                    <div className="CHAT_LIST__HEADER__TITLE">
-                        <h3>Messages</h3>
+            <div className="CLOSE_CHAT flex flex-row justify-end items-center">
+                <button
+                    type="button"
+                    className=""
+                    onClick={() => setChatVisible(false)}
+                >
+                    <XMarkIcon className="text-gray-600 w-5 h-5" />
+                </button>
+            </div>
+            <div className="CHAT_LIST bg-white rounded-xl flex flex-col justify-between shadow-xl shadow-slate-300 w-60">
+                <div className="CHAT_LIST_HEADER_AND_USERS">
+                    <div className="CHAT_LIST__HEADER shadow-[0px_2px_4px_0px_#EDF2F7]">
+                        <div className="CHAT_LIST__HEADER__TITLE py-2 bg-blue-500 rounded-t-lg">
+                            <h3 className="text-xs text-left text-white my-auto">
+                                Recent chat
+                            </h3>
+                        </div>
                     </div>
-                    <div className="CHAT_LIST__HEADER__SEARCH">
-                        <label htmlFor="chatReceiver">Receiver: </label>
-                        <input
-                            type="text"
-                            name="chatReceiver"
-                            id="chatReceiver"
-                        />
+                    <div className="CHAT_LIST__BODY">
+                        <div className="CHAT_LIST__BODY__ITEM">
+                            {lastChats.length === 0 ? (
+                                <div className="m-2 text-xs">
+                                    <p className="rounded-full bg-blue-100 px-2 py-1 w-fit">
+                                        You have no chats.
+                                    </p>
+                                </div>
+                            ) : (
+                                <div>
+                                    {lastChats.map((lastChat) => (
+                                        <div
+                                            key={`lastChat-${lastChat.id}`}
+                                            className="flex font-medium p-2 hover:bg-gray-200 cursor-pointer"
+                                            onClick={() => (
+                                                <Chat
+                                                    setChatVisible={
+                                                        setChatVisible
+                                                    }
+                                                />
+                                            )}
+                                        >
+                                            <div className="CHAT_LIST__BODY__ITEM__AVATAR">
+                                                <img
+                                                    src="https://picsum.photos/200"
+                                                    alt="avatar"
+                                                    className="w-4 h-4 rounded-full m-1"
+                                                />
+                                            </div>
+                                            <div className="CHAT_LIST__BODY__ITEM__CONTENT">
+                                                <div className="CHAT_LIST__BODY__ITEM__CONTENT__NAME">
+                                                    <h4 className="font-bold">{`${lastChat.receiver.fname} ${lastChat.receiver.lname}`}</h4>
+                                                </div>
+                                                <div className="CHAT_LIST__BODY__ITEM__CONTENT__MESSAGE">
+                                                    <p>{lastChat.message}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
                     </div>
                 </div>
-                <div className="CHAT_LIST__BODY">
-                    <div className="CHAT_LIST__BODY__ITEM">
-                        {lastChats.map((lastChat) => (
-                            <div
-                                key={`lastChat-${lastChat.id}`}
-                                className="flex font-medium p-2 hover:bg-gray-200 cursor-pointer"
-                                onClick={() => (
-                                    <Chat setChatVisible={setChatVisible} />
-                                )}
-                            >
-                                <div className="CHAT_LIST__BODY__ITEM__AVATAR">
-                                    <img
-                                        src="https://picsum.photos/200"
-                                        alt="avatar"
-                                        className="w-4 h-4 rounded-full m-1"
-                                    />
-                                </div>
-                                <div className="CHAT_LIST__BODY__ITEM__CONTENT">
-                                    <div className="CHAT_LIST__BODY__ITEM__CONTENT__NAME">
-                                        <h4 className="font-bold">{`${lastChat.receiver.fname} ${lastChat.receiver.lname}`}</h4>
-                                    </div>
-                                    <div className="CHAT_LIST__BODY__ITEM__CONTENT__MESSAGE">
-                                        <p>{lastChat.message}</p>
-                                    </div>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
+                <div className="CHAT_LIST__HEADER__SEARCH flex flex-col shadow-[0px_-2px_4px_0px_#EDF2F7]">
+                    <input
+                        type="text"
+                        className="text-xs outline-none"
+                        name="chatReceiver"
+                        id="chatReceiver"
+                        placeholder="Search for users"
+                    />
                 </div>
             </div>
             {/* <Chat setChatVisible={setChatVisible} /> */}
