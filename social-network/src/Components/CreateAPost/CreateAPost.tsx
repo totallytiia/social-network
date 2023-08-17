@@ -135,16 +135,14 @@ export default function CreateAPost(props: any) {
             >
                 <div className="flex-row flex gap-2">
                     <div className="shrink-0 h-8 w-8 relative overflow-hidden object-cover rounded-full bg-pink-200">
-                        <img
-                            className="border-none outline-none"
-                            src={
-                                userData.avatar !== undefined
-                                    ? userData.avatar.toString()
-                                    : ''
-                            }
-                            alt=""
-                        />
-                        <ProfileIcon classNames="w-10 h-10" />
+                        {userData.avatar !== undefined && userData.avatar.toString() !== '' ? (
+                            <img
+                                className="border-none rounded-full w-8 h-8 object-cover outline-none"
+                                src={userData.avatar.toString()}
+                                alt="" />
+                        ) : (
+                            <ProfileIcon classNames="w-10 h-10" />
+                        )}
                     </div>
                     <div className="w-full">
                         <div className="flex flex-col gap-2">
