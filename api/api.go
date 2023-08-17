@@ -169,8 +169,8 @@ func api(w http.ResponseWriter, r *http.Request) {
 			ep.SendChat(w, r)
 		case "get":
 			ep.GetChat(w, r)
-		case "getall":
-			// ep.GetChats(w, r)
+		case "getlast":
+			ep.GetChats(w, r)
 		default:
 			http.NotFound(w, r)
 			return

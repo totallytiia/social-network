@@ -138,3 +138,28 @@ func GetChat(w http.ResponseWriter, r *http.Request) {
 	var respJSON, _ = json.Marshal(chat)
 	w.Write(respJSON)
 }
+
+func GetChats(w http.ResponseWriter, r *http.Request) {
+	v, u := ValidateCookie(w, r)
+	if !v {
+		http.Error(w, "Unauthorized", http.StatusUnauthorized)
+	}
+	if r.Method != "GET" {
+		BadRequest(w, r, "Bad Request")
+		return
+	}
+
+	chats, err := structs.GetLastChats(u.ID)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		badReqJSON, _ := json.Marshal(structs.ErrorResponse{Errors: "There was an error with your request", Details: err.Error()})
+		w.Write(badReqJSON)
+		return
+	}
+	if len(chats) == 0 {
+		w.WriteHeader(http.StatusNoContent)
+		return
+	}
+	var respJSON, _ = json.Marshal(chats)
+	w.Write(respJSON)
+}

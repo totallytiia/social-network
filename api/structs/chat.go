@@ -76,3 +76,30 @@ func GetChats(userID, receiverID int) ([]Chat, error) {
 	}
 	return chats, nil
 }
+
+func GetLastChats(userId int) ([]Chat, error) {
+	//sqlite query to get last chats between a user and all other users and groups
+	var rows, err = db.DB.Query(`
+	SELECT c.id, c.user_id, c.receiver_id, c.group_id, c.message, c.image, c.sent_at
+	FROM chat c
+	WHERE c.id IN (
+		SELECT MAX(c.id)
+		FROM chat c
+		WHERE c.user_id = ?
+		GROUP BY c.receiver_id, c.group_id
+	)`, userId)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var chats []Chat
+	for rows.Next() {
+		var chat Chat
+		err = rows.Scan(&chat.ID, &chat.UserID, &chat.ReceiverID, &chat.GroupID, &chat.Message, &chat.Image, &chat.SentAt)
+		if err != nil {
+			return nil, err
+		}
+		chats = append(chats, chat)
+	}
+	return chats, nil
+}
