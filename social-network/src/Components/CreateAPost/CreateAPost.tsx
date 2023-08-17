@@ -138,7 +138,7 @@ export default function CreateAPost(props: any) {
     };
 
     return (
-        <div className="mt-4 mx-6 mb-0 p-5 pb-3 bg-blue-50 rounded-xl">
+        <div className="p-5 pb-3 bg-blue-50 rounded-xl">
             <form
                 onSubmit={(e) => handlePostSubmit(e)}
                 name="post"

@@ -3,9 +3,9 @@ import CreateEvent from './CreateEvent';
 import { useParams } from 'react-router-dom';
 import CreateAPost from '../CreateAPost/CreateAPost';
 import Post from '../Posts/Post';
-import { XMarkIcon } from '@heroicons/react/24/outline';
+import { XMarkIcon, PlusCircleIcon } from '@heroicons/react/24/outline';
 import { UserContext } from '../App/App';
-import { PlusCircleIcon } from '@heroicons/react/24/solid';
+import { PlusIcon, MinusIcon } from '@heroicons/react/24/solid';
 
 interface iGroup {
     id: number;
@@ -15,6 +15,7 @@ interface iGroup {
     updated_at: string;
     posts: any[];
     members: any[];
+    events: any[];
 }
 
 export default function Group() {
@@ -83,7 +84,7 @@ export default function Group() {
             .includes(userData?.id)
     ) {
         return (
-            <div className="bg-custom">
+            <div className="bg-custom min-h-screen">
                 <div className="p-16 bg-custom item-center justify-center flex flex-col lg:flex-row gap-2">
                     <div className="p-6 order-1 lg:order-0 shadow-xl flex flex-col items-center bg-white lg:w-2/3 rounded-xl">
                         <div className="items-center justify-between md:grid-cols-3 ">
@@ -127,9 +128,54 @@ export default function Group() {
     }
 
     return (
-        <div className="bg-custom">
-            <div className="p-16 bg-custom item-center justify-center flex flex-col lg:flex-row gap-2">
-                <div className="p-6 order-1 lg:order-0 shadow-xl flex flex-col items-center bg-white lg:w-2/3 rounded-xl">
+        <div className="bg-custom min-h-screen">
+            <div className="p-16 bg-custom item-center justify-center flex flex-col lg:flex-row gap-2 ">
+                <div className="EVENTS bg-white p-4 mr-4 rounded-xl shadow-lg max-w-xl">
+                    {group.events !== null && group.events.length !== 0 ? (
+                        group.events.map((event: any) => (
+                            <div
+                                key={`event-${event.id}`}
+                                className="EVENTS__ITEM shadow-md rounded-xl p-4 mb-4"
+                            >
+                                <div className="EVENTS__ITEM__HEADER flex flex-row justify-between">
+                                    <div className="EVENTS__ITEM__HEADER__TITLE">
+                                        <h1 className="font-bold text-lg text-black">
+                                            {event.name}
+                                        </h1>
+                                    </div>
+                                    <div className="EVENTS__ITEM__HEADER__DATE">
+                                        <p className="text-sm text-gray-500">
+                                            {event.start_date_time} -{' '}
+                                            {event.end_date_time}
+                                        </p>
+                                    </div>
+                                </div>
+                                <div className="EVENTS__ITEM__BODY">
+                                    <p className="text-sm text-gray-500">
+                                        {event.description}
+                                    </p>
+                                </div>
+
+                                <div className="EVENTS__ITEM__FOOTER flex flex-row gap-2 justify-end">
+                                    <button className="flex gap-1 text-sm">
+                                        <PlusIcon className="w-5 h-5 my-auto bg-green-500 rounded-full text-white text-bold p-0.5 stroke-1 stroke-white" />
+                                        <p>Join</p>
+                                    </button>
+
+                                    <button className="flex gap-1 text-sm">
+                                        <MinusIcon className="w-5 h-5 my-auto bg-red-500 rounded-full text-white text-bold p-0.5 stroke-1 stroke-white" />
+                                        <p className="">Decline</p>
+                                    </button>
+                                </div>
+                            </div>
+                        ))
+                    ) : (
+                        <p className="text-center text-2xl">
+                            No events to show
+                        </p>
+                    )}
+                </div>
+                <div className="MAIN p-6 order-1 lg:order-0 shadow-xl flex flex-col items-center bg-white lg:w-2/3 lg:max-w-4xl rounded-xl">
                     <div className="items-center justify-between md:grid-cols-3 ">
                         <div className="relative mt-10  text-center border-b pb-8">
                             <h1 className="text-4xl font-medium text-gray-700">
@@ -140,7 +186,7 @@ export default function Group() {
                                 {group.description}
                             </p>
                         </div>
-                        <div className="grid grid-cols-2 mt-2 text-center ">
+                        <div className="grid grid-cols-2 mt-2 text-center">
                             <div>
                                 <p className="font-bold text-gray-700 text-xl">
                                     {!group.members?.length
@@ -159,7 +205,7 @@ export default function Group() {
                             </div>
                         </div>
                     </div>
-                    <div className="mt-12 flex flex-col justify-center">
+                    <div className="mt-12 w-full max-w-2xl flex flex-col justify-center">
                         {group.posts !== undefined &&
                         group.posts.length !== 0 ? (
                             group.posts.map((post: any) => (
@@ -176,16 +222,16 @@ export default function Group() {
                         )}
                     </div>
                 </div>
-                <div className="p-6 order-0 lg:order-1 flex justify-center">
+                <div className="CREATE p-6 order-0 lg:order-1 flex justify-center ">
                     <div className="flex flex-col shrink-0 gap-2 mt-2 md:mt-0 md:pb-0">
                         {!createEvent && (
                             <div className="CREATE-EVENT mt-2">
                                 <button
                                     onClick={() => handleCreateEvent()}
-                                    className="flex shrink-0 flex-row text-lg font-bold items-center gap-1 bg-blue-50 py-2 pl-1 pr-4 rounded-full hover:bg-blue-100"
+                                    className="flex shrink-0 flex-row text-lg font-bold items-center gap-1 bg-blue-50 shadow-md py-2 pl-2 pr-4 rounded-full hover:bg-blue-100"
                                 >
-                                    <PlusCircleIcon className="w-6 h-6 shrink-0" />
-                                    <p className="text-bold text-sm shrink-0">
+                                    <PlusIcon className="w-4 h-4 my-auto stroke-2 stroke-black" />
+                                    <p className="text-bold text-sm shrink-0 ">
                                         Create an event
                                     </p>
                                 </button>
@@ -209,9 +255,9 @@ export default function Group() {
                             <div className="CREATE-EVENT shrink-0 flex mt-2 mx-auto lg:mx-0">
                                 <button
                                     onClick={() => handleCreateAPost()}
-                                    className="flex shrink-0 flex-row text-lg font-bold items-center gap-1 bg-blue-50 py-2 pl-1 pr-4 rounded-full hover:bg-blue-100"
+                                    className="flex shrink-0 flex-row text-lg font-bold items-center gap-1 bg-blue-50 shadow-md py-2 pl-2 pr-4 rounded-full hover:bg-blue-100"
                                 >
-                                    <PlusCircleIcon className="w-6 h-6 shrink-0" />
+                                    <PlusIcon className="w-4 h-4 my-auto stroke-2 stroke-black" />
 
                                     <p className="text-bold shrink-0 text-sm">
                                         Create a post
@@ -232,10 +278,15 @@ export default function Group() {
                                 </div>
                             )}
                             {createAPost && (
-                                <CreateAPost
-                                    postAdded={postAdded}
-                                    group={group}
-                                />
+                                <div>
+                                    <h2 className="font-bold text-center text-md mb-1">
+                                        Create your event
+                                    </h2>
+                                    <CreateAPost
+                                        postAdded={postAdded}
+                                        group={group}
+                                    />
+                                </div>
                             )}
                         </div>
                     </div>
