@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import { ChatBubbleOvalLeftIcon, XMarkIcon } from '@heroicons/react/24/solid';
-import Chat from './Chat';
+import { ChatBubbleOvalLeftIcon } from '@heroicons/react/24/outline';
+import { XMarkIcon } from '@heroicons/react/24/outline';
 
 interface IReceiver {
     id: number;
@@ -19,10 +19,18 @@ interface ILastChat {
 }
 
 interface Props {
-    numUnseenMessages: number;
+    // numUnseenMessages: number;
+    visibleChats: { groups: number[]; users: number[] };
+    setVisibleChats: React.Dispatch<
+        React.SetStateAction<{ groups: number[]; users: number[] }>
+    >;
 }
 
-export default function ChatList({ numUnseenMessages }: Props) {
+export default function ChatList({
+    // numUnseenMessages,
+    visibleChats,
+    setVisibleChats,
+}: Props) {
     const [chatVisible, setChatVisible] = useState(true);
     const [lastChats, setLastChats] = useState([] as ILastChat[]);
 
@@ -71,11 +79,11 @@ export default function ChatList({ numUnseenMessages }: Props) {
         return (
             <button onClick={() => setChatVisible(true)}>
                 <ChatBubbleOvalLeftIcon className="fill-white w-10 h-10 m-2 bg-blue-500 rounded-full shadow p-2" />
-                {numUnseenMessages > 0 ? (
+                {/* {numUnseenMessages > 0 ? (
                     <div className="flex absolute right-2 -bottom-3 bg-red-500 text-white rounded-full w-5 h-5 items-center justify-center text-xs">
                         {numUnseenMessages}
                     </div>
-                ) : null}
+                ) : null} */}
             </button>
         );
     }
@@ -114,13 +122,41 @@ export default function ChatList({ numUnseenMessages }: Props) {
                                         <div
                                             key={`lastChat-${lastChat.id}`}
                                             className="flex font-medium p-2 hover:bg-gray-200 cursor-pointer"
-                                            onClick={() => (
-                                                <Chat
-                                                    setChatVisible={
-                                                        setChatVisible
-                                                    }
-                                                />
-                                            )}
+                                            onClick={() => {
+                                                console.log(visibleChats);
+                                                if (
+                                                    lastChat.receiver.id !==
+                                                    null
+                                                ) {
+                                                    const visibleChatsCopy = {
+                                                        ...visibleChats,
+                                                    };
+                                                    if (
+                                                        visibleChatsCopy.users !==
+                                                        undefined
+                                                    )
+                                                        visibleChatsCopy.users.push(
+                                                            lastChat.receiver.id
+                                                        );
+                                                    setVisibleChats(
+                                                        visibleChatsCopy
+                                                    );
+                                                } else {
+                                                    const visibleChatsCopy = {
+                                                        ...visibleChats,
+                                                    };
+                                                    if (
+                                                        visibleChatsCopy.groups !==
+                                                        undefined
+                                                    )
+                                                        visibleChatsCopy.groups.push(
+                                                            lastChat.group
+                                                        );
+                                                    setVisibleChats(
+                                                        visibleChatsCopy
+                                                    );
+                                                }
+                                            }}
                                         >
                                             <div className="CHAT_LIST__BODY__ITEM__AVATAR">
                                                 <img

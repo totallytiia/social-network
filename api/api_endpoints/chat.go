@@ -139,7 +139,6 @@ func GetChat(w http.ResponseWriter, r *http.Request) {
 		BadRequest(w, r, "Bad Request")
 		return
 	}
-
 	receiverIDStr := r.FormValue("receiver_id")
 	groupIDStr := r.FormValue("group_id")
 
