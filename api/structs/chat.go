@@ -110,14 +110,15 @@ func (u User) GetChats(receiverID int) ([]Message, error) {
 func GetLastChats(userId int) ([]Message, error) {
 	//sqlite query to get last chats between a user and all other users and groups
 	var rows, err = db.DB.Query(`
-	SELECT c.id, c.user_id, c.receiver_id, c.group_id, c.message, c.image, c.sent_at, u.avatar, u.fname, u.lname
-	FROM chat c INNER JOIN users u ON IIF(($1 = c.receiver_id), c.user_id, c.receiver_id) = u.id
-	WHERE c.id IN (
-		SELECT MAX(c.id)
-		FROM chat c
-		WHERE (c.user_id = $1 OR c.receiver_id = $1)
-		GROUP BY c.receiver_id, c.group_id
-	)`, userId)
+	SELECT sub.id, sub.user_id, sub.receiver_id, sub.group_id, sub.message, sub.image, sub.sent_at, sub.avatar, sub.fname, sub.lname
+FROM (
+    SELECT c.id, c.user_id, c.receiver_id, c.group_id, c.message, c.image, c.sent_at, u.avatar, u.fname, u.lname,
+           ROW_NUMBER() OVER (PARTITION BY CASE WHEN c.user_id = $1 THEN c.receiver_id ELSE c.user_id END, c.group_id ORDER BY c.sent_at DESC) AS rn
+    FROM chat c
+    INNER JOIN users u ON IIF(($1 = c.receiver_id), c.user_id, c.receiver_id) = u.id
+    WHERE (c.user_id = $1 OR c.receiver_id = $1)
+) sub
+WHERE sub.rn = 1;`, userId)
 	if err != nil {
 		return nil, err
 	}
