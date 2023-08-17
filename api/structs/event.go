@@ -11,6 +11,7 @@ type Event struct {
 	StartDateTime string `json:"start_date_time"`
 	EndDateTime   string `json:"end_date_time"`
 	Location      string `json:"location"`
+	Title         string `json:"title"`
 	Description   string `json:"description"`
 	UserGoing     int    `json:"user_going"`
 	UserNotGoing  int    `json:"user_not_going"`
@@ -23,6 +24,7 @@ type NewEvent struct {
 	StartDateTime string `json:"start_date_time"`
 	EndDateTime   string `json:"end_date_time"`
 	Location      string `json:"location"`
+	Title         string `json:"title"`
 	Description   string `json:"description"`
 }
 
@@ -44,11 +46,17 @@ func (e *NewEvent) Validate() error {
 	if e.Description == "" {
 		return errors.New("event description cannot be empty")
 	}
+	if e.Title == "" {
+		return errors.New("event title cannot be empty")
+	}
+	if len(e.Title) > 50 {
+		return errors.New("event title cannot be longer than 100 characters")
+	}
 	return nil
 }
 
 func (e *NewEvent) Create() (int, error) {
-	var res, err = db.DB.Exec("INSERT INTO events (group_id, start_date_time, end_date_time, location, description) VALUES (?, ?, ?, ?, ?)", e.GroupID, e.StartDateTime, e.EndDateTime, e.Location, e.Description)
+	var res, err = db.DB.Exec("INSERT INTO events (group_id, start_date_time, end_date_time, location, description, title) VALUES (?, ?, ?, ?, ?, ?)", e.GroupID, e.StartDateTime, e.EndDateTime, e.Location, e.Description, e.Title)
 	if err != nil {
 		return 0, err
 	}
@@ -58,7 +66,7 @@ func (e *NewEvent) Create() (int, error) {
 
 func (g Group) GetEvents() ([]Event, error) {
 	var rows, err = db.DB.Query(`
-	SELECT e.id, e.group_id, e.start_date_time, e.end_date_time, e.location, e.description, (SELECT COUNT(*) FROM event_users eu WHERE eu.event_id = e.id AND eu.going = 1) AS user_going, (SELECT COUNT(*) FROM event_users eu WHERE eu.event_id = e.id AND eu.going = 0) AS user_not_going
+	SELECT e.id, e.group_id, e.start_date_time, e.end_date_time, e.location, e.description, e.title, (SELECT COUNT(*) FROM event_users eu WHERE eu.event_id = e.id AND eu.going = 1) AS user_going, (SELECT COUNT(*) FROM event_users eu WHERE eu.event_id = e.id AND eu.going = 0) AS user_not_going
 	FROM events e
 	WHERE e.group_id = ?`, g.GroupID)
 	if err != nil {
@@ -68,7 +76,7 @@ func (g Group) GetEvents() ([]Event, error) {
 	var events []Event
 	for rows.Next() {
 		var e Event
-		rows.Scan(&e.ID, &e.GroupID, &e.StartDateTime, &e.EndDateTime, &e.Location, &e.Description, &e.UserGoing, &e.UserNotGoing)
+		rows.Scan(&e.ID, &e.GroupID, &e.StartDateTime, &e.EndDateTime, &e.Location, &e.Description, &e.Title, &e.UserGoing, &e.UserNotGoing)
 		events = append(events, e)
 	}
 	return events, nil
@@ -76,9 +84,9 @@ func (g Group) GetEvents() ([]Event, error) {
 
 func (e *Event) Get() error {
 	var err = db.DB.QueryRow(`
-	SELECT e.id, e.group_id, e.start_date_time, e.end_date_time, e.location, e.description, (SELECT COUNT(*) FROM event_users eu WHERE eu.event_id = e.id AND eu.going = 1) AS user_going, (SELECT COUNT(*) FROM event_users eu WHERE eu.event_id = e.id AND eu.going = 0) AS user_not_going
+	SELECT e.id, e.group_id, e.start_date_time, e.end_date_time, e.location, e.description, e.title, (SELECT COUNT(*) FROM event_users eu WHERE eu.event_id = e.id AND eu.going = 1) AS user_going, (SELECT COUNT(*) FROM event_users eu WHERE eu.event_id = e.id AND eu.going = 0) AS user_not_going
 	FROM events e
-	WHERE e.id = ?`, e.ID).Scan(&e.ID, &e.GroupID, &e.StartDateTime, &e.EndDateTime, &e.Location, &e.Description, &e.UserGoing, &e.UserNotGoing)
+	WHERE e.id = ?`, e.ID).Scan(&e.ID, &e.GroupID, &e.StartDateTime, &e.EndDateTime, &e.Location, &e.Description, &e.Title, &e.UserGoing, &e.UserNotGoing)
 	if err != nil {
 		return err
 	}
@@ -86,7 +94,7 @@ func (e *Event) Get() error {
 }
 
 func (e *Event) Update() error {
-	var _, err = db.DB.Exec("UPDATE events SET start_date_time = ?, end_date_time = ?, location = ?, description = ? WHERE id = ?", e.StartDateTime, e.EndDateTime, e.Location, e.Description, e.ID)
+	var _, err = db.DB.Exec("UPDATE events SET start_date_time = ?, end_date_time = ?, location = ?, description = ?, title = ? WHERE id = ?", e.StartDateTime, e.EndDateTime, e.Location, e.Description, e.Title, e.ID)
 	if err != nil {
 		return err
 	}

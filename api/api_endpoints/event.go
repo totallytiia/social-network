@@ -39,6 +39,7 @@ func CreateEvent(w http.ResponseWriter, r *http.Request) {
 		EndDateTime:   r.FormValue("end_date_time"),
 		Location:      r.FormValue("location"),
 		Description:   r.FormValue("description"),
+		Title:         r.FormValue("title"),
 	}
 	err = event.Validate()
 	if err != nil {
@@ -52,7 +53,7 @@ func CreateEvent(w http.ResponseWriter, r *http.Request) {
 		w.Write(badReqJSON)
 		return
 	}
-	var e = s.Event{ID: id, GroupID: groupID, StartDateTime: event.StartDateTime, EndDateTime: event.EndDateTime, Location: event.Location, Description: event.Description}
+	var e = s.Event{ID: id, GroupID: groupID, StartDateTime: event.StartDateTime, EndDateTime: event.EndDateTime, Location: event.Location, Description: event.Description, Title: event.Title}
 	err = e.Get()
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
@@ -163,6 +164,7 @@ func UpdateEvent(w http.ResponseWriter, r *http.Request) {
 		EndDateTime:   r.FormValue("end_date_time"),
 		Location:      r.FormValue("location"),
 		Description:   r.FormValue("description"),
+		Title:         r.FormValue("title"),
 	}
 	err = event.Update()
 	if err != nil {
