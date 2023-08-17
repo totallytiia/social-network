@@ -97,18 +97,19 @@ func GetChat(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	receiverID, err := strconv.Atoi(r.FormValue("receiver_id"))
-	if err != nil {
-		BadRequest(w, r, "Invalid receiver ID")
-		return
-	}
-	groupID, err := strconv.Atoi(r.FormValue("group_id"))
-	if err != nil {
-		BadRequest(w, r, "Invalid group ID")
+	receiverIDStr := r.FormValue("receiver_id")
+	groupIDStr := r.FormValue("group_id")
+
+	receiverID, errReceiver := strconv.Atoi(receiverIDStr)
+	groupID, errGroup := strconv.Atoi(groupIDStr)
+
+	if (errReceiver == nil && errGroup == nil) || (errReceiver != nil && errGroup != nil) {
+		BadRequest(w, r, "There was an error with your request")
 		return
 	}
 
 	var chat []structs.Chat
+	var err error
 	if (receiverID != 0 && groupID != 0) || (receiverID == 0 && groupID == 0) {
 		BadRequest(w, r, "Either receiver or group ID is required but not both")
 		return

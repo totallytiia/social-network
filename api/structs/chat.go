@@ -7,13 +7,16 @@ import (
 )
 
 type Chat struct {
-	ID         int    `json:"id"`
-	UserID     int    `json:"user_id"`
-	ReceiverID int    `json:"receiver_id"`
-	GroupID    int    `json:"group_id"`
-	Message    string `json:"message"`
-	Image      string `json:"image"`
-	SentAt     string `json:"sent_at"`
+	ID             int    `json:"id"`
+	UserID         int    `json:"user_id"`
+	ReceiverID     int    `json:"receiver_id"`
+	GroupID        int    `json:"group_id"`
+	Message        string `json:"message"`
+	Image          string `json:"image"`
+	SentAt         string `json:"sent_at"`
+	ReceiverAvatar string `json:"receiver_avatar"`
+	ReceiverFname  string `json:"receiver_fname"`
+	ReceiverLname  string `json:"receiver_lname"`
 }
 
 type NewChat struct {
@@ -80,8 +83,8 @@ func GetChats(userID, receiverID int) ([]Chat, error) {
 func GetLastChats(userId int) ([]Chat, error) {
 	//sqlite query to get last chats between a user and all other users and groups
 	var rows, err = db.DB.Query(`
-	SELECT c.id, c.user_id, c.receiver_id, c.group_id, c.message, c.image, c.sent_at
-	FROM chat c
+	SELECT c.id, c.user_id, c.receiver_id, c.group_id, c.message, c.image, c.sent_at, u.avatar, u.fname, u.lname
+	FROM chat c INNER JOIN users u ON c.receiver_id = u.id
 	WHERE c.id IN (
 		SELECT MAX(c.id)
 		FROM chat c
@@ -95,7 +98,7 @@ func GetLastChats(userId int) ([]Chat, error) {
 	var chats []Chat
 	for rows.Next() {
 		var chat Chat
-		err = rows.Scan(&chat.ID, &chat.UserID, &chat.ReceiverID, &chat.GroupID, &chat.Message, &chat.Image, &chat.SentAt)
+		err = rows.Scan(&chat.ID, &chat.UserID, &chat.ReceiverID, &chat.GroupID, &chat.Message, &chat.Image, &chat.SentAt, &chat.ReceiverAvatar, &chat.ReceiverFname, &chat.ReceiverLname)
 		if err != nil {
 			return nil, err
 		}
