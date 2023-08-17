@@ -30,7 +30,7 @@ export default function UsersSidebar() {
     return (
         <>
             <div className="order-2 lg:mx-0 mx-auto w-9/12 lg:max-w-xs">
-                <div className="bg-blue-50 rounded-xl mt-6 p-4">
+                <div className="bg-white shadow rounded-xl mt-6 p-4">
                     <h1 className="font-bold text-xl text-black mb-2">Users</h1>
                     <div className="flex flex-col justify-center">
                         {users.map((user) => (
@@ -40,7 +40,7 @@ export default function UsersSidebar() {
                             >
                                 <div
                                     key={user.id}
-                                    className="flex flex-row pb-1 gap-1"
+                                    className="flex flex-row mb-1.5 py-1 pl-2 pr-4 gap-1 bg-blue-50 rounded-full w-fit"
                                 >
                                     <div className="w-6 h-6 relative overflow-hidden shrink-0 rounded-full bg-pink-200 border-none outline-none">
                                         <img
