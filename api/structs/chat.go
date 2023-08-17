@@ -6,7 +6,7 @@ import (
 	db "social_network_api/db"
 )
 
-type Chat struct {
+type Message struct {
 	ID             int    `json:"id"`
 	UserID         int    `json:"user_id"`
 	ReceiverID     int    `json:"receiver_id"`
@@ -25,6 +25,12 @@ type NewChat struct {
 	GroupID    int    `json:"group_id"`
 	Message    string `json:"message"`
 	Image      string `json:"image"`
+}
+
+type Chat struct {
+	Messages []Message `json:"messages"`
+	Receiver User      `json:"receiver,omitempty"`
+	Group    Group     `json:"group,omitempty"`
 }
 
 func (c *NewChat) Validate() error {
@@ -71,7 +77,7 @@ func (c *NewChat) Create() (int, error) {
 	return int(id), nil
 }
 
-func (c *Chat) Get() error {
+func (c *Message) Get() error {
 	var err = db.DB.QueryRow("SELECT c.id, c.user_id, c.receiver_id, c.group_id, c.message, c.image, c.sent_at FROM chat c WHERE c.id = ?", c.ID).Scan(&c.ID, &c.UserID, &c.ReceiverID, &c.GroupID, &c.Message, &c.Image, &c.SentAt)
 	if err != nil {
 		return err
@@ -79,19 +85,19 @@ func (c *Chat) Get() error {
 	return nil
 }
 
-func GetChats(userID, receiverID int) ([]Chat, error) {
+func (u User) GetChats(receiverID int) ([]Message, error) {
 	//sqlite query to get chats between a sender and receiver, or a sender and a group
 	var rows, err = db.DB.Query(`
 	SELECT c.id, c.user_id, c.receiver_id, c.group_id, c.message, c.image, c.sent_at
 	FROM chat c
-	WHERE (c.user_id = ? AND c.receiver_id = ?) OR (c.user_id = ? AND c.group_id = ?)`, userID, receiverID, receiverID, userID)
+	WHERE (c.user_id = ? AND c.receiver_id = ?) OR (c.user_id = ? AND c.receiver_id = ?) OR (c.group_id = ?)`, u.ID, receiverID, receiverID, u.ID, receiverID)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
-	var chats []Chat
+	var chats []Message
 	for rows.Next() {
-		var chat Chat
+		var chat Message
 		err = rows.Scan(&chat.ID, &chat.UserID, &chat.ReceiverID, &chat.GroupID, &chat.Message, &chat.Image, &chat.SentAt)
 		if err != nil {
 			return nil, err
@@ -101,24 +107,24 @@ func GetChats(userID, receiverID int) ([]Chat, error) {
 	return chats, nil
 }
 
-func GetLastChats(userId int) ([]Chat, error) {
+func GetLastChats(userId int) ([]Message, error) {
 	//sqlite query to get last chats between a user and all other users and groups
 	var rows, err = db.DB.Query(`
 	SELECT c.id, c.user_id, c.receiver_id, c.group_id, c.message, c.image, c.sent_at, u.avatar, u.fname, u.lname
-	FROM chat c INNER JOIN users u ON c.receiver_id = u.id
+	FROM chat c INNER JOIN users u ON IIF(($1 = c.receiver_id), c.user_id, c.receiver_id) = u.id
 	WHERE c.id IN (
 		SELECT MAX(c.id)
 		FROM chat c
-		WHERE c.user_id = ?
+		WHERE (c.user_id = $1 OR c.receiver_id = $1)
 		GROUP BY c.receiver_id, c.group_id
 	)`, userId)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
-	var chats []Chat
+	var chats []Message
 	for rows.Next() {
-		var chat Chat
+		var chat Message
 		err = rows.Scan(&chat.ID, &chat.UserID, &chat.ReceiverID, &chat.GroupID, &chat.Message, &chat.Image, &chat.SentAt, &chat.ReceiverAvatar, &chat.ReceiverFname, &chat.ReceiverLname)
 		if err != nil {
 			return nil, err

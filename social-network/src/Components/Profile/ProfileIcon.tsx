@@ -1,21 +1,11 @@
-export default function ProfileIcon(props: any) {
-	return (
+import { UserIcon } from '@heroicons/react/24/outline';
 
-		<svg
-			xmlns="http://www.w3.org/2000/svg"
-			fill="white"
-			viewBox="0 0 24 24"
-			strokeWidth={0}
-			stroke="currentColor"
-			className={props.classNames + ' absolute -translate-x-1'}
-		>
-			<path
-				strokeLinecap="round"
-				strokeLinejoin="round"
-				d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"
-			/>
-		</svg>
-
-	)
+interface Props {
+    classNames?: string;
+    avatar?: Blob | null;
 }
 
+export default function ProfileIcon({ avatar = null, classNames }: Props) {
+    // Avatar is blob, add image if not null
+    return <UserIcon className={classNames} />;
+}

@@ -1,8 +1,9 @@
-import Avatar from './Avatar';
+import ProfileIcon from '../Profile/ProfileIcon';
 import React from 'react';
 
 interface Props {
     name: string;
+    avatar: Blob | null;
 }
 
 export default function ChatHeader({
@@ -12,11 +13,11 @@ export default function ChatHeader({
     children: React.ReactNode;
     props: Props;
 }) {
-    const { name } = props;
+    const { name, avatar } = props;
     return (
         <div className="border-b-2 border-b-gray-200 py-3 px-6 flex flex-row justify-between items-center">
             <div className="flex flex-row items-center space-x-1.5">
-                <Avatar />
+                <ProfileIcon avatar={avatar} />
                 <div className="flex flex-col">
                     <p className="text-xs text-gray-600">{name}</p>
                 </div>

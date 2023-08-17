@@ -1,6 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { ChatBubbleOvalLeftIcon } from '@heroicons/react/24/outline';
 import { XMarkIcon } from '@heroicons/react/24/outline';
+import { UserContext } from '../App/App';
 
 interface IReceiver {
     id: number;
@@ -11,6 +12,7 @@ interface IReceiver {
 
 interface ILastChat {
     id: number;
+    sender: number;
     receiver: IReceiver;
     group: number;
     message: string;
@@ -34,6 +36,8 @@ export default function ChatList({
     const [chatVisible, setChatVisible] = useState(true);
     const [lastChats, setLastChats] = useState([] as ILastChat[]);
 
+    const { userData } = useContext(UserContext);
+
     useEffect(() => {
         async function getLastChats() {
             const url = 'http://localhost:8080/api/chat/getlast';
@@ -54,6 +58,7 @@ export default function ChatList({
                 console.log(message);
                 lastChats.push({
                     id: message.id,
+                    sender: message.user_id,
                     receiver: {
                         id: message.receiver_id,
                         fname: message.receiver_fname,
@@ -136,7 +141,13 @@ export default function ChatList({
                                                         undefined
                                                     )
                                                         visibleChatsCopy.users.push(
-                                                            lastChat.receiver.id
+                                                            lastChat.receiver
+                                                                .id ===
+                                                                userData.id
+                                                                ? lastChat.sender
+                                                                : lastChat
+                                                                      .receiver
+                                                                      .id
                                                         );
                                                     setVisibleChats(
                                                         visibleChatsCopy
@@ -170,7 +181,15 @@ export default function ChatList({
                                                     <h4 className="font-bold">{`${lastChat.receiver.fname} ${lastChat.receiver.lname}`}</h4>
                                                 </div>
                                                 <div className="CHAT_LIST__BODY__ITEM__CONTENT__MESSAGE">
-                                                    <p>{lastChat.message}</p>
+                                                    <p>
+                                                        <span className="text-sm">{`${
+                                                            lastChat.sender ===
+                                                            userData.id
+                                                                ? 'You: '
+                                                                : 'Them: '
+                                                        }`}</span>
+                                                        {lastChat.message}
+                                                    </p>
                                                 </div>
                                             </div>
                                         </div>
@@ -190,7 +209,6 @@ export default function ChatList({
                     />
                 </div>
             </div>
-            {/* <Chat setChatVisible={setChatVisible} /> */}
         </div>
     );
 }
