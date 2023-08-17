@@ -26,10 +26,19 @@ func CreateComment(w http.ResponseWriter, r *http.Request) {
 		BadRequest(w, r, "Invalid post_id")
 		return
 	}
+	var p = s.Post{ID: postID}
+	err = p.Get(u.ID)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		badReqJSON, _ := json.Marshal(s.ErrorResponse{Errors: "There was an error with your request", Details: err.Error()})
+		w.Write(badReqJSON)
+		return
+	}
 	var comment = s.NewComment{
 		UserID:  u.ID,
 		PostID:  postID,
 		Comment: r.FormValue("comment"),
+		Image:   r.FormValue("image"),
 	}
 	err = comment.Validate()
 	if err != nil {
@@ -43,16 +52,8 @@ func CreateComment(w http.ResponseWriter, r *http.Request) {
 		w.Write(badReqJSON)
 		return
 	}
-	var c = s.Comment{ID: id, UserID: u.ID, PostID: postID, Comment: comment.Comment}
+	var c = s.Comment{ID: id}
 	err = c.Get()
-	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		badReqJSON, _ := json.Marshal(s.ErrorResponse{Errors: "There was an error with your request", Details: err.Error()})
-		w.Write(badReqJSON)
-		return
-	}
-	var p = s.Post{ID: postID}
-	err = p.Get(u.ID)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		badReqJSON, _ := json.Marshal(s.ErrorResponse{Errors: "There was an error with your request", Details: err.Error()})
