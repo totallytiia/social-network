@@ -140,11 +140,11 @@ export default function Group() {
                                 <div className="EVENTS__ITEM__HEADER flex flex-row justify-between">
                                     <div className="EVENTS__ITEM__HEADER__TITLE">
                                         <h1 className="font-bold text-lg text-black">
-                                            {event.name}
+                                            {event.title}
                                         </h1>
                                     </div>
                                     <div className="EVENTS__ITEM__HEADER__DATE">
-                                        <p className="text-sm text-gray-500">
+                                        <p className="text-xs text-gray-500 my-auto">
                                             {event.start_date_time} -{' '}
                                             {event.end_date_time}
                                         </p>

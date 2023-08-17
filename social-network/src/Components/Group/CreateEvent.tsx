@@ -14,7 +14,6 @@ interface iForm extends iFormKeys {
         description: string;
         start_date_time: string;
         end_date_time: string;
-        location: string;
     };
 }
 
@@ -26,7 +25,6 @@ export default function CreateEvent({ groupID }: { groupID: number }) {
             description: '',
             start_date_time: '',
             end_date_time: '',
-            location: '',
         },
     });
 
@@ -38,7 +36,6 @@ export default function CreateEvent({ groupID }: { groupID: number }) {
         FD.append('description', eventData.event.description);
         FD.append('start_date_time', eventData.event.start_date_time);
         FD.append('end_date_time', eventData.event.end_date_time);
-        FD.append('location', eventData.event.location);
         const response = await fetch('http://localhost:8080/api/event/create', {
             method: 'POST',
             credentials: 'include',
@@ -116,25 +113,11 @@ export default function CreateEvent({ groupID }: { groupID: number }) {
                                         e.target.value;
                                     setEventData(eventCopy);
                                 }}
-                                type="time"
+                                type="date"
                                 className="mt-0 w-full"
-                                name="endTime"
-                                id="endTime"
-                                placeholder="end time"
-                            />
-                        </div>
-                        <div className="form__group mt-1">
-                            <input
-                                onChange={(e) => {
-                                    const eventCopy = eventData;
-                                    eventCopy.event.location = e.target.value;
-                                    setEventData(eventCopy);
-                                }}
-                                type="text"
-                                className="mt-0 w-full"
-                                name="location"
-                                id="location"
-                                placeholder="location"
+                                name="date"
+                                id="date"
+                                placeholder="date"
                             />
                         </div>
                         <div className="form__group button-custom text-center bg-blue-100 font-bold rounded-xl mt-2 p-2">
