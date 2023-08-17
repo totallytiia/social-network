@@ -134,7 +134,7 @@ export default function Post({ postInput, deletePost }: PostProps) {
     };
 
     return (
-        <div>
+        <div className="">
             <div className="mt-4 mx-6 mb-0 p-4 bg-blue-50 rounded-xl">
                 <div className="flex justify-between">
                     <div className="flex">
