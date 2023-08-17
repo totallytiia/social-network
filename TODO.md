@@ -6,20 +6,20 @@
 
 #### Primary (front-end):
 
-- [X] Show notifications (Header has them fetched and set (I hope))
-- [X] Create group page
-- [X] Display users posts on profile
+- [x] Show notifications (Header has them fetched and set (I hope))
+- [x] Create group page
+- [x] Display users posts on profile
 - [ ] Create the notifications component HTML src/Components/Notifications/Notifications.tsx
-- [ ] Choose users on "almost private" post
+- [x] Choose users on "almost private" post
 
 ---
 
 ### Viktor
 
-- [X] Follow user (request for private)
-  - [X] Accept/deny follow request
-- [X] Notifications on follow request (accept/deny)
-- [X] Display users follows and followers on profile
+- [x] Follow user (request for private)
+  - [x] Accept/deny follow request
+- [x] Notifications on follow request (accept/deny)
+- [x] Display users follows and followers on profile
 - [ ] Group invites, owner and members
   - [ ] API
 - [ ] Group join requests
@@ -36,5 +36,5 @@
 
 ### Göran
 
-- [X] Dockerfiles
-- [X] docker-compose.yaml
+- [x] Dockerfiles
+- [x] docker-compose.yaml

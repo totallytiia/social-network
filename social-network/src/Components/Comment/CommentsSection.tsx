@@ -1,7 +1,8 @@
-import { useState /*, useEffect*/ } from 'react';
+import React, { useState } from 'react';
 import Comment from './Comment';
 import { PaperAirplaneIcon } from '@heroicons/react/24/outline';
 import { PlusIcon } from '@heroicons/react/24/outline';
+import { CheckIcon } from '@heroicons/react/24/solid';
 
 interface IComment {
     id: number;
@@ -14,8 +15,8 @@ interface IComment {
     comment: string;
     created_at: string;
     updated_at: string;
+    image: string;
 }
-
 interface ICommentsSectionProps {
     commentsInput: IComment[];
     post_id: number;
@@ -29,6 +30,7 @@ export default function CommentsSection({
     const [comment, setComment] = useState({
         post_id: 0,
         comment: '',
+        image: '',
     } as IComment);
 
     const handleCommentSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -37,6 +39,8 @@ export default function CommentsSection({
 
         FD.append('post_id', comment.post_id.toString() as string);
         FD.append('comment', comment.comment as string);
+        FD.append('image', comment.image as string);
+        console.log(comment.image);
 
         const response = await fetch(
             'http://localhost:8080/api/comments/create',
@@ -56,6 +60,7 @@ export default function CommentsSection({
         const commentsCopy = comments !== null ? Array.from(comments) : [];
         commentsCopy.push(data);
         setComments(commentsCopy);
+        console.log(comments);
     };
 
     async function deleteComment(id: number) {
@@ -75,33 +80,70 @@ export default function CommentsSection({
         setComments(comments.filter((comment: any) => comment.id !== id));
     }
 
+    const handleCommentImageUpload = async (
+        e: React.ChangeEvent<HTMLInputElement>
+    ) => {
+        if (e.target.files?.length === 0) return;
+        const file = e.target.files?.[0];
+        console.log(file);
+        const reader = new FileReader();
+        reader.onloadend = () => {
+            const commentCopy = comment;
+            commentCopy.image = reader.result as string;
+            console.log(commentCopy.image);
+            setComment(commentCopy);
+            document.getElementById('PlusIcon')?.classList.toggle('hidden');
+            document.getElementById('CheckIcon')?.classList.toggle('hidden');
+        };
+        reader.readAsDataURL(file as Blob);
+    };
+
     return (
         <>
             <div className="ml-8 mr-8 my-2">
                 {comments !== null
                     ? comments.map((comment: any) => (
-                        <Comment
-                            key={comment.id}
-                            comment={comment}
-                            deleteComment={deleteComment}
-                        />
-                    ))
+                          <Comment
+                              key={comment.id}
+                              comment={comment}
+                              deleteComment={deleteComment}
+                          />
+                      ))
                     : null}
                 <form
                     onSubmit={(e) => handleCommentSubmit(e)}
                     className="flex flex-cols mt-1"
                 >
-                    <PlusIcon className="cursor-pointer stroke-2 w-8 h-8 mr-1 my-auto bg-blue-500 shrink-0 stroke-white rounded-full p-1" />
+                    <label htmlFor="commentImgUpload">
+                        <PlusIcon
+                            id="PlusIcon"
+                            className="cursor-pointer stroke-2 w-8 h-8 mr-1 my-auto bg-blue-500 shrink-0 stroke-white rounded-full p-1"
+                        />
+                        <CheckIcon
+                            id="CheckIcon"
+                            className="hidden cursor-pointer stroke-2 w-8 h-8 mr-1 my-auto bg-green-500 shrink-0 stroke-white rounded-full p-1"
+                        />
+                    </label>
+                    <input
+                        onChange={(e) => {
+                            handleCommentImageUpload(e);
+                        }}
+                        type="file"
+                        id="commentImgUpload"
+                        className="hidden"
+                        accept="image/png, image/jpg, image/jpeg, image/gif"
+                    />
+
                     <input
                         className="bg-gray-50 px-4 text-sm outline-none rounded-full w-full"
                         type="text"
                         id={'commentBox' + post_id}
                         placeholder="Write a comment"
                         onChange={(e) => {
-                            setComment({
-                                post_id: post_id,
-                                comment: e.target.value,
-                            } as IComment);
+                            const commentCopy = comment;
+                            commentCopy.post_id = post_id;
+                            commentCopy.comment = e.target.value;
+                            setComment(commentCopy);
                         }}
                     />
                     <label

@@ -135,11 +135,13 @@ export default function CreateAPost(props: any) {
             >
                 <div className="flex-row flex gap-2">
                     <div className="shrink-0 h-8 w-8 relative overflow-hidden object-cover rounded-full bg-pink-200">
-                        {userData.avatar !== undefined && userData.avatar.toString() !== '' ? (
+                        {userData.avatar !== undefined &&
+                        userData.avatar.toString() !== '' ? (
                             <img
                                 className="border-none rounded-full w-8 h-8 object-cover outline-none"
                                 src={userData.avatar.toString()}
-                                alt="" />
+                                alt=""
+                            />
                         ) : (
                             <ProfileIcon classNames="w-10 h-10" />
                         )}
@@ -164,7 +166,6 @@ export default function CreateAPost(props: any) {
                                     value={selectedOption}
                                     className="cursor-pointer border-r-8 border-blue-100 hover:border-blue-200 btn-custom text-center text-sm  font-semibold p-1"
                                     onChange={(e) => {
-
                                         const postCopy = postData;
                                         postCopy.post.privacy = parseInt(
                                             e.target.value
@@ -184,30 +185,33 @@ export default function CreateAPost(props: any) {
                                     <option value="1">Private</option>
                                 </select>
                                 <div className="USER_POPUP absolute top-10 right-32 bg-white rounded-xl overflow-scroll shadow-md max-h-36">
-                                    {userListVisible ? (
-                                        userList.map((user: any) => {
-                                            return (
-                                                <div
-                                                    className="p-2 flex flex-row gap-1"
-                                                    key={`userOption-${user.id}`}
-                                                >
-                                                    <input
-                                                        type="checkbox"
-                                                        name="user"
-                                                        value={user.id}
-                                                        className="my-auto"
-                                                        onChange={handleCheckboxChange}
-                                                    />
-                                                    <label
-                                                        htmlFor="user"
-                                                        className="my-auto"
-                                                    >
-                                                        {user.fName} {user.lName}
-                                                    </label>
-                                                </div>
-                                            );
-                                        })
-                                    ) : null}
+                                    {userListVisible
+                                        ? userList.map((user: any) => {
+                                              return (
+                                                  <div
+                                                      className="p-2 flex flex-row gap-1"
+                                                      key={`userOption-${user.id}`}
+                                                  >
+                                                      <input
+                                                          type="checkbox"
+                                                          name="user"
+                                                          value={user.id}
+                                                          className="my-auto"
+                                                          onChange={
+                                                              handleCheckboxChange
+                                                          }
+                                                      />
+                                                      <label
+                                                          htmlFor="user"
+                                                          className="my-auto"
+                                                      >
+                                                          {user.fName}{' '}
+                                                          {user.lName}
+                                                      </label>
+                                                  </div>
+                                              );
+                                          })
+                                        : null}
                                 </div>
 
                                 <label
