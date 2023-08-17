@@ -1,5 +1,4 @@
 import Post from './Post';
-import GroupSelection from './GroupSelection';
 import CreateAPost from '../CreateAPost/CreateAPost';
 import { useEffect, useState } from 'react';
 import GroupsSidebar from '../Sidebars/GroupsSidebar';
@@ -68,7 +67,6 @@ export default function Posts() {
                 <div className="order-3 lg:order-2 flex flex-col lg:mx-0 mx-auto bg-white w-9/12 max-w-4xl m-6 rounded-xl shadow-lg pb-4">
                     <div className="flex flex-col  pb-4">
                         <CreateAPost postAdded={postAdded} />
-                        <GroupSelection />
                         {posts !== undefined && posts.length !== 0 ? (
                             posts.map((post: any) => (
                                 <Post
