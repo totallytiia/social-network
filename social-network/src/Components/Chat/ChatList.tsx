@@ -61,10 +61,9 @@ export default function ChatList({
                 'hover:bg-gray-200'
             );
             li.innerHTML = `
-                <img src="${
-                    user.avatar !== null
-                        ? user.avatar
-                        : '/assets/tinydefault_profile.png'
+                <img src="${user.avatar !== null
+                    ? user.avatar
+                    : '/assets/tinydefault_profile.png'
                 }" alt="avatar" class="w-6 h-6 rounded-full object-cover mr-2">
                 <span class="text-sm">${user.fname} ${user.lname}</span>
             `;
@@ -170,127 +169,128 @@ export default function ChatList({
     }
 
     return (
-        <div className="mb-2 mr-2">
-            <div className="CLOSE_CHAT flex flex-row justify-end items-center p-0.5">
-                <button
-                    type="button"
-                    className=""
-                    onClick={() => setChatVisible(false)}
-                >
-                    <XMarkIcon className="text-gray-600 w-5 h-5" />
-                </button>
-            </div>
-            <div className="CHAT_LIST bg-white rounded-xl flex flex-col justify-between shadow-xl w-60">
-                <div className="CHAT_LIST_HEADER_AND_USERS">
-                    <div className="CHAT_LIST__HEADER shadow-[0px_2px_4px_0px_#EDF2F7]">
-                        <div className="CHAT_LIST__HEADER__TITLE py-2 bg-blue-500 rounded-t-lg">
-                            <h3 className="text-xs text-left text-white my-auto">
-                                Recent chat
-                            </h3>
+        <div className="flex items-end">
+            <div className='sticky bottom-0'>
+                <div className="CLOSE_CHAT flex flex-row justify-end items-center p-0.5">
+                    <button
+                        type="button"
+                        className=""
+                        onClick={() => setChatVisible(false)}
+                    >
+                        <XMarkIcon className="text-gray-600 w-5 h-5" />
+                    </button>
+                </div>
+                <div className="CHAT_LIST bg-white rounded-xl flex flex-col justify-between shadow-xl w-60">
+                    <div className="CHAT_LIST_HEADER_AND_USERS">
+                        <div className="CHAT_LIST__HEADER shadow-[0px_2px_4px_0px_#EDF2F7]">
+                            <div className="CHAT_LIST__HEADER__TITLE py-3 px-1 bg-blue-500 rounded-t-lg">
+                                <h3 className="text-sm text-left text-white my-auto">
+                                    Recent chat
+                                </h3>
+                            </div>
                         </div>
-                    </div>
-                    <div className="CHAT_LIST__BODY">
-                        <div className="CHAT_LIST__BODY__ITEM">
-                            {lastChats.length === 0 ? (
-                                <div className="m-2 text-xs">
-                                    <p className="rounded-full bg-blue-100 px-2 py-1 w-fit">
-                                        You have no chats.
-                                    </p>
-                                </div>
-                            ) : (
-                                <div>
-                                    {lastChats.map((lastChat) => (
-                                        <div
-                                            key={`lastChat-${lastChat.id}`}
-                                            className="flex text-xs p-2 hover:bg-gray-200 cursor-pointer"
-                                            onClick={() => {
-                                                if (
-                                                    lastChat.receiver.id !==
-                                                    null
-                                                ) {
-                                                    const visibleChatsCopy = {
-                                                        ...visibleChats,
-                                                    };
+                        <div className="CHAT_LIST__BODY">
+                            <div className="CHAT_LIST__BODY__ITEM">
+                                {lastChats.length === 0 ? (
+                                    <div className="m-2 text-sm">
+                                        <p className="rounded-full bg-blue-100 px-4 py-3 w-fit">
+                                            You have no chats.
+                                        </p>
+                                    </div>
+                                ) : (
+                                    <div>
+                                        {lastChats.map((lastChat) => (
+                                            <div
+                                                key={`lastChat-${lastChat.id}`}
+                                                className="flex text-sm p-2 hover:bg-gray-200 cursor-pointer"
+                                                onClick={() => {
                                                     if (
-                                                        visibleChatsCopy.users !==
-                                                        undefined
-                                                    )
-                                                        visibleChatsCopy.users.push(
-                                                            lastChat.receiver
-                                                                .id ===
-                                                                userData.id
-                                                                ? lastChat.sender
-                                                                : lastChat
-                                                                      .receiver
-                                                                      .id
+                                                        lastChat.receiver.id !==
+                                                        null
+                                                    ) {
+                                                        const visibleChatsCopy = {
+                                                            ...visibleChats,
+                                                        };
+                                                        if (
+                                                            visibleChatsCopy.users !==
+                                                            undefined
+                                                        )
+                                                            visibleChatsCopy.users.push(
+                                                                lastChat.receiver
+                                                                    .id ===
+                                                                    userData.id
+                                                                    ? lastChat.sender
+                                                                    : lastChat
+                                                                        .receiver
+                                                                        .id
+                                                            );
+                                                        setVisibleChats(
+                                                            visibleChatsCopy
                                                         );
-                                                    setVisibleChats(
-                                                        visibleChatsCopy
-                                                    );
-                                                } else {
-                                                    const visibleChatsCopy = {
-                                                        ...visibleChats,
-                                                    };
-                                                    if (
-                                                        visibleChatsCopy.groups !==
-                                                        undefined
-                                                    )
-                                                        visibleChatsCopy.groups.push(
-                                                            lastChat.group
+                                                    } else {
+                                                        const visibleChatsCopy = {
+                                                            ...visibleChats,
+                                                        };
+                                                        if (
+                                                            visibleChatsCopy.groups !==
+                                                            undefined
+                                                        )
+                                                            visibleChatsCopy.groups.push(
+                                                                lastChat.group
+                                                            );
+                                                        setVisibleChats(
+                                                            visibleChatsCopy
                                                         );
-                                                    setVisibleChats(
-                                                        visibleChatsCopy
-                                                    );
-                                                }
-                                            }}
-                                        >
-                                            <div className="CHAT_LIST__BODY__ITEM__AVATAR">
-                                                <img
-                                                    src="https://picsum.photos/200"
-                                                    alt="avatar"
-                                                    className="w-4 h-4 rounded-full m-1"
-                                                />
-                                            </div>
-                                            <div className="CHAT_LIST__BODY__ITEM__CONTENT">
-                                                <div className="CHAT_LIST__BODY__ITEM__CONTENT__NAME">
-                                                    <h4 className="font-bold">{`${lastChat.receiver.fname} ${lastChat.receiver.lname}`}</h4>
+                                                    }
+                                                }}
+                                            >
+                                                <div className="CHAT_LIST__BODY__ITEM__AVATAR">
+                                                    <img
+                                                        src="https://picsum.photos/200"
+                                                        alt="avatar"
+                                                        className="w-5 h-5 rounded-full m-1"
+                                                    />
                                                 </div>
-                                                <div className="CHAT_LIST__BODY__ITEM__CONTENT__MESSAGE">
-                                                    <p>
-                                                        <span className="text-sm">{`${
-                                                            lastChat.sender ===
-                                                            userData.id
+                                                <div className="CHAT_LIST__BODY__ITEM__CONTENT">
+                                                    <div className="CHAT_LIST__BODY__ITEM__CONTENT__NAME">
+                                                        <h4 className="font-bold">{`${lastChat.receiver.fname} ${lastChat.receiver.lname}`}</h4>
+                                                    </div>
+                                                    <div className="CHAT_LIST__BODY__ITEM__CONTENT__MESSAGE">
+                                                        <p>
+                                                            <span className="text-sm">{`${lastChat.sender ===
+                                                                userData.id
                                                                 ? 'You: '
                                                                 : 'Them: '
-                                                        }`}</span>
-                                                        {lastChat.message}
-                                                    </p>
+                                                                }`}</span>
+                                                            {lastChat.message}
+                                                        </p>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    ))}
-                                </div>
-                            )}
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div className="CHAT_LIST__FOOTER__SEARCH flex flex-col shadow-[0px_-2px_4px_0px_#EDF2F7]">
-                    <div className="bg-white hidden">
-                        <ul className="USERS" id="chatSearchUserList"></ul>
+                    <div className="CHAT_LIST__FOOTER__SEARCH flex flex-col shadow-[0px_-2px_4px_0px_#EDF2F7]">
+                        <div className="bg-white hidden">
+                            <ul className="USERS" id="chatSearchUserList"></ul>
+                        </div>
+                        <input
+                            type="text"
+                            className="text-sm outline-none"
+                            name="chatReceiver"
+                            id="chatReceiver"
+                            placeholder="Search for users or groups"
+                            onChange={handleUserSearch}
+                            onFocus={(e) =>
+                                e.target.parentElement?.children[0].classList.remove(
+                                    'hidden'
+                                )
+                            }
+                        />
                     </div>
-                    <input
-                        type="text"
-                        className="text-xs outline-none"
-                        name="chatReceiver"
-                        id="chatReceiver"
-                        placeholder="Search for users or groups"
-                        onChange={handleUserSearch}
-                        onFocus={(e) =>
-                            e.target.parentElement?.children[0].classList.remove(
-                                'hidden'
-                            )
-                        }
-                    />
                 </div>
             </div>
         </div>

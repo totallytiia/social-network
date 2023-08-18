@@ -147,8 +147,34 @@ export default function Chat({
     }
 
     return (
-        <div className="max-w-sm mx-auto mt-32 ">
-            <div className="bg-white border border-gray-200 rounded-lg shadow relative">
+        <div className="max-w-sm">
+            <div className="CLOSE_CHAT flex flex-row justify-end items-center">
+                <button
+                    type="button"
+                    className="font-medium text-sm text-center inline-flex items-center p-0.5"
+                    onClick={() => {
+                        if (type === 'group') {
+                            setVisibleChats({
+                                ...visibleChats,
+                                groups: visibleChats.groups.filter(
+                                    (group) => group !== id
+                                ),
+                            });
+                        }
+                        if (type === 'receiver') {
+                            setVisibleChats({
+                                ...visibleChats,
+                                users: visibleChats.users.filter(
+                                    (user) => user !== id
+                                ),
+                            });
+                        }
+                    }}
+                >
+                    <XMarkIcon className="text-gray-600 w-5 h-5" />
+                </button>
+            </div>
+            <div className="bg-blue-500 rounded-xl shadow-lg relative">
                 <ChatHeader
                     props={{
                         name:
@@ -158,32 +184,6 @@ export default function Chat({
                         avatar: chat.Receiver.avatar,
                     }}
                 >
-                    <div className="CLOSE_CHAT flex flex-row justify-end items-center py-2">
-                        <button
-                            type="button"
-                            className="hover:bg-gray-100 rounded-full font-medium text-sm p-1.5 text-center inline-flex items-center"
-                            onClick={() => {
-                                if (type === 'group') {
-                                    setVisibleChats({
-                                        ...visibleChats,
-                                        groups: visibleChats.groups.filter(
-                                            (group) => group !== id
-                                        ),
-                                    });
-                                }
-                                if (type === 'receiver') {
-                                    setVisibleChats({
-                                        ...visibleChats,
-                                        users: visibleChats.users.filter(
-                                            (user) => user !== id
-                                        ),
-                                    });
-                                }
-                            }}
-                        >
-                            <XMarkIcon className="text-gray-600 w-5 h-5" />
-                        </button>
-                    </div>
                 </ChatHeader>
                 <ChatContent
                     messages={chat.Messages}

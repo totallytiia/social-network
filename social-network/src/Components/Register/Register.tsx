@@ -46,10 +46,10 @@ export default function Register() {
         const form =
             e.target.parentElement?.tagName !== 'DIV'
                 ? (e.target.parentElement?.attributes.getNamedItem('name')
-                      ?.value as string)
+                    ?.value as string)
                 : (e.target.parentElement?.parentElement?.attributes.getNamedItem(
-                      'name'
-                  )?.value as string);
+                    'name'
+                )?.value as string);
         const target = e.target;
         var value = target.value;
         console.log(e.target.parentElement?.tagName);
@@ -144,8 +144,8 @@ export default function Register() {
                     today.getFullYear() -
                     birthdate.getFullYear() -
                     (today.getMonth() < birthdate.getMonth() ||
-                    (today.getMonth() === birthdate.getMonth() &&
-                        today.getDate() < birthdate.getDate())
+                        (today.getMonth() === birthdate.getMonth() &&
+                            today.getDate() < birthdate.getDate())
                         ? 1
                         : 0);
                 if (age < 18) {
@@ -299,7 +299,7 @@ export default function Register() {
 
     return (
         <>
-            <div className="flex items-center justify-center bg-custom h-screen">
+            <div className="flex items-center justify-center bg-custom min-h-screen">
                 <div className="bg-blue-50 flex flex-col w-80 rounded-lg px-5 py-5">
                     <div className="text-white mt-5">
                         <h1 className="font-bold text-4xl text-center text-black">

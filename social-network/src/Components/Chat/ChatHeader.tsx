@@ -15,14 +15,14 @@ export default function ChatHeader({
 }) {
     const { name, avatar } = props;
     return (
-        <div className="border-b-2 border-b-gray-200 py-3 px-6 flex flex-row justify-between items-center">
+        <div className="py-3 px-4 flex flex-row justify-between items-center">
             <div className="flex flex-row items-center space-x-1.5">
                 <ProfileIcon
                     avatar={avatar}
-                    classNames="w-5 h-5 object-cover rounded-full"
+                    classNames="w-6 h-6 object-cover rounded-full"
                 />
                 <div className="flex flex-col">
-                    <p className="text-xs text-gray-600">{name}</p>
+                    <p className="text-sm text-left font-bold text-white my-auto">{name}</p>
                 </div>
                 {children}
             </div>

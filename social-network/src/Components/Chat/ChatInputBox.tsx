@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { DocumentIcon } from '@heroicons/react/24/outline';
+import { PaperAirplaneIcon } from '@heroicons/react/24/solid';
 
 interface Props {
     sendMessage: (message: string, image: Blob | null) => void;
@@ -25,11 +26,11 @@ const ChatInputBox = ({ sendMessage, receiver }: Props) => {
         reader.readAsDataURL(file as Blob);
     };
     return (
-        <div className="px-6 py-3 bg-white w-100 overflow-hidden rounded-bl-xl rounded-br-xla">
-            <div className="flex flex-row items-center space-x-5">
+        <div className=" shadow-[0px_-2px_4px_0px_#EDF2F7] bg-white w-100 rounded-b-xl w-64">
+            <div className="flex flex-row items-center">
                 <input
                     type="text"
-                    className="flex-1 px-3 py-2 text-xs font-medium text-gray-700 bg-gray-200 rounded-lg outline-none focus:ring-blue-300"
+                    className="flex-1 text-xs font-medium text-gray-700  rounded-lg outline-none"
                     placeholder="Type your message..."
                     value={newMessage}
                     onChange={handleFormInputChange}
@@ -41,7 +42,7 @@ const ChatInputBox = ({ sendMessage, receiver }: Props) => {
                         }
                     }}
                 />
-                <label htmlFor={`chatImageUpload-${receiver.id}`}>
+                {/* <label htmlFor={`chatImageUpload-${receiver.id}`}>
                     <DocumentIcon className="w-4 h-4 rounded-full" />
                 </label>
                 <input
@@ -51,10 +52,10 @@ const ChatInputBox = ({ sendMessage, receiver }: Props) => {
                     name={`chatImageUpload-${receiver.id}`}
                     accept="image/png, image/jpeg, image/jpg"
                     onChange={handleFormImageChange}
-                />
+                /> */}
                 <button
                     type="button"
-                    className="px-3 py-2 text-xs font-medium text-center text-white bg-blue-500 rounded-lg hover:bg-blue-800 outline-none disabled:opacity-50"
+                    className="px-3 py-2 text-xs font-medium text-center text-gray-600 rounded-lg hover:bg-blue-800 outline-none disabled:opacity-50"
                     disabled={newMessage === ''}
                     onClick={(e) => {
                         sendMessage(newMessage, image);
@@ -62,7 +63,7 @@ const ChatInputBox = ({ sendMessage, receiver }: Props) => {
                         setImage(null);
                     }}
                 >
-                    Send
+                    <PaperAirplaneIcon className="w-5 h-5" />
                 </button>
             </div>
         </div>

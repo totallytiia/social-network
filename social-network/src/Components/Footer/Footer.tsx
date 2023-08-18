@@ -27,34 +27,34 @@ export default function Footer() {
 
     return (
         <>
-            <div id="notifications" className="fixed bottom-2 left-2">
+            <div id="notifications" className="fixed bottom-4 left-4">
                 <Notification />
             </div>
-            <div id="chat" className="flex fixed bottom-2 right-2">
+            <div id="chat" className="flex flex-row gap-2 fixed bottom-2 right-2">
                 <div id="chats" className="flex">
                     {visibleChats.groups !== undefined
                         ? visibleChats.groups.map((group) => (
-                              <Chat
-                                  key={group}
-                                  type="group"
-                                  id={group}
-                                  ws={ws}
-                                  setVisibleChats={setVisibleChats}
-                                  visibleChats={visibleChats}
-                              />
-                          ))
+                            <Chat
+                                key={group}
+                                type="group"
+                                id={group}
+                                ws={ws}
+                                setVisibleChats={setVisibleChats}
+                                visibleChats={visibleChats}
+                            />
+                        ))
                         : null}
                     {visibleChats.users !== undefined
                         ? visibleChats.users.map((user) => (
-                              <Chat
-                                  key={user}
-                                  type="receiver"
-                                  id={user}
-                                  ws={ws}
-                                  setVisibleChats={setVisibleChats}
-                                  visibleChats={visibleChats}
-                              />
-                          ))
+                            <Chat
+                                key={user}
+                                type="receiver"
+                                id={user}
+                                ws={ws}
+                                setVisibleChats={setVisibleChats}
+                                visibleChats={visibleChats}
+                            />
+                        ))
                         : null}
                 </div>
                 {chatVisible ? (
@@ -64,7 +64,8 @@ export default function Footer() {
                         setVisibleChats={setVisibleChats}
                     />
                 ) : (
-                    <button onClick={() => setChatVisible(true)}>
+                    <button
+                        onClick={() => setChatVisible(true)}>
                         <ChatBubbleOvalLeftIcon className="fill-white w-10 h-10 m-2 bg-blue-500 rounded-full shadow p-2" />
                         {/* {numUnseenMessages.current > 0 ? (
                             <div className="flex absolute right-2 -bottom-3 bg-red-500 text-white rounded-full w-5 h-5 items-center justify-center text-xs">
