@@ -4,7 +4,7 @@ import { WSContext } from '../WSProvider/WSProvider';
 
 export default function Notification() {
     const { ws } = useContext(WSContext);
-    const [notificationVisible, setNotificationVisible] = useState(true);
+    const [notificationVisible, setNotificationVisible] = useState(false);
     const [notification, setNotification] = useState('' as string);
 
     if (ws !== null) {
