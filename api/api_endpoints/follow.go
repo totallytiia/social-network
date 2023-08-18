@@ -63,7 +63,7 @@ func FollowUser(w http.ResponseWriter, r *http.Request) {
 			w.Write(badReqJSON)
 			return
 		}
-		err = followUser.AddNotification(u.ID, "followReq", "You have a new follow request")
+		err = followUser.AddNotification(u.ID, "followReq", "sent you a new follow request")
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			badReqJSON, _ := json.Marshal(s.ErrorResponse{Errors: "There was an error following the user", Details: err.Error()})
@@ -83,7 +83,7 @@ func FollowUser(w http.ResponseWriter, r *http.Request) {
 		w.Write(badReqJSON)
 		return
 	}
-	err = followUser.AddNotification(u.ID, "follow", "You have a new follower")
+	err = followUser.AddNotification(u.ID, "follow", "started following you")
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		badReqJSON, _ := json.Marshal(s.ErrorResponse{Errors: "There was an error following the user", Details: err.Error()})
