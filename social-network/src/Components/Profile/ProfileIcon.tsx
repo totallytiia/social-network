@@ -11,7 +11,7 @@ export default function ProfileIcon({ avatar = null, classNames }: Props) {
         <img
             src="/assets/tinydefault_profile.png"
             alt="default avatar"
-            className={classNames}
+            className={`${classNames} object-cover`}
         />
     );
 }
