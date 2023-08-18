@@ -56,7 +56,8 @@ export default function ChatList({
             li.classList.add(
                 'flex',
                 'items-center',
-                'p-2',
+                'p-1',
+                'font-sm',
                 'hover:bg-gray-200'
             );
             li.innerHTML = `
@@ -64,8 +65,8 @@ export default function ChatList({
                     user.avatar !== null
                         ? user.avatar
                         : '/assets/tinydefault_profile.png'
-                }" alt="avatar" class="w-10 h-10 rounded-full object-cover mr-2">
-                <span class="text-lg">${user.fname} ${user.lname}</span>
+                }" alt="avatar" class="w-6 h-6 rounded-full object-cover mr-2">
+                <span class="text-sm">${user.fname} ${user.lname}</span>
             `;
             li.addEventListener('click', () => {
                 setVisibleChats({
@@ -78,7 +79,7 @@ export default function ChatList({
         }
         if (filteredUsers.length === 0) {
             const li = document.createElement('li');
-            li.classList.add('text-lg', 'p-2');
+            li.classList.add('text-sm', 'p-2');
             li.textContent = 'No users found';
             usersList.appendChild(li);
         }
@@ -201,7 +202,7 @@ export default function ChatList({
                                     {lastChats.map((lastChat) => (
                                         <div
                                             key={`lastChat-${lastChat.id}`}
-                                            className="flex font-medium p-2 hover:bg-gray-200 cursor-pointer"
+                                            className="flex text-xs p-2 hover:bg-gray-200 cursor-pointer"
                                             onClick={() => {
                                                 if (
                                                     lastChat.receiver.id !==

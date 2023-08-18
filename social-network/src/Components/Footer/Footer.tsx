@@ -3,6 +3,7 @@ import { useEffect, useRef, useState, useContext } from 'react';
 import { WSContext } from '../WSProvider/WSProvider';
 import { ChatBubbleOvalLeftIcon } from '@heroicons/react/24/solid';
 import Chat from '../Chat/Chat';
+import Notification from '../Notification/Notification';
 
 interface IMessage {
     id: number;
@@ -26,7 +27,9 @@ export default function Footer() {
 
     return (
         <>
-            <div id="notifications" className="fixed bottom-2 left-2"></div>
+            <div id="notifications" className="fixed bottom-2 left-2">
+                <Notification />
+            </div>
             <div id="chat" className="flex fixed bottom-2 right-2">
                 <div id="chats" className="flex">
                     {visibleChats.groups !== undefined
