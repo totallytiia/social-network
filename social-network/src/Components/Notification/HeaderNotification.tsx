@@ -65,7 +65,12 @@ export default function HeaderNotification(props: INotificationProps) {
         if (data.errors) {
             return;
         }
-        return;
+        const notificationsClone = [...notifications];
+        notification.type = 'follow';
+        notificationsClone[notificationsClone.indexOf(notification)] = {
+            ...notification,
+        };
+        setNotifications(notificationsClone);
     }
     return (
         <div
