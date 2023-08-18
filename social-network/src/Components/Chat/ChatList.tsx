@@ -142,11 +142,12 @@ export default function ChatList({
             }
             var users: IReceiver[] = [];
             for (const user of data) {
+                console.log(user.avatar);
                 users.push({
                     id: user.id,
                     fname: user.fName,
                     lname: user.lName,
-                    avatar: user.avatar !== '' ? new Blob(user.avatar) : null,
+                    avatar: user.avatar !== '' ? user.avatar : null,
                 });
             }
             setUsers(users);
