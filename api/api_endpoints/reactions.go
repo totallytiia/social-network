@@ -67,7 +67,7 @@ func AddReaction(w http.ResponseWriter, r *http.Request) {
 		p.Get(u.ID)
 		var postOwner = s.User{ID: p.UserID}
 		postOwner.Get(nil)
-		err = postOwner.AddNotification(u.ID, "reaction", "Someone reacted on your post")
+		err = postOwner.AddNotification(u.ID, "reaction", "reacted on your post")
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			badReqJSON, _ := json.Marshal(s.ErrorResponse{Errors: "There was an error creating the notification", Details: err.Error()})

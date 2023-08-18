@@ -29,6 +29,7 @@ export default function HeaderNotification(props: INotificationProps) {
         notification,
         notificationsState: { notifications, setNotifications },
     } = props;
+
     async function markAsSeen() {
         const url = `http://localhost:8080/api/notifications/seen?id=${notification.id}`;
         const res = await fetch(url, {
@@ -77,7 +78,7 @@ export default function HeaderNotification(props: INotificationProps) {
             >
                 <div className="flex flex-row gap-2">
                     <p className="text-sm">
-                        {notification.fname} {notification.lname}:{' '}
+                        {`${notification.fname} ${notification.lname} `}
                         {notification.message}
                     </p>
                     <p className="text-xs text-gray-500">

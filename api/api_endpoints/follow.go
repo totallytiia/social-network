@@ -2,7 +2,6 @@ package endpoints
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 	s "social_network_api/structs"
 	"strconv"
@@ -214,7 +213,7 @@ func RespondToRequest(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	if response {
-		err = followUser.AddNotification(u.ID, "followReqRes", fmt.Sprintf("%s %s accepted your follow request", u.FName, u.LName))
+		err = followUser.AddNotification(u.ID, "followReqRes", "accepted your follow request")
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			badReqJSON, _ := json.Marshal(s.ErrorResponse{Errors: "There was an error responding to the follow request", Details: err.Error()})
@@ -224,7 +223,7 @@ func RespondToRequest(w http.ResponseWriter, r *http.Request) {
 		WSSendToUser(followUser.ID, `{"type": "followReqRes", "message": "You have a new follower", "user_id": `+strconv.Itoa(u.ID)+`}`)
 	}
 	if !response {
-		err = followUser.AddNotification(u.ID, "follow", fmt.Sprintf("Your follow request for %s %s was rejected", u.FName, u.LName))
+		err = followUser.AddNotification(u.ID, "follow", ("rejected your follow request"))
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			badReqJSON, _ := json.Marshal(s.ErrorResponse{Errors: "There was an error responding to the follow request", Details: err.Error()})

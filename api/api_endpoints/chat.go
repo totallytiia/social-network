@@ -74,7 +74,7 @@ func SendChat(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		err = receiver.AddNotification(u.ID, "chat", "You have a new message")
+		err = receiver.AddNotification(u.ID, "chat", "sent you a message")
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			fmt.Println("Error adding notification")
@@ -114,7 +114,7 @@ func SendChat(w http.ResponseWriter, r *http.Request) {
 					w.Write(badReqJSON)
 					return
 				}
-				err = member.AddNotification(u.ID, "chat", "You have a new message")
+				err = member.AddNotification(u.ID, "chat", fmt.Sprintf("sent a message in %s", group.GroupName))
 				if err != nil {
 					w.WriteHeader(http.StatusInternalServerError)
 					fmt.Println("Error adding notification")
