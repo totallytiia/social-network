@@ -125,7 +125,7 @@ func (e *Event) Leave(userID int) error {
 	return nil
 }
 
-func (e *Event) RespondToInvite(userID int, going string) error {
+func (e *Event) RespondtoEvent(userID int, going string) error {
 	if going == "1" {
 		var _, err = db.DB.Exec("UPDATE event_users SET going = 1 WHERE event_id = ? AND user_id = ?", e.ID, userID)
 		if err != nil {

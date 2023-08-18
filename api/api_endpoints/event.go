@@ -276,7 +276,7 @@ func RespondToEventInvite(w http.ResponseWriter, r *http.Request) {
 	var event = s.Event{
 		ID: eventID,
 	}
-	err = event.RespondToInvite(u.ID, r.FormValue("response"))
+	err = event.RespondtoEvent(u.ID, r.FormValue("response"))
 	if err != nil {
 		BadRequest(w, r, err.Error())
 		return
