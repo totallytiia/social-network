@@ -137,6 +137,6 @@ func (e *Event) RespondToInvite(userID int, going bool) error {
 		if err != nil {
 			return err
 		}
-		return nil
 	}
+	return nil
 }
