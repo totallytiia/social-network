@@ -15,25 +15,13 @@ export default function Notification() {
                 setNotificationVisible(true);
                 setNotification("You've got a new message!");
             }
-            if (data.type === 'notification') {
-                setNotificationVisible(true);
-                setNotification("You've got a new notification!");
-            }
-            if (data.type === 'follow') {
-                setNotificationVisible(true);
-                setNotification("You've got a new follower!");
-            }
-            if (data.type === 'followReq') {
-                setNotificationVisible(true);
-                setNotification('You got a new follow request!');
-            }
         });
     }
 
     // close notification after 5 seconds
     setTimeout(() => {
         setNotificationVisible(false);
-    }, 3000);
+    }, 5000);
 
     return (
         <div className="flex flex-col">
