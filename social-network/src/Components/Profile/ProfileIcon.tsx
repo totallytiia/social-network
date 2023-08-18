@@ -7,5 +7,11 @@ interface Props {
 
 export default function ProfileIcon({ avatar = null, classNames }: Props) {
     // Avatar is blob, add image if not null
-    return <UserIcon className={classNames} />;
+    return (
+        <img
+            src="/assets/tinydefault_profile.png"
+            alt="default avatar"
+            className={classNames}
+        />
+    );
 }
