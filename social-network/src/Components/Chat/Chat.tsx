@@ -174,7 +174,7 @@ export default function Chat({
                     <XMarkIcon className="text-gray-600 w-5 h-5" />
                 </button>
             </div>
-            <div className="bg-blue-500 rounded-xl shadow-lg relative">
+            <div className="bg-blue-500 rounded-lg shadow-lg relative">
                 <ChatHeader
                     props={{
                         name:

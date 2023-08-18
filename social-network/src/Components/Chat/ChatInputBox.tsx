@@ -26,11 +26,11 @@ const ChatInputBox = ({ sendMessage, receiver }: Props) => {
         reader.readAsDataURL(file as Blob);
     };
     return (
-        <div className=" shadow-[0px_-2px_4px_0px_#EDF2F7] bg-white w-100 rounded-b-xl w-64">
+        <div className=" shadow-[0px_-2px_4px_0px_#EDF2F7] bg-white w-100 rounded-b-lg w-64">
             <div className="flex flex-row items-center">
                 <input
                     type="text"
-                    className="flex-1 text-xs font-medium text-gray-700  rounded-lg outline-none"
+                    className="flex-1 text-sm text-gray-600 outline-none"
                     placeholder="Type your message..."
                     value={newMessage}
                     onChange={handleFormInputChange}

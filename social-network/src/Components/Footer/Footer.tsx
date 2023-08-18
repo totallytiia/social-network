@@ -31,7 +31,7 @@ export default function Footer() {
                 <Notification />
             </div>
             <div id="chat" className="flex flex-row gap-2 fixed bottom-2 right-2">
-                <div id="chats" className="flex">
+                <div id="chats" className="flex gap-2 items-end">
                     {visibleChats.groups !== undefined
                         ? visibleChats.groups.map((group) => (
                             <Chat

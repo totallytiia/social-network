@@ -72,7 +72,7 @@ export default function ChatList({
                     ...visibleChats,
                     users: [...visibleChats.users, user.id],
                 });
-                setChatVisible(false);
+                // setChatVisible(true);
             });
             usersList.appendChild(li);
         }
@@ -157,7 +157,7 @@ export default function ChatList({
 
     if (!chatVisible) {
         return (
-            <button onClick={() => setChatVisible(true)}>
+            <button onClick={() => setChatVisible(true)} className='flex items-end'>
                 <ChatBubbleOvalLeftIcon className="fill-white w-10 h-10 m-2 bg-blue-500 rounded-full shadow p-2" />
                 {/* {numUnseenMessages > 0 ? (
                     <div className="flex absolute right-2 -bottom-3 bg-red-500 text-white rounded-full w-5 h-5 items-center justify-center text-xs">
