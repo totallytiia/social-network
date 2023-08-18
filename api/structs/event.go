@@ -124,3 +124,11 @@ func (e *Event) Leave(userID int) error {
 	}
 	return nil
 }
+
+func (e *Event) RespondToInvite(userID int, going bool) error {
+	var _, err = db.DB.Exec("UPDATE event_users SET going = ? WHERE event_id = ? AND user_id = ?", going, e.ID, userID)
+	if err != nil {
+		return err
+	}
+	return nil
+}

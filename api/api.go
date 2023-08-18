@@ -188,6 +188,8 @@ func api(w http.ResponseWriter, r *http.Request) {
 			ep.GetEvents(w, r)
 		case "get":
 			ep.GetEvent(w, r)
+		case "respond":
+			ep.RespondToEvent(w, r)
 		default:
 			http.NotFound(w, r)
 			return

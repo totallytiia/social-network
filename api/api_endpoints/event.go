@@ -258,3 +258,30 @@ func LeaveEvent(w http.ResponseWriter, r *http.Request) {
 	var respJSON, _ = json.Marshal(s.OKResponse{Message: "Left event", Details: eventID})
 	w.Write(respJSON)
 }
+
+func RespondToEventInvite(w http.ResponseWriter, r *http.Request) {
+	v, u := ValidateCookie(w, r)
+	if !v {
+		http.Error(w, "Unauthorized", http.StatusUnauthorized)
+	}
+	if r.Method != "POST" {
+		MethodNotAllowed(w, r)
+		return
+	}
+	eventID, err := strconv.Atoi(r.FormValue("event_id"))
+	if err != nil {
+		BadRequest(w, r, "Invalid event_id")
+		return
+	}
+	var event = s.Event{
+		ID: eventID,
+	}
+	err = event.RespondToInvite(u.ID, r.FormValue("response"))
+	if err != nil {
+		BadRequest(w, r, err.Error())
+		return
+	}
+	w.WriteHeader(http.StatusOK)
+	var respJSON, _ = json.Marshal(s.OKResponse{Message: "Responded to event invite", Details: eventID})
+	w.Write(respJSON)
+}
