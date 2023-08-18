@@ -12,7 +12,7 @@ export default function Groups() {
 
     return (
         <div className="bg-custom">
-            <div className="flex flex-col lg:flex-row lg:justify-center p-6">
+            <div className="flex flex-col lg:flex-row lg:justify-center p-6 flex-shrink">
                 <div className="flex flex-col order-1 lg:w-1/2 bg-white rounded-lg shadow-lg p-4 m-2 h-screen">
                     <h1 className="font-bold text-xl text-center my-2">
                         All Groups
@@ -24,7 +24,7 @@ export default function Groups() {
                         />
                     </div>
                 </div>
-                <div className="p-2 mt-4 order-0  lg:order-1">
+                <div className="p-2 mt-4 order-0   lg:order-1">
                     {!createNewGroup && (
                         <div className="CREATE-GROUP bg-blue-50 rounded-full shadow-md flex justify-center">
                             <button

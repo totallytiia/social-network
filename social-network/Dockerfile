@@ -20,6 +20,8 @@ FROM nginx:alpine
 WORKDIR /usr/share/nginx/html
 # Copy only the built application from stage 1
 COPY --from=builder /social-network/build/ .
+# Copy nginx configuration
+COPY backend.conf /etc/nginx/conf.d/backend.conf
 # Expose the default HTTP port
 EXPOSE 80
 # Run the web service
