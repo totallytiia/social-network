@@ -160,7 +160,7 @@ export default function Post({ postInput, deletePost }: PostProps) {
                                 className="cursor-pointer text-sm font-bold"
                             >
                                 {`${post.user_fname} ${post.user_lname}`}
-                                {post.group_id !== null ? (
+                                {post.group_id !== 0 ? (
                                     <span
                                         className="text-xs"
                                         onClick={() =>

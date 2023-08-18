@@ -41,7 +41,7 @@ func CreatePost(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 	} else {
-		post.GroupID = nil
+		post.GroupID = 0
 	}
 	err = post.Validate()
 	if err != nil {

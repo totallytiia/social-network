@@ -162,8 +162,6 @@ export default function User() {
         setUser({ ...user, followed: false });
     }
 
-    console.log(user);
-
     return (
         <>
             <div className="p-10 bg-custom h-screen z-0 item-center justify-center">
@@ -219,7 +217,8 @@ export default function User() {
                                         type="checkbox"
                                         value=""
                                         className="sr-only peer"
-                                        checked={privacy}
+                                        checked={!!privacy}
+                                        onChange={() => {}}
                                     ></input>
                                     <div
                                         onClick={() => {
@@ -268,18 +267,21 @@ export default function User() {
                             {`${user.fName} "${user.nickname}" ${user.lName}`}
                             <span className="text-gray-500"></span>
                         </h1>
-                        {!user.private ? (
-                            <>
-                                <p className="text-gray-600 mt-3">
-                                    {user.about}
-                                </p>
-                                <p className="mt-8 text-gray-500">
-                                    {user.email}
-                                </p>
-                                <p className="mt-2 text-gray-500">
-                                    {user.dateOfBirth}
-                                </p>
-                            </>
+                        {user.followers !== undefined ? (
+                            user.id === userData.id ||
+                            user.followers.includes(userData.id) ? (
+                                <>
+                                    <p className="text-gray-600 mt-3">
+                                        {user.about}
+                                    </p>
+                                    <p className="mt-8 text-gray-500">
+                                        {user.email}
+                                    </p>
+                                    <p className="mt-2 text-gray-500">
+                                        {user.dateOfBirth}
+                                    </p>
+                                </>
+                            ) : null
                         ) : null}
                     </div>
 

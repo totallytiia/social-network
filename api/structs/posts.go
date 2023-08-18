@@ -20,23 +20,23 @@ type NewPost struct {
 }
 
 type Post struct {
-	ID              int         `json:"id"`
-	UserID          int         `json:"user_id"`
-	UserFName       string      `json:"user_fname"`
-	UserLName       string      `json:"user_lname"`
-	UserNickname    string      `json:"user_nickname"`
-	UserAvatar      string      `json:"user_avatar"`
-	GroupID         interface{} `json:"group_id"`
-	Content         string      `json:"content"`
-	Image           string      `json:"image"`
-	Privacy         int         `json:"privacy"`
-	PrivacySettings string      `json:"privacy_settings"`
-	CreatedAt       string      `json:"created_at"`
-	UpdatedAt       string      `json:"updated_at"`
-	Comments        []Comment   `json:"comments"`
-	Likes           int         `json:"likes"`
-	Dislikes        int         `json:"dislikes"`
-	Liked           int         `json:"liked"`
+	ID              int       `json:"id"`
+	UserID          int       `json:"user_id"`
+	UserFName       string    `json:"user_fname"`
+	UserLName       string    `json:"user_lname"`
+	UserNickname    string    `json:"user_nickname"`
+	UserAvatar      string    `json:"user_avatar"`
+	GroupID         int       `json:"group_id"`
+	Content         string    `json:"content"`
+	Image           string    `json:"image"`
+	Privacy         int       `json:"privacy"`
+	PrivacySettings string    `json:"privacy_settings"`
+	CreatedAt       string    `json:"created_at"`
+	UpdatedAt       string    `json:"updated_at"`
+	Comments        []Comment `json:"comments"`
+	Likes           int       `json:"likes"`
+	Dislikes        int       `json:"dislikes"`
+	Liked           int       `json:"liked"`
 }
 
 type Posts []Post
@@ -157,6 +157,17 @@ func GetPosts(IDs map[string]any, index, userFetching int) (Posts, error) {
 			return Posts{}, err
 		}
 		posts = append(posts, post)
+	}
+	for i := 0; i < len(posts); i++ {
+		if posts[i].GroupID == 0 {
+			continue
+		}
+		group := Group{GroupID: posts[i].GroupID}
+		group.Get()
+		if !group.IsMember(userFetching) {
+			posts = append(posts[:i], posts[i+1:]...)
+			i--
+		}
 	}
 	return posts, nil
 }
