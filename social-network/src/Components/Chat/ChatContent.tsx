@@ -19,7 +19,7 @@ export default function ChatContent({ messages, avatar }: Props) {
     const { userData } = useContext(UserContext);
 
     return (
-        <div className="max-h-64 bg-white h-64 px-6 py-1 overflow-auto">
+        <div className="max-h-64 bg-white h-64 px-2 py-1 overflow-auto">
             {messages !== undefined
                 ? messages.map((message: Message, index: number) => (
                     <div
@@ -40,8 +40,8 @@ export default function ChatContent({ messages, avatar }: Props) {
                     >
                         <div
                             className={`${message.sender === userData.id
-                                ? 'order-2'
-                                : 'order-1'
+                                ? 'order-1'
+                                : 'order-0'
                                 }`}
                         >
                             <ProfileIcon
