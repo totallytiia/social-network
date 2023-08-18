@@ -68,7 +68,7 @@ export default function HeaderNotification(props: INotificationProps) {
         <div
             id={`notification-${notification.id.toString()}`}
             className="NOTIFICATION flex flex-col"
-            onMouseOver={!notification.seen ? markAsSeen : undefined}
+            onClick={!notification.seen ? markAsSeen : undefined}
         >
             <div
                 className={`NOTIFICATION-TEXT flex flex-row justify-between ${
