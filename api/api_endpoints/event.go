@@ -259,7 +259,7 @@ func LeaveEvent(w http.ResponseWriter, r *http.Request) {
 	w.Write(respJSON)
 }
 
-func RespondToEventInvite(w http.ResponseWriter, r *http.Request) {
+func RespondtoEvent(w http.ResponseWriter, r *http.Request) {
 	v, u := ValidateCookie(w, r)
 	if !v {
 		http.Error(w, "Unauthorized", http.StatusUnauthorized)
