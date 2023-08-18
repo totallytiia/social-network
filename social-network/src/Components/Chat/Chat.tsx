@@ -77,7 +77,7 @@ export default function Chat({
                     lname: data.receiver.lname,
                     avatar:
                         data.receiver.avatar !== ''
-                            ? new Blob(data.receiver.avatar)
+                            ? data.receiver.avatar
                             : null,
                 },
                 Group: {
@@ -97,7 +97,7 @@ export default function Chat({
                     lname: data.receiver.lName,
                     avatar:
                         data.receiver.avatar !== ''
-                            ? new Blob(data.receiver.avatar)
+                            ? data.receiver.avatar
                             : null,
                 };
             var messages: IMessage[] = [];

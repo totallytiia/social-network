@@ -45,7 +45,7 @@ export default function GroupList(props: Props) {
             {groups.map((group) => {
                 return (
                     <div
-                        className="bg-blue-50 rounded-full w-fit py-1 pl-2 pr-4"
+                        className="bg-blue-50 rounded-full w-fit py-1 pl-2 pr-4 mt-1.5"
                         key={group.id}
                     >
                         <div className="flex flex-row items-center gap-2">
