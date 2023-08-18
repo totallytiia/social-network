@@ -51,9 +51,9 @@ export default function ChatContent({ messages, avatar }: Props) {
                         </div>
                         <div>
                             <div
-                                className={`px-3 w-fit py-2 flex flex-col bg-gray-100 rounded-lg text-black ${message.sender === userData.id
-                                    ? 'order-1 mr-2'
-                                    : 'order-2 ml-2'
+                                className={`px-3 w-fit py-2 flex flex-col  rounded-lg text-black ${message.sender === userData.id
+                                    ? 'order-0 mr-2 bg-blue-100'
+                                    : 'order-1 ml-2 bg-gray-100'
                                     }`}
                             >
                                 <span className="text-md">{message.content}</span>
