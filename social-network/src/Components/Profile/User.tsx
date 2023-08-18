@@ -167,7 +167,7 @@ export default function User() {
             <div className="p-10 bg-custom h-screen z-0 item-center justify-center">
                 <div className="p-10 shadow-xl flex flex-col items-center bg-white max-w-7xl rounded-xl mx-auto">
                     <div className="grid grid-cols-1 items-center justify-between md:grid-cols-3 ">
-                        <div className="grid grid-cols-3 text-center order-last md:order-first mt-7 md:mt-0">
+                        <div className="grid grid-cols-2 text-center order-last md:order-first mt-7 md:mt-0">
                             <div>
                                 <p className="font-bold text-gray-700 text-xl">
                                     {user.followers !== undefined
@@ -183,12 +183,6 @@ export default function User() {
                                         : 0}
                                 </p>
                                 <p className="text-gray-400">Following</p>
-                            </div>
-                            <div>
-                                <p className="font-bold text-gray-700 text-xl">
-                                    {posts.length}
-                                </p>
-                                <p className="text-gray-400">Posts</p>
                             </div>
                         </div>
                         <div className="relative w-48 mx-auto">
@@ -207,6 +201,12 @@ export default function User() {
                         </div>
 
                         <div className="justify-center gap-6 flex mt-10 md:mt-0 border-b md:border-b-0 pb-8 md:pb-0">
+                            <div className="flex flex-col md:ml-4">
+                                <p className="font-bold text-gray-700 text-xl mx-auto">
+                                    {posts.length}
+                                </p>
+                                <p className="text-gray-400">Posts</p>
+                            </div>
                             <label className="my-auto relative items-center cursor-pointer">
                                 <div
                                     className={`flex flex-row ${
@@ -250,14 +250,6 @@ export default function User() {
                                 ) : (
                                     <UserPlusIcon className="w-10 h-10 bg-blue-100 rounded-full p-2" />
                                 )}
-                            </button>
-
-                            <button
-                                className={`CHAT ${
-                                    user.id === userData.id ? 'hidden' : ''
-                                }`}
-                            >
-                                <ChatBubbleOvalLeftIcon className="w-10 h-10 bg-blue-100 rounded-full p-2" />
                             </button>
                         </div>
                     </div>

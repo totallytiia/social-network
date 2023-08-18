@@ -283,7 +283,7 @@ export default function ChatList({
                         className="text-xs outline-none"
                         name="chatReceiver"
                         id="chatReceiver"
-                        placeholder="Search for users"
+                        placeholder="Search for users or groups"
                         onChange={handleUserSearch}
                         onFocus={(e) =>
                             e.target.parentElement?.children[0].classList.remove(
