@@ -22,19 +22,21 @@ export default function GroupsSidebar() {
                         groupCreated={groupCreated}
                         setGroupCreated={setGroupCreated}
                     />
-                    {!createGroup && (
-                        <div className="CREATE-EVENT mt-1.5">
-                            <button
-                                onClick={() => handleCreateGroup()}
-                                className="flex flex-row text-lg font-bold items-center gap-1 bg-blue-50 py-2 pl-2 pr-4 rounded-full hover:bg-blue-100"
-                            >
-                                <PlusCircleIcon className="h-6 w-6" />
-                                <p className="text-bold text-sm">
-                                    Create a group
-                                </p>
-                            </button>
-                        </div>
-                    )}
+                    <div className="mt-1.5">
+                        {!createGroup && (
+                            <div className="CREATE-EVENT">
+                                <button
+                                    onClick={() => handleCreateGroup()}
+                                    className="flex flex-row text-lg font-bold items-center gap-1 bg-blue-50 py-2 pl-2 pr-4 rounded-full hover:bg-blue-100"
+                                >
+                                    <PlusCircleIcon className="h-6 w-6" />
+                                    <p className="text-bold text-sm">
+                                        Create a group
+                                    </p>
+                                </button>
+                            </div>
+                        )}
+                    </div>
                     <div className="mx-auto">
                         {createGroup && (
                             <CreateGroup setGroupCreated={setGroupCreated} />

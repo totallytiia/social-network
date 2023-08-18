@@ -1,3 +1,5 @@
+import { CheckIcon, XMarkIcon } from '@heroicons/react/24/solid';
+
 interface INotificationProps {
     notification: {
         id: number;
@@ -73,34 +75,34 @@ export default function HeaderNotification(props: INotificationProps) {
             <div
                 className={`NOTIFICATION-TEXT flex flex-row justify-between ${
                     !notification.seen ? 'bg-blue-200' : 'bg-blue-50'
-                } p-2 my-1 rounded-md`}
+                } p-2 my-1  rounded-md `}
             >
-                <div className="flex flex-row gap-2">
+                <div className="flex flex-row gap-8">
                     <p className="text-sm">
                         {notification.fname} {notification.lname}:{' '}
                         {notification.message}
                     </p>
-                    <p className="text-xs text-gray-500">
+                    <p className="text-xs text-gray-500 my-auto">
                         {new Date(notification.created_at).toLocaleString()}
                     </p>
+                    {notification.type === 'followReq' ? (
+                        // Two buttons to respond to follow request
+                        <div className="flex flex-row gap-2">
+                            <button
+                                className="bg-green-500 text-white rounded-full px-2 h-fit py-2 my-auto"
+                                onClick={() => followReqRespond(true)}
+                            >
+                                <CheckIcon className="h-4 w-4 stroke-1.5 stroke-white" />
+                            </button>
+                            <button
+                                className="bg-red-500 text-white rounded-full px-2 h-fit py-2 my-auto"
+                                onClick={() => followReqRespond(false)}
+                            >
+                                <XMarkIcon className="h-4 w-4 stroke-1.5 stroke-white" />
+                            </button>
+                        </div>
+                    ) : null}
                 </div>
-                {notification.type === 'followReq' ? (
-                    // Two buttons to respond to follow request
-                    <div className="flex flex-row gap-2">
-                        <button
-                            className="bg-green-500 text-white rounded-md px-2 py-1"
-                            onClick={() => followReqRespond(true)}
-                        >
-                            Accept
-                        </button>
-                        <button
-                            className="bg-red-500 text-white rounded-md px-2 py-1"
-                            onClick={() => followReqRespond(false)}
-                        >
-                            Decline
-                        </button>
-                    </div>
-                ) : null}
             </div>
         </div>
     );

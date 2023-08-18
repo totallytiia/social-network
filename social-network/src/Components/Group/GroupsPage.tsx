@@ -13,12 +13,23 @@ export default function Groups() {
     return (
         <div className="bg-custom">
             <div className="flex flex-col lg:flex-row lg:justify-center p-6">
-                <div className="flex flex-col lg:w-1/2 bg-white rounded-lg shadow-lg p-4 m-2 h-screen">
+                <div className="flex flex-col order-1 lg:w-1/2 bg-white rounded-lg shadow-lg p-4 m-2 h-screen">
+                    <h1 className="font-bold text-xl text-center my-2">
+                        All Groups
+                    </h1>
+                    <div className="[&>div]:m-1">
+                        <GroupList
+                            groupCreated={groupCreated}
+                            setGroupCreated={setGroupCreated}
+                        />
+                    </div>
+                </div>
+                <div className="p-2 mt-4 order-0  lg:order-1">
                     {!createNewGroup && (
-                        <div className="CREATE-GROUP flex justify-center">
+                        <div className="CREATE-GROUP bg-blue-50 rounded-full shadow-md flex justify-center">
                             <button
                                 onClick={() => handleCreateNewGroup()}
-                                className=" flex flex-row text-lg font-bold items-center gap-1  py-2 pl-1 pr-4 rounded-full hover:bg-blue-50"
+                                className=" flex flex-row text-lg font-bold items-center gap-1 py-2 pl-2 pr-4 rounded-full hover:bg-blue-50"
                             >
                                 <PlusCircleIcon className="w-6 h-6" />
                                 <p className="text-bold text-sm">
@@ -31,15 +42,6 @@ export default function Groups() {
                         {createNewGroup && (
                             <CreateGroup setGroupCreated={setCreateNewGroup} />
                         )}
-                    </div>
-                    <h1 className="font-bold text-xl text-center my-2">
-                        All Groups
-                    </h1>
-                    <div className="[&>div]:m-1">
-                        <GroupList
-                            groupCreated={groupCreated}
-                            setGroupCreated={setGroupCreated}
-                        />
                     </div>
                 </div>
             </div>

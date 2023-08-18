@@ -136,9 +136,6 @@ export default function Header() {
                             onClick={() => setIsNavOpen((prev) => !prev)}
                             className="NAVIGATION-MOBILE-OPEN flex flex-col items-center justify-between min-h-[250px]"
                         >
-                            <button className="text-2xl font-extrabold">
-                                Notifications
-                            </button>
                             <Link
                                 to="/groups"
                                 className="text-2xl font-extrabold"
