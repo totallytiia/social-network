@@ -3,9 +3,12 @@ import { DocumentIcon } from '@heroicons/react/24/outline';
 
 interface Props {
     sendMessage: (message: string, image: Blob | null) => void;
+    receiver: {
+        id: number;
+    };
 }
 
-const ChatInputBox = ({ sendMessage }: Props) => {
+const ChatInputBox = ({ sendMessage, receiver }: Props) => {
     const [newMessage, setNewMessage] = useState('');
     const [image, setImage] = useState<Blob | null>(null);
 
@@ -30,15 +33,22 @@ const ChatInputBox = ({ sendMessage }: Props) => {
                     placeholder="Type your message..."
                     value={newMessage}
                     onChange={handleFormInputChange}
+                    onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                            sendMessage(newMessage, image);
+                            setNewMessage('');
+                            setImage(null);
+                        }
+                    }}
                 />
-                <label htmlFor="imgUpload">
+                <label htmlFor={`chatImageUpload-${receiver.id}`}>
                     <DocumentIcon className="w-4 h-4 rounded-full" />
                 </label>
                 <input
                     type="file"
                     className="hidden"
-                    id="imgUpload"
-                    name="imgUpload"
+                    id={`chatImageUpload-${receiver.id}`}
+                    name={`chatImageUpload-${receiver.id}`}
                     accept="image/png, image/jpeg, image/jpg"
                     onChange={handleFormImageChange}
                 />
@@ -49,6 +59,7 @@ const ChatInputBox = ({ sendMessage }: Props) => {
                     onClick={(e) => {
                         sendMessage(newMessage, image);
                         setNewMessage('');
+                        setImage(null);
                     }}
                 >
                     Send

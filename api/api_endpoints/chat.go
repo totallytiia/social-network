@@ -82,7 +82,7 @@ func SendChat(w http.ResponseWriter, r *http.Request) {
 			w.Write(badReqJSON)
 			return
 		}
-		messagesJson, _ := json.Marshal(c.Message)
+		messagesJson, _ := json.Marshal(c)
 		WSSendToUser(receiver.ID, fmt.Sprintf(`{"type":"chat", "message":%s}`, messagesJson))
 	}
 	var group = s.Group{GroupID: groupID}
@@ -198,7 +198,7 @@ func GetChat(w http.ResponseWriter, r *http.Request) {
 	}
 	var respJSON, _ = json.Marshal(chat)
 	if len(chat.Messages) == 0 {
-		w.WriteHeader(http.StatusNoContent)
+		w.WriteHeader(http.StatusOK)
 		w.Write(respJSON)
 		return
 	}

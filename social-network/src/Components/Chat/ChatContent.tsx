@@ -1,11 +1,11 @@
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import { UserContext } from '../App/App';
 import ProfileIcon from '../Profile/ProfileIcon';
 
 interface Message {
     id: number;
     content: string;
-    image: Blob;
+    image: Blob | null;
     sender: number;
     receiver: number;
     timestamp: Date;
@@ -29,6 +29,15 @@ export default function ChatContent({ messages, avatar }: Props) {
                                   ? 'justify-end'
                                   : 'justify-start'
                           }`}
+                          onLoad={(e) => {
+                              const target = (e.target as HTMLDivElement)
+                                  .parentElement?.parentElement
+                                  ?.parentElement as HTMLDivElement;
+                              target.scrollTo(
+                                  0,
+                                  target?.scrollHeight as number
+                              );
+                          }}
                       >
                           <div
                               className={`${
@@ -37,7 +46,10 @@ export default function ChatContent({ messages, avatar }: Props) {
                                       : 'order-1'
                               }`}
                           >
-                              <ProfileIcon avatar={avatar} />
+                              <ProfileIcon
+                                  avatar={avatar}
+                                  classNames="w-5 h-5 rounded-full object-cover"
+                              />
                           </div>
                           <div
                               className={`px-2 w-fit py-3 flex flex-col bg-purple-500 rounded-lg text-white ${

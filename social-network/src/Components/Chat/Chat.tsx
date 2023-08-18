@@ -17,7 +17,7 @@ interface Props {
 interface IMessage {
     id: number;
     content: string;
-    image: Blob;
+    image: Blob | null;
     sender: number;
     receiver: number;
     timestamp: Date;
@@ -101,7 +101,7 @@ export default function Chat({
                             : null,
                 };
             var messages: IMessage[] = [];
-            if (res.status !== 204) {
+            if (data.messages !== null) {
                 for (const message of data.messages) {
                     messages.push({
                         id: message.id,
@@ -134,6 +134,16 @@ export default function Chat({
         if (data.errors) {
             return;
         }
+        var chatCopy = { ...chat };
+        chatCopy.Messages.push({
+            id: data.id,
+            content: message,
+            image: image,
+            sender: data.user_id,
+            receiver: data.receiver_id,
+            timestamp: data.sent_at,
+        });
+        setChat(chatCopy);
     }
 
     return (
@@ -179,7 +189,10 @@ export default function Chat({
                     messages={chat.Messages}
                     avatar={chat.Receiver.avatar}
                 />
-                <ChatInputBox sendMessage={sendMessage} />
+                <ChatInputBox
+                    sendMessage={sendMessage}
+                    receiver={chat.Receiver}
+                />
             </div>
         </div>
     );

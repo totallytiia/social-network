@@ -35,8 +35,54 @@ export default function ChatList({
 }: Props) {
     const [chatVisible, setChatVisible] = useState(true);
     const [lastChats, setLastChats] = useState([] as ILastChat[]);
+    const [users, setUsers] = useState([] as IReceiver[]);
 
     const { userData } = useContext(UserContext);
+
+    function handleUserSearch(e: React.ChangeEvent<HTMLInputElement>) {
+        const search = e.target.value.toLowerCase();
+        const usersList = document.querySelector('ul#chatSearchUserList.USERS');
+        if (usersList === null) {
+            return;
+        }
+        const filteredUsers = users.filter((user) =>
+            `${user.fname.toLowerCase()} ${user.lname.toLowerCase()}`.includes(
+                search
+            )
+        );
+        usersList.innerHTML = '';
+        for (const user of filteredUsers) {
+            const li = document.createElement('li');
+            li.classList.add(
+                'flex',
+                'items-center',
+                'p-2',
+                'hover:bg-gray-200'
+            );
+            li.innerHTML = `
+                <img src="${
+                    user.avatar !== null
+                        ? user.avatar
+                        : '/assets/tinydefault_profile.png'
+                }" alt="avatar" class="w-10 h-10 rounded-full object-cover mr-2">
+                <span class="text-lg">${user.fname} ${user.lname}</span>
+            `;
+            li.addEventListener('click', () => {
+                setVisibleChats({
+                    ...visibleChats,
+                    users: [...visibleChats.users, user.id],
+                });
+                setChatVisible(false);
+            });
+            usersList.appendChild(li);
+        }
+        if (filteredUsers.length === 0) {
+            const li = document.createElement('li');
+            li.classList.add('text-lg', 'p-2');
+            li.textContent = 'No users found';
+            usersList.appendChild(li);
+        }
+    }
 
     useEffect(() => {
         async function getLastChats() {
@@ -55,7 +101,6 @@ export default function ChatList({
             }
             var lastChats: ILastChat[] = [];
             for (const message of data) {
-                console.log(message);
                 lastChats.push({
                     id: message.id,
                     sender: message.user_id,
@@ -78,6 +123,35 @@ export default function ChatList({
             setLastChats(lastChats);
         }
         getLastChats();
+    }, [visibleChats]);
+
+    useEffect(() => {
+        async function getUsers() {
+            const url = 'http://localhost:8080/api/users/getall';
+            const res = await fetch(url, {
+                method: 'GET',
+                credentials: 'include',
+            });
+            if (res.status === 204) {
+                setUsers([] as IReceiver[]);
+                return;
+            }
+            const data = await res.json();
+            if (data.errors) {
+                return;
+            }
+            var users: IReceiver[] = [];
+            for (const user of data) {
+                users.push({
+                    id: user.id,
+                    fname: user.fName,
+                    lname: user.lName,
+                    avatar: user.avatar !== '' ? new Blob(user.avatar) : null,
+                });
+            }
+            setUsers(users);
+        }
+        getUsers();
     }, []);
 
     if (!chatVisible) {
@@ -128,7 +202,6 @@ export default function ChatList({
                                             key={`lastChat-${lastChat.id}`}
                                             className="flex font-medium p-2 hover:bg-gray-200 cursor-pointer"
                                             onClick={() => {
-                                                console.log(visibleChats);
                                                 if (
                                                     lastChat.receiver.id !==
                                                     null
@@ -199,13 +272,22 @@ export default function ChatList({
                         </div>
                     </div>
                 </div>
-                <div className="CHAT_LIST__HEADER__SEARCH flex flex-col shadow-[0px_-2px_4px_0px_#EDF2F7]">
+                <div className="CHAT_LIST__FOOTER__SEARCH flex flex-col shadow-[0px_-2px_4px_0px_#EDF2F7]">
+                    <div className="bg-white hidden">
+                        <ul className="USERS" id="chatSearchUserList"></ul>
+                    </div>
                     <input
                         type="text"
                         className="text-xs outline-none"
                         name="chatReceiver"
                         id="chatReceiver"
                         placeholder="Search for users"
+                        onChange={handleUserSearch}
+                        onFocus={(e) =>
+                            e.target.parentElement?.children[0].classList.remove(
+                                'hidden'
+                            )
+                        }
                     />
                 </div>
             </div>
