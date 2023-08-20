@@ -3,9 +3,9 @@ import CreateEvent from './CreateEvent';
 import { useParams } from 'react-router-dom';
 import CreateAPost from '../CreateAPost/CreateAPost';
 import Post from '../Posts/Post';
-import { XMarkIcon, PlusCircleIcon } from '@heroicons/react/24/outline';
+import { XMarkIcon } from '@heroicons/react/24/outline';
 import { UserContext } from '../App/App';
-import { PlusIcon, MinusIcon } from '@heroicons/react/24/solid';
+import { PlusIcon, MinusIcon, CheckIcon } from '@heroicons/react/24/solid';
 
 interface iGroup {
     id: number;
@@ -172,7 +172,7 @@ export default function Group() {
                                             setRequestSent(false);
                                         }}
                                     >
-                                        <PlusCircleIcon className="w-6 h-6 shrink-0 my-auto" />
+                                        <CheckIcon className="w-4 h-4 stroke-1 stroke-black shrink-0 my-auto" />
                                         <p>Requested</p>
                                     </div>
                                 ) : (
@@ -180,7 +180,7 @@ export default function Group() {
                                         className="flex flex-row gap-1 shrink-0"
                                         onClick={sendJoinRequest}
                                     >
-                                        <PlusCircleIcon className="w-6 h-6 font-bold shrink-0 my-auto" />
+                                        <PlusIcon className="w-4 h-4 stroke-1 stroke-black  shrink-0 my-auto" />
                                         <p>Request</p>
                                     </div>
                                 )}
