@@ -223,7 +223,7 @@ export default function Post({ postInput, deletePost }: PostProps) {
                             />
                             <p>{post.dislikes}</p>
                         </button>
-                        <button className="flex gap-1">
+                        <button className="flex gap-1 cursor-default">
                             <ChatBubbleOvalLeftIcon className="w-5 h-5 my-auto" />
                             <p>
                                 {post.comments !== null
