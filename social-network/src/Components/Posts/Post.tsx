@@ -21,6 +21,7 @@ interface PostProps {
         user_nickname: string;
         user_avatar: string;
         group_id: number;
+        group_name: string;
         content: string;
         image: string;
         privacy: string;
@@ -167,7 +168,7 @@ export default function Post({ postInput, deletePost }: PostProps) {
                                             (window.location.href = `/group/${post.group_id}`)
                                         }
                                     >
-                                        {` in group ${post.group_id}`}
+                                        {` in ${post.group_name}`}
                                     </span>
                                 ) : null}
                             </h1>

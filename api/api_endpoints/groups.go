@@ -390,12 +390,12 @@ func RespondToGroupRequest(w http.ResponseWriter, r *http.Request) {
 			BadRequest(w, r, err.Error())
 			return
 		}
-		err = user.AddNotification(g.GroupOwner, "groupJoinAccept", fmt.Sprintf("Your request to join %s's group %s has been accepted", user.FName, g.GroupName), g.GroupID)
+		err = user.AddNotification(g.GroupOwner, "groupJoinAccept", fmt.Sprintf("has accepted you request to join %s", g.GroupName), g.GroupID)
 		if err != nil {
 			BadRequest(w, r, err.Error())
 			return
 		}
-		WSSendToUser(user.ID, fmt.Sprintf(`{"type": "groupJoinAccept", "message": "Your request to join %s's group %s has been accepted", "group_id": %d}`, user.FName, g.GroupName, g.GroupID))
+		WSSendToUser(user.ID, fmt.Sprintf(`{"type": "groupJoinAccept", "message": "Your request to join %s's group %s has been accepted", "group_id": %d}`, u.FName, g.GroupName, g.GroupID))
 	} else {
 		err = g.RemoveRequest(userID)
 		if err != nil {
@@ -408,12 +408,22 @@ func RespondToGroupRequest(w http.ResponseWriter, r *http.Request) {
 			BadRequest(w, r, err.Error())
 			return
 		}
-		err = user.AddNotification(g.GroupOwner, "groupJoinReject", fmt.Sprintf("Your request to join %s's group %s has been rejected", user.FName, g.GroupName), g.GroupID)
+		err = user.AddNotification(g.GroupOwner, "groupJoinReject", fmt.Sprintf("has denied your request to join %s", g.GroupName), g.GroupID)
 		if err != nil {
 			BadRequest(w, r, err.Error())
 			return
 		}
 		WSSendToUser(user.ID, fmt.Sprintf(`{"type": "groupJoinReject", "message": "Your request to join %s's group %s has been rejected", "group_id": %d}`, user.FName, g.GroupName, g.GroupID))
+	}
+	notification, err := s.FindNotification(u.ID, userID, "groupJoinReq")
+	if err != nil {
+		BadRequest(w, r, err.Error())
+		return
+	}
+	err = notification.ChangeType("groupJoin")
+	if err != nil {
+		BadRequest(w, r, err.Error())
+		return
 	}
 	w.WriteHeader(http.StatusOK)
 	okJSON, _ := json.Marshal(s.OKResponse{Message: "Request responded to successfully"})

@@ -12,6 +12,7 @@ interface IPost {
     user_nickname: string;
     user_avatar: Blob;
     group_id: number;
+    group_name: string;
     content: string;
     created_at: string;
     updated_at: string;

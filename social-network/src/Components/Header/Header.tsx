@@ -20,6 +20,7 @@ interface INotification {
     seen: boolean;
     fname: string;
     lname: string;
+    group_id: number;
 }
 
 export default function Header() {

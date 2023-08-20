@@ -10,6 +10,7 @@ interface INotificationProps {
         type: string;
         fname: string;
         lname: string;
+        group_id: number;
     };
     notificationsState: {
         notifications: {
@@ -21,6 +22,7 @@ interface INotificationProps {
             type: string;
             fname: string;
             lname: string;
+            group_id: number;
         }[];
         setNotifications: any;
     };
@@ -76,7 +78,7 @@ export default function HeaderNotification(props: INotificationProps) {
     async function groupJoinReqRespond(accept: boolean) {
         const url = `http://localhost:8080/api/groups/respond-group`;
         const FD = new FormData();
-        FD.append('group_id', notification.follower_id.toString());
+        FD.append('group_id', notification.group_id.toString());
         FD.append('user_id', notification.follower_id.toString());
         FD.append('response', accept.toString());
         const res = await fetch(url, {
