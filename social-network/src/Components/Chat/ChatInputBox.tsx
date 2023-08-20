@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { DocumentIcon } from '@heroicons/react/24/outline';
 import { PaperAirplaneIcon } from '@heroicons/react/24/solid';
 
 interface Props {
@@ -16,15 +15,7 @@ const ChatInputBox = ({ sendMessage, receiver }: Props) => {
     function handleFormInputChange(e: React.ChangeEvent<HTMLInputElement>) {
         setNewMessage(e.target.value);
     }
-    const handleFormImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (e.target.files?.length === 0) return;
-        const file = e.target.files?.[0];
-        const reader = new FileReader();
-        reader.onloadend = () => {
-            setImage(file as Blob);
-        };
-        reader.readAsDataURL(file as Blob);
-    };
+
     return (
         <div className=" shadow-[0px_-2px_4px_0px_#EDF2F7] bg-white w-100 rounded-b-lg w-64">
             <div className="flex flex-row items-center">

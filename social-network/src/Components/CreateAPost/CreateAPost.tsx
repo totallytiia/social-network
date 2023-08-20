@@ -30,7 +30,6 @@ export default function CreateAPost(props: any) {
     const { userData } = useContext(UserContext);
     const [userListVisible, setUserListVisible] = useState(false);
     const [selectedOption, setSelectedOption] = useState('0');
-    const [selectedInitialOption, setSelectedInitialOption] = useState('0');
 
     const [postData, setPostData] = useState({
         post: {
@@ -79,7 +78,7 @@ export default function CreateAPost(props: any) {
         document.getElementById('PostCheckIcon')?.classList.add('hidden');
 
         setUserListVisible(false);
-        setSelectedOption(selectedInitialOption);
+        setSelectedOption('0');
 
         if (response.status === 201) {
             const post = await response.json();

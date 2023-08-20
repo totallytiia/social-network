@@ -2,6 +2,7 @@ import { useContext, useEffect, useState } from 'react';
 import { ChatBubbleOvalLeftIcon } from '@heroicons/react/24/solid';
 import { XMarkIcon } from '@heroicons/react/24/outline';
 import { UserContext } from '../App/App';
+import ProfileIcon from '../Profile/ProfileIcon';
 
 interface IReceiver {
     id: number;
@@ -171,6 +172,8 @@ export default function ChatList({
         );
     }
 
+    console.log(lastChats);
+
     return (
         <div className="flex items-end">
             <div className="sticky bottom-0">
@@ -258,10 +261,16 @@ export default function ChatList({
                                                 }}
                                             >
                                                 <div className="CHAT_LIST__BODY__ITEM__AVATAR">
-                                                    <img
-                                                        src="https://picsum.photos/200"
-                                                        alt="avatar"
-                                                        className="w-5 h-5 rounded-full m-1"
+                                                    <ProfileIcon
+                                                        avatar={
+                                                            lastChat.receiver
+                                                                .avatar !== null
+                                                                ? lastChat
+                                                                      .receiver
+                                                                      .avatar
+                                                                : null
+                                                        }
+                                                        classNames="w-8 h-8 rounded-full"
                                                     />
                                                 </div>
                                                 <div className="CHAT_LIST__BODY__ITEM__CONTENT">

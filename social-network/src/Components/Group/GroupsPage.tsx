@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import GroupList from './GroupList';
 import CreateGroup from './CreateGroup';
-import { PlusCircleIcon, PlusIcon } from '@heroicons/react/24/solid';
+import { PlusCircleIcon } from '@heroicons/react/24/solid';
 
 export default function Groups() {
     const [createNewGroup, setCreateNewGroup] = useState(false);
