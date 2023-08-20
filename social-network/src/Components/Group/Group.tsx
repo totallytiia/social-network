@@ -114,19 +114,16 @@ export default function Group() {
             if (data.errors) {
                 console.log(data);
             }
-
-            // filter group members out from data
             const groupMembers = group.members?.map((member) =>
                 parseInt(Object.keys(member)[0])
             );
             const notInGroup = data.filter((user: any) => {
                 return !groupMembers?.includes(user.id);
             });
-
             setUserList(notInGroup);
         }
         getUsers();
-    }, []);
+    }, [group]);
 
     if (
         !group.members
