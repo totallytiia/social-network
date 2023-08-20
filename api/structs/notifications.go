@@ -24,7 +24,7 @@ type Notifications []Notification
 
 func (u *User) GetNotifications() (Notifications, error) {
 	var notifications Notifications
-	rows, err := db.DB.Query("SELECT n.*, u.fname, u.lname FROM notifications n INNER JOIN users u ON u.id = n.follow_id WHERE user_id = ?", u.ID)
+	rows, err := db.DB.Query("SELECT n.*, u.fname, u.lname FROM notifications n INNER JOIN users u ON u.id = n.follow_id WHERE user_id = ? ORDER BY n.id DESC", u.ID)
 	if err != nil {
 		fmt.Println(err)
 		return notifications, err
