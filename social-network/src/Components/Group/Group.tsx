@@ -101,6 +101,7 @@ export default function Group() {
                 return;
             }
         });
+        e.currentTarget.reset();
     }
 
     const deletePost = async (id: number) => {
@@ -166,12 +167,7 @@ export default function Group() {
                             </div>
                             <button className="flex shrink-0 text-lg font-semibold mx-auto mt-4 gap-1 bg-blue-200 py-2 pl-2 pr-4 rounded-full hover:bg-blue-300">
                                 {requestSent ? (
-                                    <div
-                                        className="flex flex-row gap-1 shrink-0"
-                                        onClick={() => {
-                                            setRequestSent(false);
-                                        }}
-                                    >
+                                    <div className="flex flex-row gap-1 shrink-0">
                                         <CheckIcon className="w-4 h-4 stroke-1 stroke-black shrink-0 my-auto" />
                                         <p>Requested</p>
                                     </div>
