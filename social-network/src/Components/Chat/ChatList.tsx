@@ -217,7 +217,11 @@ export default function ChatList({
                                                             };
                                                         if (
                                                             visibleChatsCopy.users !==
-                                                            undefined
+                                                                undefined &&
+                                                            !visibleChatsCopy.users.includes(
+                                                                lastChat
+                                                                    .receiver.id
+                                                            )
                                                         )
                                                             visibleChatsCopy.users.push(
                                                                 lastChat
@@ -239,7 +243,10 @@ export default function ChatList({
                                                             };
                                                         if (
                                                             visibleChatsCopy.groups !==
-                                                            undefined
+                                                                undefined &&
+                                                            !visibleChatsCopy.groups.includes(
+                                                                lastChat.group
+                                                            )
                                                         )
                                                             visibleChatsCopy.groups.push(
                                                                 lastChat.group
