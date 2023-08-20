@@ -119,23 +119,20 @@ export default function Chat({
         getChat();
     }, [id, type]);
 
-    // eventlistener that looks for ws  chat messages
     useEffect(() => {
         ws.addEventListener('message', (e) => {
             const data = JSON.parse(e.data);
             if (data.type === 'chat') {
-                if (data.receiver_id === id) {
-                    var chatCopy = { ...chat };
-                    chatCopy.Messages.push({
-                        id: data.id,
-                        content: data.message,
-                        image: data.image,
-                        sender: data.user_id,
-                        receiver: data.receiver_id,
-                        timestamp: data.sent_at,
-                    });
-                    setChat(chatCopy);
-                }
+                var chatCopy = { ...chat };
+                chatCopy.Messages.push({
+                    id: data.message.id,
+                    content: data.message.message,
+                    image: data.message.image,
+                    sender: data.message.user_id,
+                    receiver: data.message.receiver_id,
+                    timestamp: data.message.sent_at,
+                });
+                setChat(chatCopy);
             }
         });
     }, [ws, id, chat]);
