@@ -61,9 +61,10 @@ export default function ChatList({
                 'hover:bg-gray-200'
             );
             li.innerHTML = `
-                <img src="${user.avatar !== null
-                    ? user.avatar
-                    : '/assets/tinydefault_profile.png'
+                <img src="${
+                    user.avatar !== null
+                        ? user.avatar
+                        : '/assets/tinydefault_profile.png'
                 }" alt="avatar" class="w-6 h-6 rounded-full object-cover mr-2">
                 <span class="text-sm">${user.fname} ${user.lname}</span>
             `;
@@ -110,13 +111,12 @@ export default function ChatList({
                         lname: message.receiver_lname,
                         avatar:
                             message.receiver_avatar !== ''
-                                ? new Blob(message.receiver_avatar)
+                                ? message.receiver_avatar
                                 : null,
                     },
                     group: message.group_id,
                     message: message.message,
-                    image:
-                        message.image !== '' ? new Blob(message.image) : null,
+                    image: message.image !== '' ? message.image : null,
                     sent_at: new Date(message.sent_at),
                 });
             }
@@ -157,7 +157,10 @@ export default function ChatList({
 
     if (!chatVisible) {
         return (
-            <button onClick={() => setChatVisible(true)} className='flex items-end'>
+            <button
+                onClick={() => setChatVisible(true)}
+                className="flex items-end"
+            >
                 <ChatBubbleOvalLeftIcon className="fill-white w-10 h-10 m-2 bg-blue-500 rounded-full shadow p-2" />
                 {/* {numUnseenMessages > 0 ? (
                     <div className="flex absolute right-2 -bottom-3 bg-red-500 text-white rounded-full w-5 h-5 items-center justify-center text-xs">
@@ -170,7 +173,7 @@ export default function ChatList({
 
     return (
         <div className="flex items-end">
-            <div className='sticky bottom-0'>
+            <div className="sticky bottom-0">
                 <div className="CLOSE_CHAT flex flex-row justify-end items-center p-0.5">
                     <button
                         type="button"
@@ -208,29 +211,32 @@ export default function ChatList({
                                                         lastChat.receiver.id !==
                                                         null
                                                     ) {
-                                                        const visibleChatsCopy = {
-                                                            ...visibleChats,
-                                                        };
+                                                        const visibleChatsCopy =
+                                                            {
+                                                                ...visibleChats,
+                                                            };
                                                         if (
                                                             visibleChatsCopy.users !==
                                                             undefined
                                                         )
                                                             visibleChatsCopy.users.push(
-                                                                lastChat.receiver
+                                                                lastChat
+                                                                    .receiver
                                                                     .id ===
                                                                     userData.id
                                                                     ? lastChat.sender
                                                                     : lastChat
-                                                                        .receiver
-                                                                        .id
+                                                                          .receiver
+                                                                          .id
                                                             );
                                                         setVisibleChats(
                                                             visibleChatsCopy
                                                         );
                                                     } else {
-                                                        const visibleChatsCopy = {
-                                                            ...visibleChats,
-                                                        };
+                                                        const visibleChatsCopy =
+                                                            {
+                                                                ...visibleChats,
+                                                            };
                                                         if (
                                                             visibleChatsCopy.groups !==
                                                             undefined
@@ -257,11 +263,12 @@ export default function ChatList({
                                                     </div>
                                                     <div className="CHAT_LIST__BODY__ITEM__CONTENT__MESSAGE">
                                                         <p>
-                                                            <span className="text-sm">{`${lastChat.sender ===
+                                                            <span className="text-sm">{`${
+                                                                lastChat.sender ===
                                                                 userData.id
-                                                                ? 'You: '
-                                                                : 'Them: '
-                                                                }`}</span>
+                                                                    ? 'You: '
+                                                                    : 'Them: '
+                                                            }`}</span>
                                                             {lastChat.message}
                                                         </p>
                                                     </div>
