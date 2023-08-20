@@ -395,12 +395,12 @@ export default function User() {
                                         <div className="flex justify-between">
                                             <div className="flex">
                                                 <div className="h-8 w-8 relative overflow-hidden rounded-full bg-pink-200">
-                                                    <img
-                                                        className="border-none outline-none object-cover object-center h-8 w-8"
-                                                        src={post.user_avatar}
-                                                        alt=""
+                                                    <ProfileIcon
+                                                        avatar={
+                                                            post.user_avatar
+                                                        }
+                                                        classNames="h-10 w-10"
                                                     />
-                                                    <ProfileIcon classNames="w-10 h-10" />
                                                 </div>
                                                 <div className="ml-2">
                                                     <h1 className="text-sm font-bold">
