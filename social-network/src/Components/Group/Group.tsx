@@ -18,6 +18,12 @@ interface iGroup {
     events: any[];
 }
 
+interface iUsers {
+    id: number;
+    fName: string;
+    lName: string;
+}
+
 export default function Group() {
     const { userData } = useContext(UserContext);
     const [requestSent, setRequestSent] = useState(false);
@@ -94,6 +100,33 @@ export default function Group() {
             return { ...current, posts: newPosts };
         });
     };
+
+    const [userListVisibility, setUserListVisibility] = useState(false);
+    const [userList, setUserList] = useState([] as iUsers[]);
+    useEffect(() => {
+        async function getUsers() {
+            const url = `http://localhost:8080/api/users/getall`;
+            const res = await fetch(url, {
+                method: 'GET',
+                credentials: 'include',
+            });
+            const data = await res.json();
+            if (data.errors) {
+                console.log(data);
+            }
+
+            // filter group members out from data
+            const groupMembers = group.members?.map((member) =>
+                parseInt(Object.keys(member)[0])
+            );
+            const notInGroup = data.filter((user: any) => {
+                return !groupMembers?.includes(user.id);
+            });
+
+            setUserList(notInGroup);
+        }
+        getUsers();
+    }, []);
 
     if (
         !group.members
@@ -303,6 +336,46 @@ export default function Group() {
                                     />
                                 </div>
                             )}
+                        </div>
+                        {/* invite users */}
+                        <div className="INVITE shrink-0 flex mt-2 mx-auto lg:mx-0 bg-white rounded-lg shadow-lg">
+                            <form action="" className="flex flex-col">
+                                <div className="flex p-2  gap-1 bg-blue-500 text-white rounded-t-lg">
+                                    <PlusIcon className="w-4 h-4 my-auto stroke-2 stroke-white my-auto" />
+                                    <h2 className="font-bold text-center text-sm mb">
+                                        Invite users
+                                    </h2>
+                                </div>
+
+                                <div className="USER_POPUP  overflow-scroll shadow-md max-h-60">
+                                    {userList.map((user: any) => {
+                                        return (
+                                            <div
+                                                className="p-2 flex flex-row gap-1"
+                                                key={`userGroupOption-${user.id}`}
+                                            >
+                                                <input
+                                                    type="checkbox"
+                                                    name="user"
+                                                    value={user.id}
+                                                    className="my-auto"
+                                                />
+                                                <label
+                                                    htmlFor="user"
+                                                    className="my-auto"
+                                                >
+                                                    {user.fName} {user.lName}
+                                                </label>
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                                <input
+                                    type="submit"
+                                    value="Invite"
+                                    className="text-white font-bold bg-blue-500 rounded-t-none"
+                                />
+                            </form>
                         </div>
                     </div>
                 </div>
