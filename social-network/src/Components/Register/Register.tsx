@@ -1,5 +1,6 @@
 import { PlusIcon } from '@heroicons/react/24/solid';
 import { useState } from 'react';
+import Notification from '../Notification/Notification';
 
 interface iFormKeys {
     [key: string]: {
@@ -46,13 +47,12 @@ export default function Register() {
         const form =
             e.target.parentElement?.tagName !== 'DIV'
                 ? (e.target.parentElement?.attributes.getNamedItem('name')
-                    ?.value as string)
+                      ?.value as string)
                 : (e.target.parentElement?.parentElement?.attributes.getNamedItem(
-                    'name'
-                )?.value as string);
+                      'name'
+                  )?.value as string);
         const target = e.target;
         var value = target.value;
-        console.log(e.target.parentElement?.tagName);
         // VALIDATE VALUE, WHAT TARGET IS, ETC
         switch (target.name) {
             case 'fName':
@@ -136,6 +136,9 @@ export default function Register() {
                 document
                     .getElementById('emailErrorMsg')!
                     .classList.add('hidden');
+                document
+                    .getElementById('errorMsgRegister')!
+                    .classList.add('hidden');
                 break;
             case 'dob':
                 const today: Date = new Date();
@@ -144,8 +147,8 @@ export default function Register() {
                     today.getFullYear() -
                     birthdate.getFullYear() -
                     (today.getMonth() < birthdate.getMonth() ||
-                        (today.getMonth() === birthdate.getMonth() &&
-                            today.getDate() < birthdate.getDate())
+                    (today.getMonth() === birthdate.getMonth() &&
+                        today.getDate() < birthdate.getDate())
                         ? 1
                         : 0);
                 if (age < 18) {
@@ -295,6 +298,9 @@ export default function Register() {
             window.location.href = '/login';
             // show home page
         }
+        document.getElementById('errorMsgRegister')!.classList.remove('hidden');
+        document.getElementById('errorMsgRegister')!.innerHTML =
+            'Email already taken.';
     };
 
     return (
@@ -377,6 +383,10 @@ export default function Register() {
                         >
                             Not valid email.
                         </p>
+                        <p
+                            id="errorMsgRegister"
+                            className="hidden text-xs !mt-1 ml-2 mb-1"
+                        ></p>
                         <input
                             type="text"
                             placeholder="Nickname (optional)"

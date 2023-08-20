@@ -146,11 +146,10 @@ export default function Post({ postInput, deletePost }: PostProps) {
                             className="cursor-pointer h-8 w-8 relative overflow-hidden rounded-full bg-pink-200"
                         >
                             <img
-                                className="border-none outline-none"
+                                className="border-none outline-none object-cover h-full w-full"
                                 src={post.user_avatar}
                                 alt=""
                             />
-                            <ProfileIcon classNames="w-10 h-10" />
                         </div>
                         <div className="ml-2">
                             <h1
