@@ -515,7 +515,7 @@ func InviteToGroup(w http.ResponseWriter, r *http.Request) {
 		BadRequest(w, r, err.Error())
 		return
 	}
-	err = user.AddNotification(g.GroupOwner, "groupInvite", fmt.Sprintf("%s %s has invited you to join their group %s", u.FName, u.LName, g.GroupName), g.GroupID)
+	err = user.AddNotification(g.GroupOwner, "groupInvite", fmt.Sprintf(" has invited you to join their group %s", g.GroupName), g.GroupID)
 	if err != nil {
 		BadRequest(w, r, err.Error())
 		return
@@ -573,7 +573,7 @@ func RespondToInvite(w http.ResponseWriter, r *http.Request) {
 			BadRequest(w, r, err.Error())
 			return
 		}
-		err = user.AddNotification(u.ID, "groupInviteAccept", fmt.Sprintf("%s %s has accepted your invitation to join your group %s", u.FName, u.LName, g.GroupName), g.GroupID)
+		err = user.AddNotification(u.ID, "groupInviteAccept", fmt.Sprintf("accepted your invitation to join your group %s", g.GroupName), g.GroupID)
 		if err != nil {
 			BadRequest(w, r, err.Error())
 			return
@@ -591,12 +591,22 @@ func RespondToInvite(w http.ResponseWriter, r *http.Request) {
 			BadRequest(w, r, err.Error())
 			return
 		}
-		err = user.AddNotification(u.ID, "groupInviteDecline", fmt.Sprintf("%s %s has declined your invitation to join your group %s", u.FName, u.LName, g.GroupName), g.GroupID)
+		err = user.AddNotification(u.ID, "groupInviteDecline", fmt.Sprintf("has declined your invitation to join your group %s", g.GroupName), g.GroupID)
 		if err != nil {
 			BadRequest(w, r, err.Error())
 			return
 		}
 		WSSendToUser(user.ID, fmt.Sprintf(`{"type": "groupInviteDecline", "message": "%s %s has declined your invitation to join your group %s", "group_id": %d}`, u.FName, u.LName, g.GroupName, g.GroupID))
+	}
+	notification, err := s.FindNotification(u.ID, g.GroupOwner, "groupInvite")
+	if err != nil {
+		BadRequest(w, r, err.Error())
+		return
+	}
+	err = notification.ChangeType("groupInviteResponded")
+	if err != nil {
+		BadRequest(w, r, err.Error())
+		return
 	}
 	w.WriteHeader(http.StatusOK)
 	okJSON, _ := json.Marshal(s.OKResponse{Message: "Responded to invite successfully"})
