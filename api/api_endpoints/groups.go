@@ -490,10 +490,6 @@ func InviteToGroup(w http.ResponseWriter, r *http.Request) {
 		BadRequest(w, r, err.Error())
 		return
 	}
-	if g.GroupOwner != u.ID {
-		http.Error(w, "Unauthorized", http.StatusUnauthorized)
-		return
-	}
 	userID, err := strconv.Atoi(r.FormValue("user_id"))
 	if err != nil {
 		BadRequest(w, r, err.Error())
