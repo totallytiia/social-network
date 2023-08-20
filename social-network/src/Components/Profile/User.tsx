@@ -182,7 +182,11 @@ export default function User() {
                 <div className="p-10 shadow-xl flex flex-col items-center bg-white max-w-7xl rounded-xl mx-auto">
                     <div className="grid grid-cols-1 items-center justify-between md:grid-cols-3 ">
                         <div className="grid grid-cols-2 text-center order-last md:order-first mt-7 md:mt-0">
-                            <div>
+                            <div
+                                onClick={() =>
+                                    setFollowersVisible(!followersVisible)
+                                }
+                            >
                                 {followersVisible ? (
                                     <ul>
                                         {user.followers !== undefined &&
@@ -192,17 +196,13 @@ export default function User() {
                                                     key={u.id}
                                                     className="flex items-center justify-between"
                                                 >
-                                                    <Link to={`/users/${u.id}`}>
+                                                    <Link to={`/user/${u.id}`}>
                                                         <div className="flex items-center">
-                                                            <img
-                                                                src={
-                                                                    u.avatar !==
-                                                                    undefined
-                                                                        ? u.avatar.toString()
-                                                                        : ''
+                                                            <ProfileIcon
+                                                                avatar={
+                                                                    u.avatar
                                                                 }
-                                                                className="w-10 h-10 rounded-full"
-                                                                alt="avatar"
+                                                                classNames="w-10 h-10 rounded-full"
                                                             />
                                                             <p className="ml-2">
                                                                 {u.nickname}
@@ -230,13 +230,53 @@ export default function User() {
                                     </>
                                 )}
                             </div>
-                            <div>
-                                <p className="font-bold text-gray-700 text-xl">
-                                    {user.follows !== undefined
-                                        ? user.follows.length
-                                        : 0}
-                                </p>
-                                <p className="text-gray-400">Following</p>
+                            <div
+                                onClick={() =>
+                                    setFollowsVisible(!followsVisible)
+                                }
+                            >
+                                {followsVisible ? (
+                                    <ul>
+                                        {user.follows !== undefined &&
+                                        user.follows.length > 0 ? (
+                                            user.follows.map((u: IUser) => (
+                                                <li
+                                                    key={u.id}
+                                                    className="flex items-center justify-between"
+                                                >
+                                                    <Link to={`/user/${u.id}`}>
+                                                        <div className="flex items-center">
+                                                            <ProfileIcon
+                                                                avatar={
+                                                                    u.avatar
+                                                                }
+                                                                classNames="w-10 h-10 rounded-full"
+                                                            />
+                                                            <p className="ml-2">
+                                                                {u.nickname}
+                                                            </p>
+                                                        </div>
+                                                    </Link>
+                                                </li>
+                                            ))
+                                        ) : (
+                                            <li className="text-center">
+                                                No follows
+                                            </li>
+                                        )}
+                                    </ul>
+                                ) : (
+                                    <>
+                                        <p className="font-bold text-gray-700 text-xl">
+                                            {user.follows !== undefined
+                                                ? user.follows.length
+                                                : 0}
+                                        </p>
+                                        <p className="text-gray-400 pr-2">
+                                            Follows
+                                        </p>
+                                    </>
+                                )}
                             </div>
                         </div>
                         <div className="relative w-48 mx-auto">
