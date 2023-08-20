@@ -182,61 +182,115 @@ export default function User() {
                 <div className="p-10 shadow-xl flex flex-col items-center bg-white max-w-7xl rounded-xl mx-auto">
                     <div className="grid grid-cols-1 items-center justify-between md:grid-cols-3 ">
                         <div className="grid grid-cols-2 text-center order-last md:order-first mt-7 md:mt-0">
-                            <div>
-                                {followersVisible ? (
-                                    <ul>
-                                        {user.followers !== undefined &&
-                                        user.followers.length > 0 ? (
-                                            user.followers.map((u: IUser) => (
-                                                <li
-                                                    key={u.id}
-                                                    className="flex items-center justify-between"
-                                                >
-                                                    <Link to={`/users/${u.id}`}>
-                                                        <div className="flex items-center">
-                                                            <img
-                                                                src={
-                                                                    u.avatar !==
-                                                                    undefined
-                                                                        ? u.avatar.toString()
-                                                                        : ''
-                                                                }
-                                                                className="w-10 h-10 rounded-full"
-                                                                alt="avatar"
-                                                            />
-                                                            <p className="ml-2">
-                                                                {u.nickname}
-                                                            </p>
-                                                        </div>
-                                                    </Link>
+                            <div
+                                onClick={() =>
+                                    setFollowersVisible(!followersVisible)
+                                }
+                            >
+                                {
+                                    // TODO: Tiia style
+                                    followersVisible ? (
+                                        <ul>
+                                            {user.followers !== undefined &&
+                                            user.followers.length > 0 ? (
+                                                user.followers.map(
+                                                    (u: IUser) => (
+                                                        <li
+                                                            key={u.id}
+                                                            className="flex items-center justify-between"
+                                                        >
+                                                            <Link
+                                                                to={`/user/${u.id}`}
+                                                            >
+                                                                <div className="flex items-center">
+                                                                    <ProfileIcon
+                                                                        avatar={
+                                                                            u.avatar
+                                                                        }
+                                                                        classNames="w-10 h-10 rounded-full"
+                                                                    />
+                                                                    <p className="ml-2">
+                                                                        {
+                                                                            u.nickname
+                                                                        }
+                                                                    </p>
+                                                                </div>
+                                                            </Link>
+                                                        </li>
+                                                    )
+                                                )
+                                            ) : (
+                                                <li className="text-center">
+                                                    No followers
                                                 </li>
-                                            ))
-                                        ) : (
-                                            <li className="text-center">
-                                                No followers
-                                            </li>
-                                        )}
-                                    </ul>
-                                ) : (
-                                    <>
-                                        <p className="font-bold text-gray-700 text-xl">
-                                            {user.followers !== undefined
-                                                ? user.followers.length
-                                                : 0}
-                                        </p>
-                                        <p className="text-gray-400 pr-2">
-                                            Followers
-                                        </p>
-                                    </>
-                                )}
+                                            )}
+                                        </ul>
+                                    ) : (
+                                        <>
+                                            <p className="font-bold text-gray-700 text-xl">
+                                                {user.followers !== undefined
+                                                    ? user.followers.length
+                                                    : 0}
+                                            </p>
+                                            <p className="text-gray-400 pr-2">
+                                                Followers
+                                            </p>
+                                        </>
+                                    )
+                                }
                             </div>
-                            <div>
-                                <p className="font-bold text-gray-700 text-xl">
-                                    {user.follows !== undefined
-                                        ? user.follows.length
-                                        : 0}
-                                </p>
-                                <p className="text-gray-400">Following</p>
+                            <div
+                                onClick={() =>
+                                    setFollowsVisible(!followsVisible)
+                                }
+                            >
+                                {
+                                    // TODO: Tiia style
+                                    followsVisible ? (
+                                        <ul>
+                                            {user.follows !== undefined &&
+                                            user.follows.length > 0 ? (
+                                                user.follows.map((u: IUser) => (
+                                                    <li
+                                                        key={u.id}
+                                                        className="flex items-center justify-between"
+                                                    >
+                                                        <Link
+                                                            to={`/user/${u.id}`}
+                                                        >
+                                                            <div className="flex items-center">
+                                                                <ProfileIcon
+                                                                    avatar={
+                                                                        u.avatar
+                                                                    }
+                                                                    classNames="w-10 h-10 rounded-full"
+                                                                />
+                                                                <p className="ml-2">
+                                                                    {u.nickname}
+                                                                </p>
+                                                            </div>
+                                                        </Link>
+                                                    </li>
+                                                ))
+                                            ) : (
+                                                <li className="text-center">
+                                                    No follows
+                                                </li>
+                                            )}
+                                        </ul>
+                                    ) : (
+                                        <>
+                                            <p className="font-bold text-gray-700 text-xl">
+                                                {user.follows !== undefined
+                                                    ? user.follows.length
+                                                    : 0}
+                                            </p>
+                                            <p className="text-gray-400 pr-2">
+                                                Follows
+                                            </p>
+                                        </>
+                                    )
+                                }
                             </div>
                         </div>
                         <div className="relative w-48 mx-auto">
