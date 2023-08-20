@@ -31,7 +31,7 @@ func (r *Reaction) Validate() error {
 			return errors.New("invalid post id")
 		}
 		r.PostID = p.ID
-		err := p.Get(0)
+		err := p.Get()
 		if err != nil {
 			return errors.New("post does not exist")
 		}

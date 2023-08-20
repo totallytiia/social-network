@@ -64,7 +64,7 @@ func AddReaction(w http.ResponseWriter, r *http.Request) {
 	if reaction.PostID != "" {
 		var p s.Post
 		p.ID = reaction.PostID.(int)
-		p.Get(u.ID)
+		p.Get()
 		var postOwner = s.User{ID: p.UserID}
 		postOwner.Get(nil)
 		err = postOwner.AddNotification(u.ID, "reaction", "reacted on your post", nil)

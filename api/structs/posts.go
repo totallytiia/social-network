@@ -20,24 +20,24 @@ type NewPost struct {
 }
 
 type Post struct {
-	ID              int       `json:"id"`
-	UserID          int       `json:"user_id"`
-	UserFName       string    `json:"user_fname"`
-	UserLName       string    `json:"user_lname"`
-	UserNickname    string    `json:"user_nickname"`
-	UserAvatar      string    `json:"user_avatar"`
-	GroupID         int       `json:"group_id"`
-	GroupName       string    `json:"group_name"`
-	Content         string    `json:"content"`
-	Image           string    `json:"image"`
-	Privacy         int       `json:"privacy"`
-	PrivacySettings string    `json:"privacy_settings"`
-	CreatedAt       string    `json:"created_at"`
-	UpdatedAt       string    `json:"updated_at"`
-	Comments        []Comment `json:"comments"`
-	Likes           int       `json:"likes"`
-	Dislikes        int       `json:"dislikes"`
-	Liked           int       `json:"liked"`
+	ID              int         `json:"id"`
+	UserID          int         `json:"user_id"`
+	UserFName       string      `json:"user_fname"`
+	UserLName       string      `json:"user_lname"`
+	UserNickname    string      `json:"user_nickname"`
+	UserAvatar      string      `json:"user_avatar"`
+	GroupID         int         `json:"group_id"`
+	GroupName       interface{} `json:"group_name"`
+	Content         string      `json:"content"`
+	Image           string      `json:"image"`
+	Privacy         int         `json:"privacy"`
+	PrivacySettings string      `json:"privacy_settings"`
+	CreatedAt       string      `json:"created_at"`
+	UpdatedAt       string      `json:"updated_at"`
+	Comments        []Comment   `json:"comments"`
+	Likes           int         `json:"likes"`
+	Dislikes        int         `json:"dislikes"`
+	Liked           int         `json:"liked"`
 }
 
 type Posts []Post
@@ -79,7 +79,7 @@ func (p *NewPost) Create() (Post, error) {
 	var id, _ = res.LastInsertId()
 	var post Post
 	post.ID = int(id)
-	post.Get(p.UserID)
+	post.Get()
 	return post, nil
 }
 
@@ -91,9 +91,8 @@ func (p *Post) Update() error {
 	return nil
 }
 
-func (p *Post) Get(userFetching int) error {
-	var err = db.DB.QueryRow(`
-	WITH const(ufetching)  AS (SELECT ?)
+func (p *Post) Get() error {
+	var row = db.DB.QueryRow(`
 	SELECT p.user_id, u.fname, u.nickname, u.lname, u.avatar, p.group_id, p.content, p.image, p.privacy, p.privacy_settings, p.created_at, p.updated_at, 
 	(SELECT g.group_name FROM groups g WHERE g.id = p.group_id) AS group_name,
 	(SELECT COUNT(*) FROM reactions r WHERE r.post_id = p.id AND r.value = 1) AS likes, 
@@ -101,9 +100,9 @@ func (p *Post) Get(userFetching int) error {
 	IIF((SELECT value FROM reactions r WHERE p.id = r.post_id) NOT NULL, (SELECT value FROM reactions r WHERE p.id = r.post_id), 0) AS liked 
 	FROM posts p 
 	INNER JOIN users u ON p.user_id = u.id
-	CROSS JOIN const 
 	WHERE p.id = ?
-	`, userFetching, p.ID).Scan(&p.UserID, &p.UserFName, &p.UserNickname, &p.UserLName, &p.UserAvatar, &p.GroupID, &p.Content, &p.Image, &p.Privacy, &p.PrivacySettings, &p.CreatedAt, &p.UpdatedAt, &p.GroupName, &p.Likes, &p.Dislikes, &p.Liked)
+	`, p.ID)
+	err := row.Scan(&p.UserID, &p.UserFName, &p.UserNickname, &p.UserLName, &p.UserAvatar, &p.GroupID, &p.Content, &p.Image, &p.Privacy, &p.PrivacySettings, &p.CreatedAt, &p.UpdatedAt, &p.GroupName, &p.Likes, &p.Dislikes, &p.Liked)
 	if err != nil {
 		return err
 	}

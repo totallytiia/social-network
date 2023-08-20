@@ -1,5 +1,5 @@
 import { useEffect, useState, useContext, useCallback } from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import ProfileIcon from './ProfileIcon';
 import { UserContext } from '../App/App';
 import {
@@ -22,8 +22,8 @@ interface IUser {
     dateOfBirth: string;
     private: boolean;
     followed: boolean;
-    followers: number[];
-    follows: number[];
+    followers: IUser[];
+    follows: IUser[];
     followReq?: boolean;
 }
 
@@ -46,6 +46,8 @@ export default function User() {
     const [user, setUser] = useState({} as IUser);
     const [posts, setPosts] = useState([] as IPost[]);
     const [privacy, setPrivacy] = useState(user.private);
+    const [followersVisible, setFollowersVisible] = useState(false);
+    const [followsVisible, setFollowsVisible] = useState(false);
     const { id } = useParams();
     const { userData } = useContext(UserContext);
     const getUser = useCallback(async () => {
@@ -59,6 +61,7 @@ export default function User() {
             return;
         }
         const data = await res.json();
+        const users = await getUsers();
         const user = {
             id: data.id,
             fName: data.fName,
@@ -69,14 +72,12 @@ export default function User() {
             email: data.email,
             dateOfBirth: data.dateOfBirth,
             private: data.private,
-            followers: (data.followers as string)
-                .split(',')
-                .map(Number)
-                .filter((id) => id !== 0),
-            follows: (data.follows as string)
-                .split(',')
-                .map(Number)
-                .filter((id) => id !== 0),
+            followers: users.filter((u: IUser) =>
+                data.followers.split(',').includes(u.id.toString())
+            ) as IUser[],
+            follows: users.filter((u: IUser) =>
+                data.follows.split(',').includes(u.id.toString())
+            ) as IUser[],
             followed: (data.followers as string)
                 .split(',')
                 .map(Number)
@@ -86,6 +87,19 @@ export default function User() {
         setUser(user);
         setPrivacy(user.private);
     }, [id, userData.id]);
+
+    async function getUsers() {
+        const url = `http://localhost:8080/api/users/getall`;
+        const res = await fetch(url, {
+            method: 'GET',
+            credentials: 'include',
+        });
+        const data = await res.json();
+        if (data.errors) {
+            return;
+        }
+        return data;
+    }
 
     useEffect(() => {
         async function getPosts() {
@@ -169,12 +183,52 @@ export default function User() {
                     <div className="grid grid-cols-1 items-center justify-between md:grid-cols-3 ">
                         <div className="grid grid-cols-2 text-center order-last md:order-first mt-7 md:mt-0">
                             <div>
-                                <p className="font-bold text-gray-700 text-xl">
-                                    {user.followers !== undefined
-                                        ? user.followers.length
-                                        : 0}
-                                </p>
-                                <p className="text-gray-400 pr-2">Followers</p>
+                                {followersVisible ? (
+                                    <ul>
+                                        {user.followers !== undefined &&
+                                        user.followers.length > 0 ? (
+                                            user.followers.map((u: IUser) => (
+                                                <li
+                                                    key={u.id}
+                                                    className="flex items-center justify-between"
+                                                >
+                                                    <Link to={`/users/${u.id}`}>
+                                                        <div className="flex items-center">
+                                                            <img
+                                                                src={
+                                                                    u.avatar !==
+                                                                    undefined
+                                                                        ? u.avatar.toString()
+                                                                        : ''
+                                                                }
+                                                                className="w-10 h-10 rounded-full"
+                                                                alt="avatar"
+                                                            />
+                                                            <p className="ml-2">
+                                                                {u.nickname}
+                                                            </p>
+                                                        </div>
+                                                    </Link>
+                                                </li>
+                                            ))
+                                        ) : (
+                                            <li className="text-center">
+                                                No followers
+                                            </li>
+                                        )}
+                                    </ul>
+                                ) : (
+                                    <>
+                                        <p className="font-bold text-gray-700 text-xl">
+                                            {user.followers !== undefined
+                                                ? user.followers.length
+                                                : 0}
+                                        </p>
+                                        <p className="text-gray-400 pr-2">
+                                            Followers
+                                        </p>
+                                    </>
+                                )}
                             </div>
                             <div>
                                 <p className="font-bold text-gray-700 text-xl">
@@ -261,7 +315,9 @@ export default function User() {
                         </h1>
                         {user.followers !== undefined ? (
                             user.id === userData.id ||
-                            user.followers.includes(userData.id) ? (
+                            user.followers
+                                .map((user) => user.id)
+                                .includes(userData.id) ? (
                                 <>
                                     <p className="text-gray-600 mt-3">
                                         {user.about}

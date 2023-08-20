@@ -82,7 +82,7 @@ func DeletePost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	post.ID = postID
-	err = post.Get(0)
+	err = post.Get()
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		badReqJSON, _ := json.Marshal(s.ErrorResponse{Errors: "There was an error deleting the post", Details: err.Error()})
@@ -129,7 +129,7 @@ func UpdatePost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	post.ID = postID
-	err = post.Get(0)
+	err = post.Get()
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		badReqJSON, _ := json.Marshal(s.ErrorResponse{Errors: "There was an error updating the post", Details: err.Error()})
@@ -169,7 +169,7 @@ func GetPosts(w http.ResponseWriter, r *http.Request) {
 	postID, err := strconv.Atoi(r.FormValue("post_id"))
 	if err == nil {
 		post.ID = postID
-		err = post.Get(u.ID)
+		err = post.Get()
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			badReqJSON, _ := json.Marshal(s.ErrorResponse{Errors: "There was an error getting the post", Details: err.Error()})
