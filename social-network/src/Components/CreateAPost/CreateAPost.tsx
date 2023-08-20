@@ -30,6 +30,7 @@ export default function CreateAPost(props: any) {
     const { userData } = useContext(UserContext);
     const [userListVisible, setUserListVisible] = useState(false);
     const [selectedOption, setSelectedOption] = useState('0');
+    const [selectedInitialOption, setSelectedInitialOption] = useState('0');
 
     const [postData, setPostData] = useState({
         post: {
@@ -78,7 +79,7 @@ export default function CreateAPost(props: any) {
         document.getElementById('PostCheckIcon')?.classList.add('hidden');
 
         setUserListVisible(false);
-        setSelectedOption('0');
+        setSelectedOption(selectedInitialOption);
 
         if (response.status === 201) {
             const post = await response.json();
@@ -144,16 +145,18 @@ export default function CreateAPost(props: any) {
                 className="flex flex-col [&>input]:mb-2 [&>textarea]:mb-2 [&>*]:outline-none"
             >
                 <div className="flex-row flex gap-2">
-                    <div className="shrink-0 h-8 w-8 relative overflow-hidden object-cover rounded-full bg-pink-200">
-                        {userData.avatar !== undefined &&
-                        userData.avatar.toString() !== '' ? (
+                    <div className="shrink-0 h-8 w-8 overflow-hidden object-cover rounded-full bg-pink-200">
+                        {userData.avatar.toString() !== '' ? (
                             <img
-                                className="border-none rounded-full w-8 h-8 object-cover outline-none"
+                                className="border-none rounded-full w-8 h-8 object-cover object-center"
                                 src={userData.avatar.toString()}
                                 alt=""
                             />
                         ) : (
-                            <ProfileIcon classNames="w-10 h-10" />
+                            <ProfileIcon
+                                avatar={userData.avatar}
+                                classNames="w-8 h-8 rounded-full object-cover"
+                            />
                         )}
                     </div>
                     <div className="w-full">

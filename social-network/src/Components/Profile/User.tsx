@@ -188,7 +188,7 @@ export default function User() {
                         <div className="relative w-48 mx-auto">
                             <div className="w-48 h-48 bg-indigo-100 mx-auto rounded-full shadow-2xl flex items-center justify-center">
                                 {user.avatar !== undefined &&
-                                    user.avatar.toString() !== '' ? (
+                                user.avatar.toString() !== '' ? (
                                     <img
                                         className="border-none rounded-full w-48 h-48 object-cover outline-none"
                                         src={user.avatar.toString()}
@@ -209,15 +209,16 @@ export default function User() {
                             </div>
                             <label className="my-auto relative items-center cursor-pointer">
                                 <div
-                                    className={`flex flex-row ${user.id !== userData.id ? 'hidden' : ''
-                                        }`}
+                                    className={`flex flex-row ${
+                                        user.id !== userData.id ? 'hidden' : ''
+                                    }`}
                                 >
                                     <input
                                         type="checkbox"
                                         value=""
                                         className="sr-only peer"
                                         checked={!!privacy}
-                                        onChange={() => { }}
+                                        onChange={() => {}}
                                     ></input>
                                     <div
                                         onClick={() => {
@@ -231,14 +232,15 @@ export default function User() {
                                 </div>
                             </label>
                             <button
-                                className={`FOLLOW ${user.id === userData.id ? 'hidden' : ''
-                                    }`}
+                                className={`FOLLOW ${
+                                    user.id === userData.id ? 'hidden' : ''
+                                }`}
                                 onClick={
                                     user.followReq
                                         ? undefined
                                         : user.followed
-                                            ? unfollowUser
-                                            : followUser
+                                        ? unfollowUser
+                                        : followUser
                                 }
                             >
                                 {user.followed ? (
@@ -259,7 +261,7 @@ export default function User() {
                         </h1>
                         {user.followers !== undefined ? (
                             user.id === userData.id ||
-                                user.followers.includes(userData.id) ? (
+                            user.followers.includes(userData.id) ? (
                                 <>
                                     <p className="text-gray-600 mt-3">
                                         {user.about}
@@ -284,7 +286,7 @@ export default function User() {
                                             <div className="flex">
                                                 <div className="h-8 w-8 relative overflow-hidden rounded-full bg-pink-200">
                                                     <img
-                                                        className="border-none outline-none"
+                                                        className="border-none outline-none object-cover object-center h-8 w-8"
                                                         src={post.user_avatar}
                                                         alt=""
                                                     />
@@ -313,20 +315,22 @@ export default function User() {
                                             <div className="flex gap-4">
                                                 <div className="flex gap-2">
                                                     <HandThumbUpIcon
-                                                        className={`w-5 h-5 my-auto ${post.liked === 1
+                                                        className={`w-5 h-5 my-auto ${
+                                                            post.liked === 1
                                                                 ? 'fill-green-500'
                                                                 : ''
-                                                            }`}
+                                                        }`}
                                                     />
 
                                                     <p>{post.likes}</p>
                                                 </div>
                                                 <div className="flex gap-2">
                                                     <HandThumbDownIcon
-                                                        className={`w-5 h-5 my-auto ${post.liked === -1
+                                                        className={`w-5 h-5 my-auto ${
+                                                            post.liked === -1
                                                                 ? 'fill-red-600'
                                                                 : ''
-                                                            }`}
+                                                        }`}
                                                     />
                                                     <p>{post.dislikes}</p>
                                                 </div>
@@ -335,7 +339,7 @@ export default function User() {
                                                     <p>
                                                         {post.comments !== null
                                                             ? post.comments
-                                                                .length
+                                                                  .length
                                                             : 0}
                                                     </p>
                                                 </div>

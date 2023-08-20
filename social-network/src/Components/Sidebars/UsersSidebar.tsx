@@ -41,13 +41,16 @@ export default function UsersSidebar() {
                                     key={user.id}
                                     className="flex flex-row mb-1.5 py-1 pl-2 pr-4 gap-1 bg-blue-50 rounded-full w-fit"
                                 >
-                                    <div className="w-6 h-6 relative overflow-hidden shrink-0 rounded-full bg-pink-200 border-none outline-none">
-                                        <img
-                                            className="border-none outline-none"
-                                            src={user.avatar.toString()}
-                                            alt=""
-                                        />
-                                        <ProfileIcon classNames="w-8 h-8" />
+                                    <div className="w-6 h-6 relative overflow-hidden shrink-0 rounded-full">
+                                        {user.avatar.toString() !== '' ? (
+                                            <img
+                                                className="border-none outline-none object-cover h-6 w-6"
+                                                src={user.avatar.toString()}
+                                                alt=""
+                                            />
+                                        ) : (
+                                            <ProfileIcon classNames="w-8 h-8" />
+                                        )}
                                     </div>
                                     <p className="text-black text-sm my-auto">
                                         {user.fName} {user.lName}
