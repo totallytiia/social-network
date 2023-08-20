@@ -323,7 +323,7 @@ func GroupJoinRequest(w http.ResponseWriter, r *http.Request) {
 		BadRequest(w, r, err.Error())
 		return
 	}
-	err = groupOwner.AddNotification(u.ID, "groupJoinReq", fmt.Sprintf("%s %s has requested to join your group %s", u.FName, u.LName, g.GroupName))
+	err = groupOwner.AddNotification(u.ID, "groupJoinReq", fmt.Sprintf("%s %s has requested to join your group %s", u.FName, u.LName, g.GroupName), g.GroupID)
 	if err != nil {
 		BadRequest(w, r, err.Error())
 		return
@@ -390,7 +390,7 @@ func RespondToGroupRequest(w http.ResponseWriter, r *http.Request) {
 			BadRequest(w, r, err.Error())
 			return
 		}
-		err = user.AddNotification(g.GroupOwner, "groupJoinAccept", fmt.Sprintf("Your request to join %s's group %s has been accepted", user.FName, g.GroupName))
+		err = user.AddNotification(g.GroupOwner, "groupJoinAccept", fmt.Sprintf("Your request to join %s's group %s has been accepted", user.FName, g.GroupName), g.GroupID)
 		if err != nil {
 			BadRequest(w, r, err.Error())
 			return
@@ -408,7 +408,7 @@ func RespondToGroupRequest(w http.ResponseWriter, r *http.Request) {
 			BadRequest(w, r, err.Error())
 			return
 		}
-		err = user.AddNotification(g.GroupOwner, "groupJoinReject", fmt.Sprintf("Your request to join %s's group %s has been rejected", user.FName, g.GroupName))
+		err = user.AddNotification(g.GroupOwner, "groupJoinReject", fmt.Sprintf("Your request to join %s's group %s has been rejected", user.FName, g.GroupName), g.GroupID)
 		if err != nil {
 			BadRequest(w, r, err.Error())
 			return
@@ -505,7 +505,7 @@ func InviteToGroup(w http.ResponseWriter, r *http.Request) {
 		BadRequest(w, r, err.Error())
 		return
 	}
-	err = user.AddNotification(g.GroupOwner, "groupInvite", fmt.Sprintf("%s %s has invited you to join their group %s", u.FName, u.LName, g.GroupName))
+	err = user.AddNotification(g.GroupOwner, "groupInvite", fmt.Sprintf("%s %s has invited you to join their group %s", u.FName, u.LName, g.GroupName), g.GroupID)
 	if err != nil {
 		BadRequest(w, r, err.Error())
 		return
@@ -563,7 +563,7 @@ func RespondToInvite(w http.ResponseWriter, r *http.Request) {
 			BadRequest(w, r, err.Error())
 			return
 		}
-		err = user.AddNotification(u.ID, "groupInviteAccept", fmt.Sprintf("%s %s has accepted your invitation to join your group %s", u.FName, u.LName, g.GroupName))
+		err = user.AddNotification(u.ID, "groupInviteAccept", fmt.Sprintf("%s %s has accepted your invitation to join your group %s", u.FName, u.LName, g.GroupName), g.GroupID)
 		if err != nil {
 			BadRequest(w, r, err.Error())
 			return
@@ -581,7 +581,7 @@ func RespondToInvite(w http.ResponseWriter, r *http.Request) {
 			BadRequest(w, r, err.Error())
 			return
 		}
-		err = user.AddNotification(u.ID, "groupInviteDecline", fmt.Sprintf("%s %s has declined your invitation to join your group %s", u.FName, u.LName, g.GroupName))
+		err = user.AddNotification(u.ID, "groupInviteDecline", fmt.Sprintf("%s %s has declined your invitation to join your group %s", u.FName, u.LName, g.GroupName), g.GroupID)
 		if err != nil {
 			BadRequest(w, r, err.Error())
 			return

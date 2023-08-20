@@ -62,7 +62,7 @@ func FollowUser(w http.ResponseWriter, r *http.Request) {
 			w.Write(badReqJSON)
 			return
 		}
-		err = followUser.AddNotification(u.ID, "followReq", "sent you a new follow request")
+		err = followUser.AddNotification(u.ID, "followReq", "sent you a new follow request", nil)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			badReqJSON, _ := json.Marshal(s.ErrorResponse{Errors: "There was an error following the user", Details: err.Error()})
@@ -82,7 +82,7 @@ func FollowUser(w http.ResponseWriter, r *http.Request) {
 		w.Write(badReqJSON)
 		return
 	}
-	err = followUser.AddNotification(u.ID, "follow", "started following you")
+	err = followUser.AddNotification(u.ID, "follow", "started following you", nil)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		badReqJSON, _ := json.Marshal(s.ErrorResponse{Errors: "There was an error following the user", Details: err.Error()})
@@ -213,7 +213,7 @@ func RespondToRequest(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	if response {
-		err = followUser.AddNotification(u.ID, "followReqRes", "accepted your follow request")
+		err = followUser.AddNotification(u.ID, "followReqRes", "accepted your follow request", nil)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			badReqJSON, _ := json.Marshal(s.ErrorResponse{Errors: "There was an error responding to the follow request", Details: err.Error()})
@@ -223,7 +223,7 @@ func RespondToRequest(w http.ResponseWriter, r *http.Request) {
 		WSSendToUser(followUser.ID, `{"type": "followReqRes", "message": "You have a new follower", "user_id": `+strconv.Itoa(u.ID)+`}`)
 	}
 	if !response {
-		err = followUser.AddNotification(u.ID, "follow", ("rejected your follow request"))
+		err = followUser.AddNotification(u.ID, "follow", "rejected your follow request", nil)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			badReqJSON, _ := json.Marshal(s.ErrorResponse{Errors: "There was an error responding to the follow request", Details: err.Error()})

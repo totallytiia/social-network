@@ -7,16 +7,17 @@ import (
 )
 
 type Notification struct {
-	ID         int    `json:"id"`
-	UserID     int    `json:"user_id"`
-	UserFName  string `json:"fname"`
-	UserLName  string `json:"lname"`
-	FollowerID int    `json:"follower_id"`
-	Message    string `json:"message"`
-	Type       string `json:"type"`
-	Seen       bool   `json:"seen"`
-	CreatedAt  string `json:"created_at"`
-	UpdatedAt  string `json:"updated_at"`
+	ID         int         `json:"id"`
+	UserID     int         `json:"user_id"`
+	UserFName  string      `json:"fname"`
+	UserLName  string      `json:"lname"`
+	FollowerID int         `json:"follower_id"`
+	GroupID    interface{} `json:"group_id,omitempty"`
+	Message    string      `json:"message"`
+	Type       string      `json:"type"`
+	Seen       bool        `json:"seen"`
+	CreatedAt  string      `json:"created_at"`
+	UpdatedAt  string      `json:"updated_at"`
 }
 
 type Notifications []Notification
@@ -31,7 +32,7 @@ func (u *User) GetNotifications() (Notifications, error) {
 	defer rows.Close()
 	for rows.Next() {
 		var n Notification
-		err := rows.Scan(&n.ID, &n.UserID, &n.FollowerID, &n.Message, &n.CreatedAt, &n.UpdatedAt, &n.Type, &n.Seen, &n.UserFName, &n.UserLName)
+		err := rows.Scan(&n.ID, &n.UserID, &n.FollowerID, &n.Message, &n.CreatedAt, &n.UpdatedAt, &n.Type, &n.Seen, &n.GroupID, &n.UserFName, &n.UserLName)
 		if err != nil {
 			fmt.Println(err)
 			return notifications, err
@@ -57,8 +58,8 @@ func (u *User) GetNotifications() (Notifications, error) {
 	return notifications, nil
 }
 
-func (u *User) AddNotification(followerID int, nType, message string) error {
-	_, err := db.DB.Exec("INSERT INTO notifications (user_id, follow_id, message, type) VALUES (?, ?, ?, ?)", u.ID, followerID, message, nType)
+func (u *User) AddNotification(followerID int, nType, message string, groupID interface{}) error {
+	_, err := db.DB.Exec("INSERT INTO notifications (user_id, follow_id, message, type, group_id) VALUES (?, ?, ?, ?, ?)", u.ID, followerID, message, nType, groupID)
 	if err != nil {
 		return err
 	}
@@ -83,7 +84,7 @@ func (u *User) MarkNotificationsSeen() error {
 
 func FindNotification(user, follower int, notiType string) (Notification, error) {
 	var notification Notification
-	err := db.DB.QueryRow("SELECT * FROM notifications WHERE user_id = ? AND follow_id = ? AND type = ?", user, follower, notiType).Scan(&notification.ID, &notification.UserID, &notification.FollowerID, &notification.Message, &notification.CreatedAt, &notification.UpdatedAt, &notification.Type, &notification.Seen)
+	err := db.DB.QueryRow("SELECT * FROM notifications WHERE user_id = ? AND follow_id = ? AND type = ?", user, follower, notiType).Scan(&notification.ID, &notification.UserID, &notification.FollowerID, &notification.Message, &notification.CreatedAt, &notification.UpdatedAt, &notification.Type, &notification.Seen, &notification.GroupID)
 	if err != nil {
 		fmt.Println(err)
 		return notification, err

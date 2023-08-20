@@ -57,7 +57,7 @@ func (g NewGroup) Create() (Group, error) {
 }
 
 func (g *Group) Get() error {
-	row := db.DB.QueryRow(`SELECT group_name, group_description, user_id, group_concat((SELECT user_id FROM group_members WHERE id = ?), ", ") AS members FROM groups WHERE id = ?`, g.GroupID, g.GroupID)
+	row := db.DB.QueryRow(`SELECT g.group_name, g.group_description, g.user_id, (SELECT GROUP_CONCAT(gm.user_id, ", ") FROM group_members gm WHERE gm.group_id = g.id) AS members FROM groups g WHERE g.id = ?`, g.GroupID, g.GroupID)
 	var members string
 	err := row.Scan(&g.GroupName, &g.GroupDescription, &g.GroupOwner, &members)
 	if err != nil {
