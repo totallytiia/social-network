@@ -235,6 +235,12 @@ func (g Group) RemoveRequest(userID int) error {
 	return err
 }
 
+func (g Group) RequestExists(userID int) bool {
+	var id int
+	err := db.DB.QueryRow("SELECT id FROM group_requests WHERE group_id = ? AND user_id = ?", g.GroupID, userID).Scan(&id)
+	return err == nil
+}
+
 func (g Group) InviteMember(userID int) error {
 	_, err := db.DB.Exec("INSERT INTO group_invites(group_id, user_id) VALUES(?, ?)", g.GroupID, userID)
 	return err

@@ -312,6 +312,14 @@ func GroupJoinRequest(w http.ResponseWriter, r *http.Request) {
 		BadRequest(w, r, err.Error())
 		return
 	}
+	if g.RequestExists(u.ID) {
+		BadRequest(w, r, "Request already exists")
+		return
+	}
+	if err != nil {
+		BadRequest(w, r, err.Error())
+		return
+	}
 	err = g.JoinRequest(u.ID)
 	if err != nil {
 		BadRequest(w, r, err.Error())
@@ -501,8 +509,7 @@ func InviteToGroup(w http.ResponseWriter, r *http.Request) {
 		BadRequest(w, r, err.Error())
 		return
 	}
-	exists := g.InviteExists(userID)
-	if exists {
+	if g.InviteExists(userID) {
 		BadRequest(w, r, "User already invited to group")
 		return
 	}
