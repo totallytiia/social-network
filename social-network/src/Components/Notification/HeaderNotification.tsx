@@ -72,6 +72,30 @@ export default function HeaderNotification(props: INotificationProps) {
         };
         setNotifications(notificationsClone);
     }
+
+    async function groupJoinReqRespond(accept: boolean) {
+        const url = `http://localhost:8080/api/groups/respond-group`;
+        const FD = new FormData();
+        FD.append('group_id', notification.follower_id.toString());
+        FD.append('user_id', notification.follower_id.toString());
+        FD.append('response', accept.toString());
+        const res = await fetch(url, {
+            method: 'POST',
+            credentials: 'include',
+            body: FD,
+        });
+        const data = await res.json();
+        if (data.errors) {
+            return;
+        }
+        const notificationsClone = [...notifications];
+        notification.type = 'groupJoin';
+        notificationsClone[notificationsClone.indexOf(notification)] = {
+            ...notification,
+        };
+        setNotifications(notificationsClone);
+    }
+
     return (
         <div
             id={`notification-${notification.id.toString()}`}
@@ -103,6 +127,22 @@ export default function HeaderNotification(props: INotificationProps) {
                             <button
                                 className="bg-red-500 text-white rounded-full px-2 h-fit py-2 my-auto"
                                 onClick={() => followReqRespond(false)}
+                            >
+                                <XMarkIcon className="h-4 w-4 stroke-1.5 stroke-white" />
+                            </button>
+                        </div>
+                    ) : null}
+                    {notification.type === 'groupJoinReq' ? (
+                        <div className="flex flex-row gap-2">
+                            <button
+                                className="bg-green-500 text-white rounded-full px-2 h-fit py-2 my-auto"
+                                onClick={() => groupJoinReqRespond(true)}
+                            >
+                                <CheckIcon className="h-4 w-4 stroke-1.5 stroke-white" />
+                            </button>
+                            <button
+                                className="bg-red-500 text-white rounded-full px-2 h-fit py-2 my-auto"
+                                onClick={() => groupJoinReqRespond(false)}
                             >
                                 <XMarkIcon className="h-4 w-4 stroke-1.5 stroke-white" />
                             </button>

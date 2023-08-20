@@ -59,6 +59,23 @@ export default function Group() {
         setGroup(groupCopy);
     }
 
+    async function sendJoinRequest() {
+        if (id === undefined) return;
+        const url = `http://localhost:8080/api/groups/join`;
+        const FD = new FormData();
+        FD.append('group_id', id);
+        const res = await fetch(url, {
+            method: 'POST',
+            credentials: 'include',
+            body: FD,
+        });
+        const data = await res.json();
+        if (data.errors) {
+            return;
+        }
+        setRequestSent(true);
+    }
+
     const deletePost = async (id: number) => {
         const url = `http://localhost:8080/api/posts/delete`;
         const FD = new FormData();
@@ -111,9 +128,7 @@ export default function Group() {
                                 ) : (
                                     <div
                                         className="flex flex-row gap-1 shrink-0"
-                                        onClick={() => {
-                                            setRequestSent(true);
-                                        }}
+                                        onClick={sendJoinRequest}
                                     >
                                         <PlusCircleIcon className="w-6 h-6 font-bold shrink-0 my-auto" />
                                         <p>Request</p>
