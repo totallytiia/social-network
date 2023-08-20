@@ -101,7 +101,6 @@ export default function Group() {
         });
     };
 
-    const [userListVisibility, setUserListVisibility] = useState(false);
     const [userList, setUserList] = useState([] as iUsers[]);
     useEffect(() => {
         async function getUsers() {
