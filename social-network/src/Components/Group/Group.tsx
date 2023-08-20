@@ -82,6 +82,27 @@ export default function Group() {
         setRequestSent(true);
     }
 
+    async function sendInvite(e: React.FormEvent<HTMLFormElement>) {
+        e.preventDefault();
+        if (id === undefined) return;
+        const url = `http://localhost:8080/api/groups/invite`;
+        const tempFD = new FormData(e.target as HTMLFormElement);
+        tempFD.forEach(async (value, key) => {
+            const FD = new FormData();
+            FD.append('group_id', id);
+            FD.append('user_id', value.toString());
+            const res = await fetch(url, {
+                method: 'POST',
+                credentials: 'include',
+                body: FD,
+            });
+            const data = await res.json();
+            if (data.errors) {
+                return;
+            }
+        });
+    }
+
     const deletePost = async (id: number) => {
         const url = `http://localhost:8080/api/posts/delete`;
         const FD = new FormData();
@@ -335,9 +356,12 @@ export default function Group() {
                         </div>
                         {/* invite users */}
                         <div className="INVITE shrink-0 flex mt-2 mx-auto lg:mx-0 bg-white rounded-lg shadow-lg">
-                            <form action="" className="flex flex-col">
+                            <form
+                                className="flex flex-col"
+                                onSubmit={sendInvite}
+                            >
                                 <div className="flex p-2  gap-1 bg-blue-500 text-white rounded-t-lg">
-                                    <PlusIcon className="w-4 h-4 my-auto stroke-2 stroke-white my-auto" />
+                                    <PlusIcon className="w-4 h-4 my-auto stroke-2 stroke-white" />
                                     <h2 className="font-bold text-center text-sm mb">
                                         Invite users
                                     </h2>
