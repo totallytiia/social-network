@@ -8,10 +8,10 @@ export default function ErrorNotification({
     (document.querySelector('body') as HTMLElement).style.overflow = 'hidden';
     return (
         <>
-            <div className="absolute top-0 left-0 z-50 bg-opacity-20 min-h-full min-w-full bg-gray-400">
+            <div className="fixed top-0 left-0 z-50 bg-opacity-20 min-h-full min-w-full bg-gray-200">
                 <div
                     id="alertErrorNotification"
-                    className="absolute top-1/3 left-2/4 -translate-x-1/2 -translate-y-1/2 p-2 bg-white rounded-md shadow-md"
+                    className="fixed top-1/3 left-2/4 -translate-x-1/2 -translate-y-1/2 p-2 bg-white rounded-md shadow-md"
                 >
                     <div className="bg-red-100 p-2" role="alert">
                         <h4 className="text-red-500 underline px-2">{title}</h4>
