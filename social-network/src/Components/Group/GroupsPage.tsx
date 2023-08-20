@@ -6,9 +6,11 @@ import { PlusCircleIcon } from '@heroicons/react/24/solid';
 export default function Groups() {
     const [createNewGroup, setCreateNewGroup] = useState(false);
     const [groupCreated, setGroupCreated] = useState(false);
+
     function handleCreateNewGroup() {
         setCreateNewGroup((current) => !current);
     }
+
     return (
         <div className="bg-custom min-h-screen">
             <div className="flex flex-col lg:flex-row lg:justify-center p-6 flex-shrink">
