@@ -6,13 +6,7 @@ interface Props {
     avatar: Blob | null;
 }
 
-export default function ChatHeader({
-    children,
-    props,
-}: {
-    children: React.ReactNode;
-    props: Props;
-}) {
+export default function ChatHeader({ props }: { props: Props }) {
     const { name, avatar } = props;
     return (
         <div className="py-3 px-4 flex flex-row justify-between items-center">
@@ -22,9 +16,10 @@ export default function ChatHeader({
                     classNames="w-6 h-6 object-cover rounded-full"
                 />
                 <div className="flex flex-col">
-                    <p className="text-sm text-left font-bold text-white my-auto">{name}</p>
+                    <p className="text-sm text-left font-bold text-white my-auto">
+                        {name}
+                    </p>
                 </div>
-                {children}
             </div>
             <div className="space-x-1"></div>
         </div>

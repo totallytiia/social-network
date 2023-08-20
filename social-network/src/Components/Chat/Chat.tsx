@@ -181,10 +181,12 @@ export default function Chat({
                             chat.Receiver !== undefined
                                 ? `${chat.Receiver.fname} ${chat.Receiver.lname}`
                                 : chat.Group.name,
-                        avatar: chat.Receiver.avatar,
+                        avatar:
+                            chat.Receiver !== undefined
+                                ? chat.Receiver.avatar
+                                : null,
                     }}
-                >
-                </ChatHeader>
+                />
                 <ChatContent
                     messages={chat.Messages}
                     avatar={chat.Receiver.avatar}
