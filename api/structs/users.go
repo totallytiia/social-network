@@ -163,6 +163,7 @@ func (u *User) Login(password string) error {
 	if err != nil {
 		return err
 	}
+	u.Get(nil)
 	var session = Session{ID: len(Users), UserID: u.ID}
 	err = session.Generate()
 	if err != nil {

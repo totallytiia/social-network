@@ -19,7 +19,7 @@ interface PostProps {
         user_fname: string;
         user_lname: string;
         user_nickname: string;
-        user_avatar: string;
+        user_avatar: Blob | null;
         group_id: number;
         group_name: string;
         content: string;
@@ -145,10 +145,9 @@ export default function Post({ postInput, deletePost }: PostProps) {
                             }
                             className="cursor-pointer h-8 w-8 relative overflow-hidden rounded-full bg-pink-200"
                         >
-                            <img
-                                className="border-none outline-none object-cover h-full w-full"
-                                src={post.user_avatar}
-                                alt=""
+                            <ProfileIcon
+                                avatar={post.user_avatar}
+                                classNames="h-10 w-10"
                             />
                         </div>
                         <div className="ml-2">

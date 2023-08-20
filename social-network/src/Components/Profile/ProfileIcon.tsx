@@ -4,11 +4,10 @@ interface Props {
 }
 
 export default function ProfileIcon({ avatar = null, classNames }: Props) {
-    // Avatar is blob, add image if not null
     return (
         <img
             src={
-                avatar !== null
+                avatar !== null && avatar.toString() !== ''
                     ? avatar.toString()
                     : '/assets/tinydefault_profile.png'
             }
