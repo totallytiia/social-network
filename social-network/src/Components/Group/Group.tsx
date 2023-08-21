@@ -351,9 +351,9 @@ export default function Group() {
                             )}
                         </div>
                         {/* invite users */}
-                        <div className="INVITE shrink-0 flex mt-2 mx-auto lg:mx-0 bg-white rounded-lg shadow-lg">
+                        <div className="INVITE shrink-0 flex mt-2 mx-auto lg:mx-0">
                             <form
-                                className="flex flex-col"
+                                className="flex flex-col bg-white rounded-lg"
                                 onSubmit={sendInvite}
                             >
                                 <div className="flex p-2  gap-1 bg-blue-500 text-white rounded-t-lg">
