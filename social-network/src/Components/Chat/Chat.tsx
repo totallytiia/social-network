@@ -2,7 +2,8 @@ import ChatHeader from './ChatHeader';
 import ChatContent from './ChatContent';
 import ChatInputBox from './ChatInputBox';
 import { XMarkIcon } from '@heroicons/react/24/outline';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState, useCallback } from 'react';
+import { NewMessageContext } from '../WSProvider/WSProvider';
 
 interface Props {
     setVisibleChats: React.Dispatch<
@@ -42,8 +43,8 @@ export default function Chat({
     visibleChats,
     type,
     id,
-    ws,
 }: Props) {
+    const { newMessage, setNewMessage } = useContext(NewMessageContext);
     const [chat, setChat] = useState({
         Messages: [],
         Receiver: {
@@ -58,66 +59,69 @@ export default function Chat({
         },
     } as IChat);
 
-    useEffect(() => {
-        async function getChat() {
-            const url = `http://localhost:8080/api/chat/get?${type}_id=${id}`;
-            const res = await fetch(url, {
-                method: 'GET',
-                credentials: 'include',
-            });
-            const data = await res.json();
-            if (data.errors) {
-                return;
-            }
-            var dataChat: IChat = {
-                Messages: [],
-                Receiver: {
-                    id: data.receiver.id,
-                    fname: data.receiver.fname,
-                    lname: data.receiver.lname,
-                    avatar:
-                        data.receiver.avatar !== ''
-                            ? data.receiver.avatar
-                            : null,
-                },
-                Group: {
-                    id: data.group.id,
-                    name: data.group.name,
-                },
-            };
-            if (data.group.id)
-                dataChat.Group = {
-                    id: data.group.id,
-                    name: data.group.name,
-                };
-            if (data.receiver.id)
-                dataChat.Receiver = {
-                    id: data.receiver.id,
-                    fname: data.receiver.fName,
-                    lname: data.receiver.lName,
-                    avatar:
-                        data.receiver.avatar !== ''
-                            ? data.receiver.avatar
-                            : null,
-                };
-            var messages: IMessage[] = [];
-            if (data.messages !== null) {
-                for (const message of data.messages) {
-                    messages.push({
-                        id: message.id,
-                        content: message.message,
-                        image: message.image,
-                        sender: message.user_id,
-                        receiver: message.receiver_id,
-                        timestamp: message.sent_at,
-                    });
-                }
-            }
-            dataChat.Messages = messages;
-            setChat(dataChat);
+    const getChat = useCallback(async () => {
+        const url = `http://localhost:8080/api/chat/get?${type}_id=${id}`;
+        const res = await fetch(url, {
+            method: 'GET',
+            credentials: 'include',
+        });
+        const data = await res.json();
+        if (data.errors) {
+            return;
         }
-        getChat();
+        var dataChat: IChat = {
+            Messages: [],
+            Receiver: {
+                id: data.receiver.id,
+                fname: data.receiver.fname,
+                lname: data.receiver.lname,
+                avatar:
+                    data.receiver.avatar !== '' ? data.receiver.avatar : null,
+            },
+            Group: {
+                id: data.group.id,
+                name: data.group.name,
+            },
+        };
+        if (data.group.id)
+            dataChat.Group = {
+                id: data.group.id,
+                name: data.group.name,
+            };
+        if (data.receiver.id)
+            dataChat.Receiver = {
+                id: data.receiver.id,
+                fname: data.receiver.fName,
+                lname: data.receiver.lName,
+                avatar:
+                    data.receiver.avatar !== '' ? data.receiver.avatar : null,
+            };
+        var messages: IMessage[] = [];
+        if (data.messages !== null) {
+            for (const message of data.messages) {
+                messages.push({
+                    id: message.id,
+                    content: message.message,
+                    image: message.image,
+                    sender: message.user_id,
+                    receiver: message.receiver_id,
+                    timestamp: message.sent_at,
+                });
+            }
+        }
+        dataChat.Messages = messages;
+        setChat(dataChat);
     }, [id, type]);
+
+    useEffect(() => {
+        getChat();
+    }, [getChat]);
+
+    useEffect(() => {
+        if (newMessage !== id) return;
+        getChat();
+        setNewMessage(0);
+    }, [newMessage, id, getChat, setNewMessage]);
 
     async function sendMessage(message: string, image: Blob | null) {
         const url = `http://localhost:8080/api/chat/send`;

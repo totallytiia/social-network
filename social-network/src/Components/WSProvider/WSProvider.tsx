@@ -6,7 +6,13 @@ interface WebSocketContextType {
     setWS: Function;
 }
 
+interface NewMessageContextType {
+    newMessage: number;
+    setNewMessage: Function;
+}
+
 export const WSContext = createContext({} as WebSocketContextType);
+export const NewMessageContext = createContext({} as NewMessageContextType);
 
 export const useWS = () => useContext(WSContext);
 
@@ -17,6 +23,7 @@ export default function WSProvider({
 }) {
     const { userData } = useContext(UserContext);
     const [ws, setWS] = useState(null as any);
+    const [newMessage, setNewMessage] = useState(0 as number);
 
     function defaultWS(userID: number) {
         const defaultWS = new WebSocket('ws://localhost:8080/api/ws');
@@ -37,10 +44,7 @@ export default function WSProvider({
             const message = JSON.parse(e.data);
             console.log('WebSocket message:');
             console.log(message);
-            switch (message.type) {
-                case 'followReq':
-                    break;
-            }
+            if (message.type === 'chat') setNewMessage(message.message.user_id);
         };
         return defaultWS;
     }
@@ -53,7 +57,9 @@ export default function WSProvider({
 
     return (
         <WSContext.Provider value={{ ws, setWS }}>
-            {children}
+            <NewMessageContext.Provider value={{ newMessage, setNewMessage }}>
+                {children}
+            </NewMessageContext.Provider>
         </WSContext.Provider>
     );
 }
