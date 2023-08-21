@@ -286,13 +286,13 @@ export default function Group() {
                 <div className="CREATE p-6 order-0 lg:order-1 flex justify-center ">
                     <div className="flex flex-col shrink-0 gap-2 mt-2 md:mt-0 md:pb-0">
                         {!createEvent && (
-                            <div className="CREATE-EVENT mt-2">
+                            <div className="CREATE-EVENT mt-2 mx-auto lg:mx-0">
                                 <button
                                     onClick={() => handleCreateEvent()}
-                                    className="flex shrink-0 flex-row text-lg font-bold items-center gap-1 bg-blue-50 shadow-md py-2 pl-2 pr-4 rounded-full hover:bg-blue-100"
+                                    className="flex flex-row text-lg font-bold items-center gap-1 bg-blue-50 shadow-md py-2 pl-2 pr-4 rounded-full hover:bg-blue-100"
                                 >
                                     <PlusIcon className="w-4 h-4 my-auto stroke-2 stroke-black" />
-                                    <p className="text-bold text-sm shrink-0 ">
+                                    <p className="text-bold text-sm ">
                                         Create an event
                                     </p>
                                 </button>
