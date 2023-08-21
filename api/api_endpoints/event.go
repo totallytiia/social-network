@@ -77,12 +77,14 @@ func CreateEvent(w http.ResponseWriter, r *http.Request) {
 			w.Write(badReqJSON)
 			return
 		}
-		err = user.AddNotification(u.ID, "newEvent", fmt.Sprintf(`%s %s created a new event in %s`, u.FName, u.LName, group.GroupName), groupID)
-		if err != nil {
-			w.WriteHeader(http.StatusInternalServerError)
-			badReqJSON, _ := json.Marshal(s.ErrorResponse{Errors: "There was an error with your request", Details: err.Error()})
-			w.Write(badReqJSON)
-			return
+		if user.ID == u.ID {
+			err = user.AddNotification(u.ID, "newEvent", fmt.Sprintf(`%s %s created a new event in %s`, u.FName, u.LName, group.GroupName), groupID)
+			if err != nil {
+				w.WriteHeader(http.StatusInternalServerError)
+				badReqJSON, _ := json.Marshal(s.ErrorResponse{Errors: "There was an error with your request", Details: err.Error()})
+				w.Write(badReqJSON)
+				return
+			}
 		}
 		WSSendToUser(user.ID, `{"type": "newEvent", "message": "You have a new event in group `+group.GroupName+`", "event_id": `+strconv.Itoa(id)+`, "group_id": `+strconv.Itoa(groupID)+`}`)
 	}
