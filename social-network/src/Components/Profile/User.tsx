@@ -371,7 +371,8 @@ export default function User() {
                             user.id === userData.id ||
                             user.followers
                                 .map((user) => user.id)
-                                .includes(userData.id) ? (
+                                .includes(userData.id) ||
+                            !user.private ? (
                                 <>
                                     <p className="text-gray-600 mt-3">
                                         {user.about}
