@@ -25,8 +25,6 @@ interface INotification {
 
 export default function Header() {
     const { ws } = useContext(WSContext);
-
-    const [isNavOpen, setIsNavOpen] = useState(false);
     const [notifications, setNotifications] = useState([] as INotification[]);
     const [newNotification, setNewNotification] = useState(false);
 
@@ -105,7 +103,7 @@ export default function Header() {
                         SOCIAL NETWORK
                     </h1>
                 </div>
-                <section className="MOBILE-MENU flex lg:hidden justify-end">
+                {/* <section className="MOBILE-MENU flex lg:hidden justify-end">
                     <div
                         className="HAMBURGER-ICON space-y-2 "
                         onClick={() => setIsNavOpen((prev) => !prev)}
@@ -159,8 +157,8 @@ export default function Header() {
                             </button>
                         </div>
                     </div>
-                </section>
-                <div className="DESKTOP-MENU space-x-3 text-xs justify-end  hidden lg:flex">
+                </section> */}
+                <div className="DESKTOP-MENU space-x-3 text-xs justify-end flex lg:flex">
                     <div>
                         <div
                             onClick={handleButtonClick}
@@ -183,7 +181,7 @@ export default function Header() {
                             <div
                                 onClick={handleContainerClick}
                                 id="NOTIFICATIONS-CONTAINER"
-                                className="flex absolute top-14 right-2 bg-white shadow-lg rounded-lg w-96 overflow-scroll h-2/3"
+                                className="flex absolute top-14 right-2 bg-white shadow-lg rounded-lg w-96 overflow-scroll max-h-96"
                             >
                                 <div
                                     id="NOTIFICATIONS-CONTAINER-HEADER"
