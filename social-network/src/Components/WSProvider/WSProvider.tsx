@@ -44,7 +44,12 @@ export default function WSProvider({
             const message = JSON.parse(e.data);
             console.log('WebSocket message:');
             console.log(message);
-            if (message.type === 'chat') setNewMessage(message.message.user_id);
+            if (message.type === 'chat')
+                setNewMessage(
+                    message.message.group_id === 0
+                        ? message.message.user_id
+                        : message.message.group_id
+                );
         };
         return defaultWS;
     }

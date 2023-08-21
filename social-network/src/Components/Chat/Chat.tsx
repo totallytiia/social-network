@@ -152,7 +152,7 @@ export default function Chat({
         setChat(chatCopy);
     }
 
-    console.log(chat);
+    console.log(id);
 
     return (
         <div className="max-w-sm">

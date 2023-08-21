@@ -118,7 +118,7 @@ func SendChat(w http.ResponseWriter, r *http.Request) {
 					w.Write(badReqJSON)
 					return
 				}
-				messagesJson, _ := json.Marshal(c.Message)
+				messagesJson, _ := json.Marshal(c)
 				WSSendToUser(member.ID, fmt.Sprintf(`{"type":"chat", "message":%s}`, messagesJson))
 			}
 		}
