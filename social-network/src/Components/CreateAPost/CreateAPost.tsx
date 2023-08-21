@@ -192,7 +192,7 @@ export default function CreateAPost(props: any) {
                                         ? userList.map((user: any) => {
                                               return (
                                                   <div
-                                                      className="p-2 flex flex-row gap-1"
+                                                      className="p-1 flex flex-row gap-1"
                                                       key={`userOption-${user.id}`}
                                                   >
                                                       <input
