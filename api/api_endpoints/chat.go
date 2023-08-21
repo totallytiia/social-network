@@ -95,15 +95,11 @@ func SendChat(w http.ResponseWriter, r *http.Request) {
 			w.Write(badReqJSON)
 			return
 		}
-		var members = group.GroupMembers
-		if err != nil {
-			w.WriteHeader(http.StatusInternalServerError)
-			fmt.Println("Error getting group members")
-			badReqJSON, _ := json.Marshal(s.ErrorResponse{Errors: "There was an error with your request", Details: err.Error()})
-			w.Write(badReqJSON)
-			return
-		}
-		for id := range members {
+		for member := range group.GroupMembers {
+			var id int
+			for k := range group.GroupMembers[member] {
+				id = k
+			}
 			if id != u.ID {
 				var member = s.User{ID: id}
 				err = member.Get(nil)
@@ -161,7 +157,8 @@ func GetChat(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	if receiverID != 0 {
-		chat.Messages, err = u.GetChats(receiverID)
+		var IDs = []int{receiverID, -1}
+		chat.Messages, err = u.GetChats(IDs)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			badReqJSON, _ := json.Marshal(s.ErrorResponse{Errors: "There was an error with your request", Details: err.Error()})
@@ -179,7 +176,8 @@ func GetChat(w http.ResponseWriter, r *http.Request) {
 		chat.Receiver = receiver
 	}
 	if groupID != 0 {
-		chat.Messages, err = u.GetChats(groupID)
+		var IDs = []int{-1, groupID}
+		chat.Messages, err = u.GetChats(IDs)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			badReqJSON, _ := json.Marshal(s.ErrorResponse{Errors: "There was an error with your request", Details: err.Error()})

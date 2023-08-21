@@ -126,7 +126,9 @@ export default function Chat({
     async function sendMessage(message: string, image: Blob | null) {
         const url = `http://localhost:8080/api/chat/send`;
         const FD = new FormData();
-        FD.append('receiver_id', chat.Receiver.id.toString());
+        if (type === 'group') FD.append('group_id', chat.Group.id.toString());
+        if (type === 'receiver')
+            FD.append('receiver_id', chat.Receiver.id.toString());
         FD.append('message', message);
         if (image !== null) FD.append('image', image);
         const res = await fetch(url, {
@@ -149,6 +151,8 @@ export default function Chat({
         });
         setChat(chatCopy);
     }
+
+    console.log(chat);
 
     return (
         <div className="max-w-sm">
@@ -182,11 +186,11 @@ export default function Chat({
                 <ChatHeader
                     props={{
                         name:
-                            chat.Receiver !== undefined
+                            chat.Receiver.fname !== undefined
                                 ? `${chat.Receiver.fname} ${chat.Receiver.lname}`
                                 : chat.Group.name,
                         avatar:
-                            chat.Receiver !== undefined
+                            chat.Receiver.avatar !== null
                                 ? chat.Receiver.avatar
                                 : null,
                     }}

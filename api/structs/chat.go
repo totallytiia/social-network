@@ -11,6 +11,7 @@ type Message struct {
 	UserID         int    `json:"user_id"`
 	ReceiverID     int    `json:"receiver_id"`
 	GroupID        int    `json:"group_id"`
+	GroupName      string `json:"group_name,omitempty"`
 	Message        string `json:"message"`
 	Image          string `json:"image"`
 	SentAt         string `json:"sent_at"`
@@ -85,12 +86,12 @@ func (c *Message) Get() error {
 	return nil
 }
 
-func (u User) GetChats(receiverID int) ([]Message, error) {
+func (u User) GetChats(IDs []int) ([]Message, error) {
 	//sqlite query to get chats between a sender and receiver, or a sender and a group
 	var rows, err = db.DB.Query(`
 	SELECT c.id, c.user_id, c.receiver_id, c.group_id, c.message, c.image, c.sent_at
 	FROM chat c
-	WHERE (c.user_id = ? AND c.receiver_id = ?) OR (c.user_id = ? AND c.receiver_id = ?) OR (c.group_id = ?)`, u.ID, receiverID, receiverID, u.ID, receiverID)
+	WHERE (c.user_id = ? AND c.receiver_id = ?) OR (c.user_id = ? AND c.receiver_id = ?) OR (c.group_id = ?)`, u.ID, IDs[0], IDs[0], u.ID, IDs[1])
 	if err != nil {
 		return nil, err
 	}
@@ -110,15 +111,15 @@ func (u User) GetChats(receiverID int) ([]Message, error) {
 func GetLastChats(userId int) ([]Message, error) {
 	//sqlite query to get last chats between a user and all other users and groups
 	var rows, err = db.DB.Query(`
-	SELECT sub.id, sub.user_id, sub.receiver_id, sub.group_id, sub.message, sub.image, sub.sent_at, sub.avatar, sub.fname, sub.lname, sub.avatar
-FROM (
-    SELECT c.id, c.user_id, c.receiver_id, c.group_id, c.message, c.image, c.sent_at, u.avatar, u.fname, u.lname, u.avatar,
-           ROW_NUMBER() OVER (PARTITION BY CASE WHEN c.user_id = $1 THEN c.receiver_id ELSE c.user_id END, c.group_id ORDER BY c.sent_at DESC) AS rn
-    FROM chat c
-    INNER JOIN users u ON IIF(($1 = c.receiver_id), c.user_id, c.receiver_id) = u.id
-    WHERE (c.user_id = $1 OR c.receiver_id = $1)
-) sub
-WHERE sub.rn = 1;`, userId)
+	SELECT sub.id, sub.user_id, sub.receiver_id, sub.group_id, sub.message, sub.image, sub.sent_at, sub.avatar, sub.fname, sub.lname
+		FROM (
+			SELECT c.id, c.user_id, c.receiver_id, c.group_id, c.message, c.image, c.sent_at, u.avatar, u.fname, u.lname, u.avatar,
+				ROW_NUMBER() OVER (PARTITION BY CASE WHEN c.user_id = $1 THEN c.receiver_id ELSE c.user_id END, c.group_id ORDER BY c.sent_at DESC) AS rn
+			FROM chat c
+			INNER JOIN users u ON IIF(($1 = c.receiver_id), c.user_id, c.receiver_id) = u.id
+			WHERE (c.user_id = $1 OR c.receiver_id = $1)
+		) sub
+	WHERE sub.rn = 1;`, userId)
 	if err != nil {
 		return nil, err
 	}
@@ -126,7 +127,28 @@ WHERE sub.rn = 1;`, userId)
 	var chats []Message
 	for rows.Next() {
 		var chat Message
-		err = rows.Scan(&chat.ID, &chat.UserID, &chat.ReceiverID, &chat.GroupID, &chat.Message, &chat.Image, &chat.SentAt, &chat.ReceiverAvatar, &chat.ReceiverFname, &chat.ReceiverLname, &chat.ReceiverAvatar)
+		err = rows.Scan(&chat.ID, &chat.UserID, &chat.ReceiverID, &chat.GroupID, &chat.Message, &chat.Image, &chat.SentAt, &chat.ReceiverAvatar, &chat.ReceiverFname, &chat.ReceiverLname)
+		if err != nil {
+			return nil, err
+		}
+		chats = append(chats, chat)
+	}
+	rows, err = db.DB.Query(`SELECT sub.id, sub.user_id, sub.receiver_id, sub.group_id, sub.message, sub.image, sub.sent_at, sub.group_name
+	FROM (
+		SELECT c.id, c.user_id, c.receiver_id, c.group_id, c.message, c.image, c.sent_at, g.group_name,
+			   ROW_NUMBER() OVER (PARTITION BY CASE WHEN c.user_id = $1 THEN c.receiver_id ELSE c.user_id END, c.group_id ORDER BY c.sent_at DESC) AS rn
+		FROM chat c
+		INNER JOIN groups g ON c.group_id = g.id
+		WHERE (c.group_id IN (SELECT group_id FROM group_members WHERE user_id = $1))
+	) sub
+	WHERE sub.rn = 1;`, userId)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	for rows.Next() {
+		var chat Message
+		err = rows.Scan(&chat.ID, &chat.UserID, &chat.ReceiverID, &chat.GroupID, &chat.Message, &chat.Image, &chat.SentAt, &chat.GroupName)
 		if err != nil {
 			return nil, err
 		}

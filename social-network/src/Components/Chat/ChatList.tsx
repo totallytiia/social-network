@@ -3,6 +3,7 @@ import { ChatBubbleOvalLeftIcon } from '@heroicons/react/24/solid';
 import { XMarkIcon } from '@heroicons/react/24/outline';
 import { UserContext } from '../App/App';
 import ProfileIcon from '../Profile/ProfileIcon';
+import GroupIcon from '../Group/GroupIcon';
 
 interface IReceiver {
     id: number;
@@ -11,11 +12,17 @@ interface IReceiver {
     avatar: Blob | null;
 }
 
+interface IGroup {
+    id: number;
+    name: string;
+}
+
 interface ILastChat {
     id: number;
     sender: number;
     receiver: IReceiver;
     group: number;
+    group_name: string;
     message: string;
     image: Blob | null;
     sent_at: Date;
@@ -37,13 +44,14 @@ export default function ChatList({
     const [chatVisible, setChatVisible] = useState(true);
     const [lastChats, setLastChats] = useState([] as ILastChat[]);
     const [users, setUsers] = useState([] as IReceiver[]);
+    const [groups, setGroups] = useState([] as IGroup[]);
 
     const { userData } = useContext(UserContext);
 
-    function handleUserSearch(e: React.ChangeEvent<HTMLInputElement>) {
+    function handleSearch(e: React.ChangeEvent<HTMLInputElement>) {
         const search = e.target.value.toLowerCase();
-        const usersList = document.querySelector('ul#chatSearchUserList.USERS');
-        if (usersList === null) {
+        const list = document.querySelector('ul#chatSearchUserList.USERS');
+        if (list === null) {
             return;
         }
         const filteredUsers = users.filter((user) =>
@@ -51,7 +59,7 @@ export default function ChatList({
                 search
             )
         );
-        usersList.innerHTML = '';
+        list.innerHTML = '';
         for (const user of filteredUsers) {
             const li = document.createElement('li');
             li.classList.add(
@@ -74,15 +82,35 @@ export default function ChatList({
                     ...visibleChats,
                     users: [...visibleChats.users, user.id],
                 });
-                // setChatVisible(true);
             });
-            usersList.appendChild(li);
+            list.appendChild(li);
+        }
+        for (const group of groups) {
+            const li = document.createElement('li');
+            li.classList.add(
+                'flex',
+                'items-center',
+                'p-1',
+                'font-sm',
+                'hover:bg-gray-200'
+            );
+            li.innerHTML = `
+                <img src="/assets/group_icon.png" alt="avatar" class="w-6 h-6 rounded-full object-cover mr-2">
+                <span class="text-sm">${group.name}</span>
+            `;
+            li.addEventListener('click', () => {
+                setVisibleChats({
+                    ...visibleChats,
+                    groups: [...visibleChats.groups, group.id],
+                });
+            });
+            list.appendChild(li);
         }
         if (filteredUsers.length === 0) {
             const li = document.createElement('li');
             li.classList.add('text-sm', 'p-2');
             li.textContent = 'No users found';
-            usersList.appendChild(li);
+            list.appendChild(li);
         }
     }
 
@@ -116,6 +144,7 @@ export default function ChatList({
                                 : null,
                     },
                     group: message.group_id,
+                    group_name: message.group_name,
                     message: message.message,
                     image: message.image !== '' ? message.image : null,
                     sent_at: new Date(message.sent_at),
@@ -152,7 +181,30 @@ export default function ChatList({
             }
             setUsers(users);
         }
+        async function getGroups() {
+            const url = 'http://localhost:8080/api/groups/getall';
+            const res = await fetch(url, {
+                method: 'GET',
+                credentials: 'include',
+            });
+            if (res.status === 204) {
+                return;
+            }
+            const data = await res.json();
+            if (data.errors) {
+                return;
+            }
+            var groups: IGroup[] = [];
+            for (const group of data) {
+                groups.push({
+                    id: group.id,
+                    name: group.name,
+                });
+            }
+            setGroups(groups);
+        }
         getUsers();
+        getGroups();
     }, []);
 
     if (!chatVisible) {
@@ -209,7 +261,7 @@ export default function ChatList({
                                                 onClick={() => {
                                                     if (
                                                         lastChat.receiver.id !==
-                                                        null
+                                                        0
                                                     ) {
                                                         const visibleChatsCopy =
                                                             {
@@ -258,21 +310,34 @@ export default function ChatList({
                                                 }}
                                             >
                                                 <div className="CHAT_LIST__BODY__ITEM__AVATAR">
-                                                    <ProfileIcon
-                                                        avatar={
-                                                            lastChat.receiver
-                                                                .avatar !== null
-                                                                ? lastChat
-                                                                      .receiver
-                                                                      .avatar
-                                                                : null
-                                                        }
-                                                        classNames="w-8 h-8 rounded-full shrink-0"
-                                                    />
+                                                    {lastChat.receiver.fname !==
+                                                    undefined ? (
+                                                        <ProfileIcon
+                                                            avatar={
+                                                                lastChat
+                                                                    .receiver
+                                                                    .avatar !==
+                                                                null
+                                                                    ? lastChat
+                                                                          .receiver
+                                                                          .avatar
+                                                                    : null
+                                                            }
+                                                            classNames="w-8 h-8 rounded-full shrink-0"
+                                                        />
+                                                    ) : (
+                                                        <GroupIcon />
+                                                    )}
                                                 </div>
                                                 <div className="CHAT_LIST__BODY__ITEM__CONTENT">
                                                     <div className="CHAT_LIST__BODY__ITEM__CONTENT__NAME">
-                                                        <h4 className="font-bold">{`${lastChat.receiver.fname} ${lastChat.receiver.lname}`}</h4>
+                                                        <h4 className="font-bold">
+                                                            {lastChat.receiver
+                                                                .fname !==
+                                                            undefined
+                                                                ? `${lastChat.receiver.fname} ${lastChat.receiver.lname}`
+                                                                : lastChat.group_name}
+                                                        </h4>
                                                     </div>
                                                     <div className="CHAT_LIST__BODY__ITEM__CONTENT__MESSAGE">
                                                         <p>
@@ -303,7 +368,7 @@ export default function ChatList({
                             name="chatReceiver"
                             id="chatReceiver"
                             placeholder="Search for users or groups"
-                            onChange={handleUserSearch}
+                            onChange={handleSearch}
                             onFocus={(e) =>
                                 e.target.parentElement?.children[0].classList.remove(
                                     'hidden'
