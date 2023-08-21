@@ -267,7 +267,7 @@ export default function ChatList({
                                                                       .avatar
                                                                 : null
                                                         }
-                                                        classNames="w-8 h-8 rounded-full"
+                                                        classNames="w-8 h-8 rounded-full shrink-0"
                                                     />
                                                 </div>
                                                 <div className="CHAT_LIST__BODY__ITEM__CONTENT">

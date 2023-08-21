@@ -13,7 +13,7 @@ export default function ChatHeader({ props }: { props: Props }) {
             <div className="flex flex-row items-center space-x-1.5">
                 <ProfileIcon
                     avatar={avatar}
-                    classNames="w-6 h-6 object-cover rounded-full"
+                    classNames="w-6 h-6 object-cover rounded-full shrink-0"
                 />
                 <div className="flex flex-col">
                     <p className="text-sm text-left font-bold text-white my-auto">
