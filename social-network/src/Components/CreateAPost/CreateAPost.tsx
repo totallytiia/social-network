@@ -163,28 +163,30 @@ export default function CreateAPost(props: any) {
                                 required
                             ></textarea>
                             <div className="relative flex flex-rows justify-end gap-2 [&>*]:outline-none md:gap-6">
-                                <select
-                                    value={selectedOption}
-                                    className="cursor-pointer border-r-8 border-blue-100 hover:border-blue-200 btn-custom text-center text-sm  font-semibold p-1"
-                                    onChange={(e) => {
-                                        const postCopy = postData;
-                                        postCopy.post.privacy = parseInt(
-                                            e.target.value
-                                        );
-                                        setPostData(postCopy);
-                                        setSelectedOption(e.target.value);
-                                        if (e.target.value === '2') {
-                                            setUserListVisible(true);
-                                            getUserList();
-                                        } else {
-                                            setUserListVisible(false);
-                                        }
-                                    }}
-                                >
-                                    <option value="0">Public</option>
-                                    <option value="2">Semi-private</option>
-                                    <option value="1">Private</option>
-                                </select>
+                                {props.group ? null : (
+                                    <select
+                                        value={selectedOption}
+                                        className="cursor-pointer border-r-8 border-blue-100 hover:border-blue-200 btn-custom text-center text-sm  font-semibold p-1"
+                                        onChange={(e) => {
+                                            const postCopy = postData;
+                                            postCopy.post.privacy = parseInt(
+                                                e.target.value
+                                            );
+                                            setPostData(postCopy);
+                                            setSelectedOption(e.target.value);
+                                            if (e.target.value === '2') {
+                                                setUserListVisible(true);
+                                                getUserList();
+                                            } else {
+                                                setUserListVisible(false);
+                                            }
+                                        }}
+                                    >
+                                        <option value="0">Public</option>
+                                        <option value="2">Semi-private</option>
+                                        <option value="1">Private</option>
+                                    </select>
+                                )}
                                 <div className="USER_POPUP absolute top-10 right-32 bg-white rounded-xl overflow-scroll shadow-md max-h-36">
                                     {userListVisible
                                         ? userList.map((user: any) => {

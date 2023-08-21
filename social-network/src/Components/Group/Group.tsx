@@ -191,7 +191,7 @@ export default function Group() {
     return (
         <div className="bg-custom min-h-screen">
             <div className="p-16 bg-custom item-center justify-center flex flex-col lg:flex-row gap-2 ">
-                <div className="EVENTS bg-white p-4 mr-4 rounded-xl shadow-lg max-w-xl">
+                <div className="EVENTS bg-white lg:mr-4 rounded-xl shadow-lg max-w-xl mx-auto px-8 py-4 lg:px-4 lg:mx-0 ">
                     {group.events !== null && group.events.length !== 0 ? (
                         group.events.map((event: any) => (
                             <div
