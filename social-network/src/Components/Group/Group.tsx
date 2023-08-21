@@ -357,7 +357,7 @@ export default function Group() {
                                 onSubmit={sendInvite}
                             >
                                 <div className="flex p-2  gap-1 bg-blue-500 text-white rounded-t-lg">
-                                    <PlusIcon className="w-4 h-4 my-auto stroke-2 stroke-white" />
+                                    <PlusIcon className="w-4 h-4 my-auto stroke-2 stroke-white shrink-0" />
                                     <h2 className="font-bold text-center text-sm mb">
                                         Invite users
                                     </h2>

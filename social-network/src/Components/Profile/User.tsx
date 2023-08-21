@@ -207,7 +207,7 @@ export default function User() {
                                                                         avatar={
                                                                             u.avatar
                                                                         }
-                                                                        classNames="w-10 h-10 rounded-full"
+                                                                        classNames="w-10 h-10 rounded-full shrink-0"
                                                                     />
                                                                     <p className="ml-2">
                                                                         {
@@ -263,7 +263,7 @@ export default function User() {
                                                                     avatar={
                                                                         u.avatar
                                                                     }
-                                                                    classNames="w-10 h-10 rounded-full"
+                                                                    classNames="w-10 h-10 rounded-full shrink-0"
                                                                 />
                                                                 <p className="ml-2">
                                                                     {u.nickname}
@@ -294,16 +294,16 @@ export default function User() {
                             </div>
                         </div>
                         <div className="relative w-48 mx-auto">
-                            <div className="w-48 h-48 bg-indigo-100 mx-auto rounded-full shadow-2xl flex items-center justify-center">
+                            <div className="w-48 h-48 bg-indigo-100 mx-auto rounded-full shadow-2xl shrink-0 flex items-center justify-center">
                                 {user.avatar !== undefined &&
                                 user.avatar.toString() !== '' ? (
                                     <img
-                                        className="border-none rounded-full w-48 h-48 object-cover outline-none"
+                                        className="border-none rounded-full w-48 h-48 object-cover outline-none "
                                         src={user.avatar.toString()}
                                         alt=""
                                     />
                                 ) : (
-                                    <ProfileIcon classNames="w-48 h-48 rounded-full" />
+                                    <ProfileIcon classNames="w-48 h-48 rounded-full shrink-0" />
                                 )}
                             </div>
                         </div>
@@ -394,7 +394,7 @@ export default function User() {
                                     <div className="mt-4 mx-6 mb-0 p-5 bg-blue-50 rounded-xl">
                                         <div className="flex justify-between">
                                             <div className="flex">
-                                                <div className="h-8 w-8 relative overflow-hidden rounded-full bg-pink-200">
+                                                <div className="h-8 w-8 relative overflow-hidden shrink-0 rounded-full bg-pink-200">
                                                     <ProfileIcon
                                                         avatar={
                                                             post.user_avatar

@@ -141,7 +141,7 @@ export default function Post({ postInput, deletePost }: PostProps) {
                             onClick={() =>
                                 (window.location.href = `/user/${post.user_id}`)
                             }
-                            className="cursor-pointer h-8 w-8 relative overflow-hidden rounded-full bg-pink-200"
+                            className="cursor-pointer h-8 w-8 relative overflow-hidden rounded-full shrink-0 bg-pink-200"
                         >
                             <ProfileIcon
                                 avatar={post.user_avatar}

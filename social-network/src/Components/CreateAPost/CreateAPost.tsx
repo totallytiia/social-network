@@ -141,7 +141,7 @@ export default function CreateAPost(props: any) {
                 className="flex flex-col [&>input]:mb-2 [&>textarea]:mb-2 [&>*]:outline-none"
             >
                 <div className="flex-row flex gap-2">
-                    <div className="h-8 w-8 overflow-hidden object-cover rounded-full bg-pink-200">
+                    <div className="h-8 w-8 overflow-hidden object-cover rounded-full bg-pink-200 shrink-0">
                         <ProfileIcon
                             avatar={userData.avatar}
                             classNames="w-10 h-10"

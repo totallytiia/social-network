@@ -48,7 +48,7 @@ export default function ChatContent({ messages, avatar }: Props) {
                           >
                               <ProfileIcon
                                   avatar={avatar}
-                                  classNames="w-5 h-5 rounded-full object-cover mt-1"
+                                  classNames="w-5 h-5 rounded-full shrink-0 object-cover mt-1"
                               />
                           </div>
                           <div>
