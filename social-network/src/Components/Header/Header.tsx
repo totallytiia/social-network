@@ -126,7 +126,7 @@ export default function Header() {
                             <div
                                 onClick={handleContainerClick}
                                 id="NOTIFICATIONS-CONTAINER"
-                                className="flex absolute top-14 right-2 bg-white shadow-lg rounded-lg w-96 overflow-scroll max-h-96"
+                                className="flex absolute top-16 right-2 bg-white shadow-lg rounded-lg w-96 overflow-scroll max-h-96"
                             >
                                 <div
                                     id="NOTIFICATIONS-CONTAINER-HEADER"
