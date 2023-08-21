@@ -167,7 +167,7 @@ export default function Header() {
                         >
                             <BellIcon className="text-black w-6 h-6 " />
                             {numUnseenNotifications.current > 0 ? (
-                                <div className="flex absolute right-2 -bottom-3 bg-red-500 text-white rounded-full w-5 h-5 items-center justify-center text-xs">
+                                <div className="flex absolute right-6 -top-1 bg-red-500 text-white rounded-full w-4 h-4 items-center justify-center text-xs">
                                     {numUnseenNotifications.current}
                                 </div>
                             ) : null}
