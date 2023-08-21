@@ -118,23 +118,6 @@ export default function Chat({
         }
         getChat();
     }, [id, type]);
-    if (ws !== null && ws !== undefined)
-        ws.addEventListener('message', (e) => {
-            const data = JSON.parse(e.data);
-            console.log(data);
-            if (data.type === 'chat') {
-                var chatCopy = { ...chat };
-                chatCopy.Messages.push({
-                    id: data.message.id,
-                    content: data.message.message,
-                    image: data.message.image,
-                    sender: data.message.user_id,
-                    receiver: data.message.receiver_id,
-                    timestamp: data.message.sent_at,
-                });
-                setChat(chatCopy);
-            }
-        });
 
     async function sendMessage(message: string, image: Blob | null) {
         const url = `http://localhost:8080/api/chat/send`;

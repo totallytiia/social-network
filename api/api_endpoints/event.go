@@ -37,7 +37,6 @@ func CreateEvent(w http.ResponseWriter, r *http.Request) {
 		GroupID:       groupID,
 		StartDateTime: r.FormValue("start_date_time"),
 		EndDateTime:   r.FormValue("end_date_time"),
-		Location:      r.FormValue("location"),
 		Description:   r.FormValue("description"),
 		Title:         r.FormValue("title"),
 	}
@@ -53,18 +52,26 @@ func CreateEvent(w http.ResponseWriter, r *http.Request) {
 		w.Write(badReqJSON)
 		return
 	}
-	var e = s.Event{ID: id, GroupID: groupID, StartDateTime: event.StartDateTime, EndDateTime: event.EndDateTime, Location: event.Location, Description: event.Description, Title: event.Title}
+	var e = s.Event{ID: id}
 	err = e.Get()
 	if err != nil {
+		fmt.Println("Could not get event")
 		w.WriteHeader(http.StatusInternalServerError)
 		badReqJSON, _ := json.Marshal(s.ErrorResponse{Errors: "There was an error with your request", Details: err.Error()})
 		w.Write(badReqJSON)
 		return
 	}
-	for member := range group.GroupMembers {
-		var user = s.User{ID: member}
+	fmt.Println(group.GroupMembers)
+	for _, member := range group.GroupMembers {
+		// extract key (user id)
+		var userID int
+		for key := range member {
+			userID = key
+		}
+		var user = s.User{ID: userID}
 		err = user.Get(nil)
 		if err != nil {
+			fmt.Println("Could not get user")
 			w.WriteHeader(http.StatusInternalServerError)
 			badReqJSON, _ := json.Marshal(s.ErrorResponse{Errors: "There was an error with your request", Details: err.Error()})
 			w.Write(badReqJSON)
@@ -162,7 +169,6 @@ func UpdateEvent(w http.ResponseWriter, r *http.Request) {
 		ID:            eventID,
 		StartDateTime: r.FormValue("start_date_time"),
 		EndDateTime:   r.FormValue("end_date_time"),
-		Location:      r.FormValue("location"),
 		Description:   r.FormValue("description"),
 		Title:         r.FormValue("title"),
 	}
