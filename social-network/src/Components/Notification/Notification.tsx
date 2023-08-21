@@ -10,7 +10,6 @@ export default function Notification() {
     if (ws !== null) {
         ws.addEventListener('message', (e) => {
             const data = JSON.parse(e.data);
-            console.log(data);
             if (data.type === 'chat') {
                 setNotificationVisible(true);
                 setNotification("You've got a new message!");

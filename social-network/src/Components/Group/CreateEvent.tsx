@@ -40,11 +40,9 @@ export default function CreateEvent({ groupID }: { groupID: number }) {
             credentials: 'include',
             body: FD,
         });
-        if (response.ok) {
-            const data = await response.json();
-            console.log(data);
-        } else {
-            console.log('something went wrong');
+        const data = await response.json();
+        if (data.errors) {
+            return;
         }
     };
 

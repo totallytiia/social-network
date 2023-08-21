@@ -76,7 +76,6 @@ export default function Post({ postInput, deletePost }: PostProps) {
                 credentials: 'include',
             });
             if (!res.ok) {
-                console.log('error unlike');
                 return;
             }
             const postCopy = Object.assign({}, post);
@@ -123,7 +122,6 @@ export default function Post({ postInput, deletePost }: PostProps) {
                 credentials: 'include',
             });
             if (!res.ok) {
-                console.log('error unlike');
                 return;
             }
             const postCopy = Object.assign({}, post);

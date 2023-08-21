@@ -58,12 +58,9 @@ export default function CreateGroup(props: Props) {
 
         const data = await res.json();
         if (data.errors) {
-            console.log(data);
         }
         setFormVisibility(false);
-        console.log(props);
         if (setGroupCreated !== undefined) {
-            console.log('something happened');
             setGroupCreated(true);
         }
     }

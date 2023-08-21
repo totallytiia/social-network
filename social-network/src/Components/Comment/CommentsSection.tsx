@@ -40,7 +40,6 @@ export default function CommentsSection({
         FD.append('post_id', comment.post_id.toString() as string);
         FD.append('comment', comment.comment as string);
         FD.append('image', comment.image as string);
-        console.log(comment.image);
 
         const response = await fetch(
             'http://localhost:8080/api/comments/create',
@@ -76,7 +75,6 @@ export default function CommentsSection({
         const commentsCopy = comments !== null ? Array.from(comments) : [];
         commentsCopy.push(data);
         setComments(commentsCopy);
-        console.log(comments);
     };
 
     async function deleteComment(id: number) {
@@ -90,7 +88,6 @@ export default function CommentsSection({
         });
         const data = await res.json();
         if (data.errors) {
-            console.log(data);
             return;
         }
         setComments(comments.filter((comment: any) => comment.id !== id));
@@ -101,12 +98,10 @@ export default function CommentsSection({
     ) => {
         if (e.target.files?.length === 0) return;
         const file = e.target.files?.[0];
-        console.log(file);
         const reader = new FileReader();
         reader.onloadend = () => {
             const commentCopy = comment;
             commentCopy.image = reader.result as string;
-            console.log(commentCopy.image);
             setComment(commentCopy);
         };
         reader.readAsDataURL(file as Blob);

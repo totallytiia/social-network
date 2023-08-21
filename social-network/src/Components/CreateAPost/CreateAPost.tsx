@@ -83,8 +83,6 @@ export default function CreateAPost(props: any) {
         if (response.status === 201) {
             const post = await response.json();
             props.postAdded(post);
-        } else {
-            console.log(response);
         }
     };
 
@@ -94,12 +92,10 @@ export default function CreateAPost(props: any) {
             credentials: 'include',
         });
         if (!response.ok) {
-            console.log(response);
             return;
         }
         const data = await response.json();
         if (data === null) {
-            console.log('no users found');
             return;
         }
         setUserList(data);
@@ -133,7 +129,6 @@ export default function CreateAPost(props: any) {
                 );
         }
         setPostData(postCopy);
-        console.log(postCopy.post.privacy_settings);
     };
 
     if (userData.id === undefined) return <></>;

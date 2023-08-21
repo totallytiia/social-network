@@ -41,7 +41,7 @@ export default function Group() {
             });
             const data = await res.json();
             if (data.errors) {
-                console.log(data);
+                return;
             }
             if (data.posts === null) {
                 data.posts = [];
@@ -133,7 +133,7 @@ export default function Group() {
             });
             const data = await res.json();
             if (data.errors) {
-                console.log(data);
+                return;
             }
             const groupMembers = group.members?.map((member) =>
                 parseInt(Object.keys(member)[0])

@@ -143,7 +143,6 @@ export default function ChatList({
             }
             var users: IReceiver[] = [];
             for (const user of data) {
-                console.log(user.avatar);
                 users.push({
                     id: user.id,
                     fname: user.fName,
@@ -171,8 +170,6 @@ export default function ChatList({
             </button>
         );
     }
-
-    console.log(lastChats);
 
     return (
         <div className="flex items-end">

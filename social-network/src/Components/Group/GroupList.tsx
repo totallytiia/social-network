@@ -31,7 +31,6 @@ export default function GroupList(props: Props) {
             }
             const data = await res.json();
             if (data.errors) {
-                console.log(data);
                 return;
             }
             setGroups(data);
