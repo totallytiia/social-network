@@ -64,7 +64,7 @@ func SendChat(w http.ResponseWriter, r *http.Request) {
 	}
 	//send message to receiver
 	var receiver = s.User{ID: receiverID}
-	if receiverID != 0 {
+	if receiverID != 0 && receiverID != u.ID {
 		err = receiver.Get(nil)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
