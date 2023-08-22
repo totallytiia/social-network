@@ -84,6 +84,13 @@ func GetGroup(w http.ResponseWriter, r *http.Request) {
 		BadRequest(w, r, err.Error())
 		return
 	}
+	for i := range posts {
+		posts[i].Comments, err = s.GetComments(posts[i].ID)
+		if err != nil {
+			BadRequest(w, r, err.Error())
+			return
+		}
+	}
 	g.GroupPosts = posts
 	w.WriteHeader(http.StatusOK)
 	okJSON, _ := json.Marshal(g)

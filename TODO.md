@@ -11,6 +11,7 @@
 - [X] Display users posts on profile
 - [X] Create the notifications component HTML src/Components/Notifications/Notifications.tsx
 - [X] Choose users on "almost private" post
+- [ ] Click on notification do appropriate action
 
 ---
 
@@ -25,8 +26,7 @@
 - [X] Group join requests
   - [X] Frontend
 - [ ] Events [going/not going] (groups)
-- [ ] Comments on posts in group view 
-- [ ] Click on notification do appropriate action
+- [X] Comments on posts in group view 
 
 ---
 
