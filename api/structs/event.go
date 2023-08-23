@@ -104,34 +104,13 @@ func (e *Event) Delete() error {
 	return nil
 }
 
-func (e *Event) Join(userID int) error {
-	var _, err = db.DB.Exec("INSERT INTO event_users (event_id, user_id, going) VALUES (?, ?, 1)", e.ID, userID)
-	if err != nil {
-		return err
-	}
-	return nil
-}
+func (e *Event) RespondToEvent(userID int, going bool) error {
+	var err error
+	if going {
+		_, err = db.DB.Exec("INSERT INTO event_users (event_id, user_id, going, status) VALUES (?, ?, ?, ?)", e.ID, userID, 1, 1)
+	} else {
+		_, err = db.DB.Exec("INSERT INTO event_users (event_id, user_id, notgoing, status) VALUES (?, ?, ?, ?)", e.ID, userID, 1, 1)
 
-func (e *Event) Leave(userID int) error {
-	var _, err = db.DB.Exec("DELETE FROM event_users WHERE event_id = ? AND user_id = ?", e.ID, userID)
-	if err != nil {
-		return err
 	}
-	return nil
-}
-
-func (e *Event) RespondtoEvent(userID int, going string) error {
-	if going == "1" {
-		var _, err = db.DB.Exec("UPDATE event_users SET going = 1 WHERE event_id = ? AND user_id = ?", e.ID, userID)
-		if err != nil {
-			return err
-		}
-		return nil
-	} else if going == "0" {
-		var _, err = db.DB.Exec("UPDATE event_users SET notgoing = 1 WHERE event_id = ? AND user_id = ?", e.ID, userID)
-		if err != nil {
-			return err
-		}
-	}
-	return nil
+	return err
 }

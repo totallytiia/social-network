@@ -104,6 +104,35 @@ export default function Group() {
         e.currentTarget.reset();
     }
 
+    async function respondToEvent(response: boolean, event_id: number) {
+        const url = `http://localhost:8080/api/event/respond`;
+        const FD = new FormData();
+        FD.append('event_id', event_id.toString());
+        FD.append('response', response.toString());
+        const res = await fetch(url, {
+            method: 'POST',
+            credentials: 'include',
+            body: FD,
+        });
+        const data = await res.json();
+        if (data.errors) {
+            return;
+        }
+        setGroup((current) => {
+            const newEvents = current.events.map((event: any) => {
+                if (event.id === event_id) {
+                    if (response) {
+                        event.user_going = 1;
+                    } else {
+                        event.user_not_going = 1;
+                    }
+                }
+                return event;
+            });
+            return { ...current, events: newEvents };
+        });
+    }
+
     const deletePost = async (id: number) => {
         const url = `http://localhost:8080/api/posts/delete`;
         const FD = new FormData();
@@ -218,15 +247,55 @@ export default function Group() {
                                 </div>
 
                                 <div className="EVENTS__ITEM__FOOTER flex flex-row gap-2 justify-end">
-                                    <button className="flex gap-1 text-sm">
-                                        <PlusIcon className="w-5 h-5 my-auto bg-green-500 rounded-full text-white text-bold p-0.5 stroke-1 stroke-white" />
-                                        <p>Join</p>
-                                    </button>
+                                    {event.user_going ||
+                                    event.user_not_going ? (
+                                        <>
+                                            {event.user_going ? (
+                                                <div className="flex flex-row gap-1">
+                                                    <CheckIcon className="w-5 h-5 my-auto bg-green-500 rounded-full text-white text-bold p-0.5 stroke-1 stroke-white" />
+                                                    <p className="text-sm">
+                                                        Going
+                                                    </p>
+                                                </div>
+                                            ) : null}
+                                            {event.user_not_going ? (
+                                                <div className="flex flex-row gap-1">
+                                                    <MinusIcon className="w-5 h-5 my-auto bg-red-500 rounded-full text-white text-bold p-0.5 stroke-1 stroke-white" />
+                                                    <p className="text-sm">
+                                                        Not going
+                                                    </p>
+                                                </div>
+                                            ) : null}
+                                        </>
+                                    ) : (
+                                        <>
+                                            <button
+                                                className="flex gap-1 text-sm"
+                                                onClick={() =>
+                                                    respondToEvent(
+                                                        true,
+                                                        event.id
+                                                    )
+                                                }
+                                            >
+                                                <PlusIcon className="w-5 h-5 my-auto bg-green-500 rounded-full text-white text-bold p-0.5 stroke-1 stroke-white" />
+                                                <p>Join</p>
+                                            </button>
 
-                                    <button className="flex gap-1 text-sm">
-                                        <MinusIcon className="w-5 h-5 my-auto bg-red-500 rounded-full text-white text-bold p-0.5 stroke-1 stroke-white" />
-                                        <p className="">Decline</p>
-                                    </button>
+                                            <button
+                                                className="flex gap-1 text-sm"
+                                                onClick={() =>
+                                                    respondToEvent(
+                                                        false,
+                                                        event.id
+                                                    )
+                                                }
+                                            >
+                                                <MinusIcon className="w-5 h-5 my-auto bg-red-500 rounded-full text-white text-bold p-0.5 stroke-1 stroke-white" />
+                                                <p className="">Decline</p>
+                                            </button>
+                                        </>
+                                    )}
                                 </div>
                             </div>
                         ))

@@ -213,60 +213,6 @@ func DeleteEvent(w http.ResponseWriter, r *http.Request) {
 	w.Write(respJSON)
 }
 
-func JoinEvent(w http.ResponseWriter, r *http.Request) {
-	v, u := ValidateCookie(w, r)
-	if !v {
-		http.Error(w, "Unauthorized", http.StatusUnauthorized)
-	}
-	if r.Method != "POST" {
-		MethodNotAllowed(w, r)
-		return
-	}
-	eventID, err := strconv.Atoi(r.FormValue("event_id"))
-	if err != nil {
-		BadRequest(w, r, "Invalid event_id")
-		return
-	}
-	var event = s.Event{
-		ID: eventID,
-	}
-	err = event.Join(u.ID)
-	if err != nil {
-		BadRequest(w, r, err.Error())
-		return
-	}
-	w.WriteHeader(http.StatusOK)
-	var respJSON, _ = json.Marshal(s.OKResponse{Message: "Joined event", Details: eventID})
-	w.Write(respJSON)
-}
-
-func LeaveEvent(w http.ResponseWriter, r *http.Request) {
-	v, u := ValidateCookie(w, r)
-	if !v {
-		http.Error(w, "Unauthorized", http.StatusUnauthorized)
-	}
-	if r.Method != "POST" {
-		MethodNotAllowed(w, r)
-		return
-	}
-	eventID, err := strconv.Atoi(r.FormValue("event_id"))
-	if err != nil {
-		BadRequest(w, r, "Invalid event_id")
-		return
-	}
-	var event = s.Event{
-		ID: eventID,
-	}
-	err = event.Leave(u.ID)
-	if err != nil {
-		BadRequest(w, r, err.Error())
-		return
-	}
-	w.WriteHeader(http.StatusOK)
-	var respJSON, _ = json.Marshal(s.OKResponse{Message: "Left event", Details: eventID})
-	w.Write(respJSON)
-}
-
 func RespondToEvent(w http.ResponseWriter, r *http.Request) {
 	v, u := ValidateCookie(w, r)
 	if !v {
@@ -284,7 +230,12 @@ func RespondToEvent(w http.ResponseWriter, r *http.Request) {
 	var event = s.Event{
 		ID: eventID,
 	}
-	err = event.RespondtoEvent(u.ID, r.FormValue("response"))
+	response, err := strconv.ParseBool(r.FormValue("response"))
+	if err != nil {
+		BadRequest(w, r, "Invalid response")
+		return
+	}
+	err = event.RespondToEvent(u.ID, response)
 	if err != nil {
 		BadRequest(w, r, err.Error())
 		return
