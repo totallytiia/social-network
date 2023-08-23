@@ -152,8 +152,6 @@ export default function Chat({
         setChat(chatCopy);
     }
 
-    console.log(id);
-
     return (
         <div className="max-w-sm">
             <div className="CLOSE_CHAT flex flex-row justify-end items-center">

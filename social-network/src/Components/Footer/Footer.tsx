@@ -4,11 +4,9 @@ import { WSContext } from '../WSProvider/WSProvider';
 import { ChatBubbleOvalLeftIcon } from '@heroicons/react/24/solid';
 import Chat from '../Chat/Chat';
 import Notification from '../Notification/Notification';
-import { UserContext } from '../App/App';
 
 export default function Footer() {
     const { ws } = useContext(WSContext);
-    const { userData } = useContext(UserContext);
     // const [messages, setMessages] = useState([] as IMessage[]);
     // const [newMessage, setNewMessage] = useState(false);
     const [chatVisible, setChatVisible] = useState(false);
@@ -23,17 +21,18 @@ export default function Footer() {
             const data = JSON.parse(e.data);
             console.log(data);
             if (data.type === 'chat') {
-                const { group_id, receiver_id, user_id } = data.message;
-
-                // Check if the chat is not already visible before updating state
-                if (
-                    !visibleChats.groups.includes(group_id) &&
-                    !visibleChats.users.includes(user_id)
-                ) {
-                    setVisibleChats((prevChats) => ({
-                        groups: [...prevChats.groups, group_id],
-                        users: [...prevChats.users, user_id],
-                    }));
+                const { group_id, user_id } = data.message;
+                console.log(visibleChats);
+                console.log(group_id, user_id);
+                if (!visibleChats.users.includes(user_id)) {
+                    const visibleChatsCopy = { ...visibleChats };
+                    visibleChatsCopy.users.push(user_id);
+                    setVisibleChats(visibleChatsCopy);
+                }
+                if (!visibleChats.groups.includes(group_id) && group_id !== 0) {
+                    const visibleChatsCopy = { ...visibleChats };
+                    visibleChatsCopy.groups.push(group_id);
+                    setVisibleChats(visibleChatsCopy);
                 }
             }
         }
@@ -46,7 +45,7 @@ export default function Footer() {
                 ws.removeEventListener('message', handleNewMessage);
             };
         }
-    }, [ws]); // Only re-run if ws changes
+    }, [ws, visibleChats]); // Only re-run if ws changes
 
     return (
         <>
@@ -61,7 +60,7 @@ export default function Footer() {
                     {visibleChats.groups !== undefined
                         ? visibleChats.groups.map((group) => (
                               <Chat
-                                  key={group}
+                                  key={`groupChat-${group}`}
                                   type="group"
                                   id={group}
                                   ws={ws}
@@ -73,7 +72,7 @@ export default function Footer() {
                     {visibleChats.users !== undefined
                         ? visibleChats.users.map((user) => (
                               <Chat
-                                  key={user}
+                                  key={`userChat-${user}`}
                                   type="receiver"
                                   id={user}
                                   ws={ws}
@@ -85,7 +84,6 @@ export default function Footer() {
                 </div>
                 {chatVisible ? (
                     <ChatList
-                        // numUnseenMessages={numUnseenMessages.current}
                         visibleChats={visibleChats}
                         setVisibleChats={setVisibleChats}
                     />
