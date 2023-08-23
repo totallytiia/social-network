@@ -7,24 +7,25 @@ export default function Notification() {
     const [notificationVisible, setNotificationVisible] = useState(false);
     const [notification, setNotification] = useState('' as string);
 
-    if (ws !== null) {
-        ws.addEventListener('message', (e) => {
-            const data = JSON.parse(e.data);
-            if (data.type === 'chat') {
-                setNotificationVisible(true);
-                setNotification("You've got a new message!");
-            }
-        });
-    }
+    // if (ws !== null) {
+    //     ws.addEventListener('message', (e) => {
+    //         const data = JSON.parse(e.data);
+    //         if (data.type === 'chat') {
+    //             setNotificationVisible(true);
+    //             setNotification("You've got a new message");
+    //             console.log(data.message);
+    //         }
+    //     });
+    // }
 
-    // close notification after 5 seconds
-    setTimeout(() => {
-        setNotificationVisible(false);
-    }, 5000);
+    // // close notification after 5 seconds
+    // setTimeout(() => {
+    //     setNotificationVisible(false);
+    // }, 5000);
 
     return (
         <div className="flex flex-col">
-            {notificationVisible ? (
+            {/* {notificationVisible ? (
                 <div>
                     <div className="CLOSE_NOTIFICATION flex flex-row justify-end items-center ">
                         <button
@@ -40,7 +41,7 @@ export default function Notification() {
                         {notification}
                     </div>
                 </div>
-            ) : null}
+            ) : null} */}
         </div>
     );
 }
