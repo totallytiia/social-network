@@ -25,7 +25,8 @@
   - [X] API
 - [X] Group join requests
   - [X] Frontend
-- [ ] Events [going/not going] (groups)
+- [X] Events [going/not going] (groups)
+  - [ ] (OPTIONAL) Improve... not permanent answer
 - [X] Comments on posts in group view 
 
 ---
