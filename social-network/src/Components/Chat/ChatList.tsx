@@ -89,7 +89,6 @@ export default function ChatList({
             list.appendChild(li);
         }
         for (const group of groups) {
-            // TODO: if user is part of the group add it to the list
             const groupMembers = group.members?.map((member) =>
                 parseInt(Object.keys(member)[0])
             );
