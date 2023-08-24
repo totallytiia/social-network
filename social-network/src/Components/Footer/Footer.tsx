@@ -16,7 +16,6 @@ export default function Footer() {
     } as { groups: number[]; users: number[] });
 
     useEffect(() => {
-        // Define the function inside the useEffect
         function handleNewMessage(e: MessageEvent) {
             const data = JSON.parse(e.data);
             console.log(data);

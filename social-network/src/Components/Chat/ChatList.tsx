@@ -15,6 +15,7 @@ interface IReceiver {
 interface IGroup {
     id: number;
     name: string;
+    members: [];
 }
 
 interface ILastChat {
@@ -51,6 +52,7 @@ export default function ChatList({
     function handleSearch(e: React.ChangeEvent<HTMLInputElement>) {
         const search = e.target.value.toLowerCase();
         const list = document.querySelector('ul#chatSearchUserList.USERS');
+        list?.classList.add('max-h-64', 'overflow-scroll');
         if (list === null) {
             return;
         }
@@ -67,7 +69,8 @@ export default function ChatList({
                 'items-center',
                 'p-1',
                 'font-sm',
-                'hover:bg-gray-200'
+                'hover:bg-gray-200',
+                'max-h-32'
             );
             li.innerHTML = `
                 <img src="${
@@ -86,25 +89,37 @@ export default function ChatList({
             list.appendChild(li);
         }
         for (const group of groups) {
-            const li = document.createElement('li');
-            li.classList.add(
-                'flex',
-                'items-center',
-                'p-1',
-                'font-sm',
-                'hover:bg-gray-200'
+            // TODO: if user is part of the group add it to the list
+            const groupMembers = group.members?.map((member) =>
+                parseInt(Object.keys(member)[0])
             );
-            li.innerHTML = `
+            if (groupMembers?.includes(userData.id)) {
+                if (group.members.length !== 0) {
+                    console.log(group.members.entries());
+                }
+
+                if (group.members) {
+                    const li = document.createElement('li');
+                    li.classList.add(
+                        'flex',
+                        'items-center',
+                        'p-1',
+                        'font-sm',
+                        'hover:bg-gray-200'
+                    );
+                    li.innerHTML = `
                 <img src="/assets/group_icon.png" alt="avatar" class="w-6 h-6 rounded-full object-cover mr-2">
                 <span class="text-sm">${group.name}</span>
             `;
-            li.addEventListener('click', () => {
-                setVisibleChats({
-                    ...visibleChats,
-                    groups: [...visibleChats.groups, group.id],
-                });
-            });
-            list.appendChild(li);
+                    li.addEventListener('click', () => {
+                        setVisibleChats({
+                            ...visibleChats,
+                            groups: [...visibleChats.groups, group.id],
+                        });
+                    });
+                    list.appendChild(li);
+                }
+            }
         }
         if (filteredUsers.length === 0) {
             const li = document.createElement('li');
@@ -199,6 +214,7 @@ export default function ChatList({
                 groups.push({
                     id: group.id,
                     name: group.name,
+                    members: group.members,
                 });
             }
             setGroups(groups);
