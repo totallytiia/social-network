@@ -23,7 +23,7 @@ export default function Footer() {
                 const { group_id, user_id } = data.message;
                 console.log(visibleChats);
                 console.log(group_id, user_id);
-                if (!visibleChats.users.includes(user_id)) {
+                if (!visibleChats.users.includes(user_id) && group_id === 0) {
                     const visibleChatsCopy = { ...visibleChats };
                     visibleChatsCopy.users.push(user_id);
                     setVisibleChats(visibleChatsCopy);
