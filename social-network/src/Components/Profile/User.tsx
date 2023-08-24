@@ -9,6 +9,7 @@ import {
     ClockIcon,
     HandThumbUpIcon,
     HandThumbDownIcon,
+    XMarkIcon,
 } from '@heroicons/react/24/solid';
 
 interface IUser {
@@ -191,13 +192,21 @@ export default function User() {
                                     // TODO: Tiia style
                                     followersVisible ? (
                                         <ul>
+                                            <XMarkIcon
+                                                className="w-10 h-10 p-2"
+                                                onClick={() =>
+                                                    setFollowersVisible(
+                                                        !followersVisible
+                                                    )
+                                                }
+                                            />
                                             {user.followers !== undefined &&
                                             user.followers.length > 0 ? (
                                                 user.followers.map(
                                                     (u: IUser) => (
                                                         <li
                                                             key={u.id}
-                                                            className="flex items-center justify-between"
+                                                            className="flex items-center justify-between my-1"
                                                         >
                                                             <Link
                                                                 to={`/user/${u.id}`}
@@ -207,7 +216,7 @@ export default function User() {
                                                                         avatar={
                                                                             u.avatar
                                                                         }
-                                                                        classNames="w-10 h-10 rounded-full shrink-0"
+                                                                        classNames="w-8 h-8 rounded-full shrink-0"
                                                                     />
                                                                     <p className="ml-2">
                                                                         {
@@ -248,12 +257,20 @@ export default function User() {
                                     // TODO: Tiia style
                                     followsVisible ? (
                                         <ul>
+                                            <XMarkIcon
+                                                className="w-10 h-10 p-2"
+                                                onClick={() =>
+                                                    setFollowsVisible(
+                                                        !followsVisible
+                                                    )
+                                                }
+                                            />
                                             {user.follows !== undefined &&
                                             user.follows.length > 0 ? (
                                                 user.follows.map((u: IUser) => (
                                                     <li
                                                         key={u.id}
-                                                        className="flex items-center justify-between"
+                                                        className="flex items-center justify-between my-1"
                                                     >
                                                         <Link
                                                             to={`/user/${u.id}`}
@@ -263,7 +280,7 @@ export default function User() {
                                                                     avatar={
                                                                         u.avatar
                                                                     }
-                                                                    classNames="w-10 h-10 rounded-full shrink-0"
+                                                                    classNames="w-8 h-8 rounded-full shrink-0"
                                                                 />
                                                                 <p className="ml-2">
                                                                     {u.nickname}
