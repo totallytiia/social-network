@@ -188,65 +188,56 @@ export default function User() {
                                     setFollowersVisible(!followersVisible)
                                 }
                             >
-                                {
-                                    // TODO: Tiia style
-                                    followersVisible ? (
-                                        <ul>
-                                            <XMarkIcon
-                                                className="w-10 h-10 p-2"
-                                                onClick={() =>
-                                                    setFollowersVisible(
-                                                        !followersVisible
-                                                    )
-                                                }
-                                            />
-                                            {user.followers !== undefined &&
-                                            user.followers.length > 0 ? (
-                                                user.followers.map(
-                                                    (u: IUser) => (
-                                                        <li
-                                                            key={u.id}
-                                                            className="flex items-center justify-between my-1"
-                                                        >
-                                                            <Link
-                                                                to={`/user/${u.id}`}
-                                                            >
-                                                                <div className="flex items-center">
-                                                                    <ProfileIcon
-                                                                        avatar={
-                                                                            u.avatar
-                                                                        }
-                                                                        classNames="w-8 h-8 rounded-full shrink-0"
-                                                                    />
-                                                                    <p className="ml-2">
-                                                                        {
-                                                                            u.nickname
-                                                                        }
-                                                                    </p>
-                                                                </div>
-                                                            </Link>
-                                                        </li>
-                                                    )
+                                {followersVisible ? (
+                                    <ul className="bg-white rounded-lg">
+                                        <XMarkIcon
+                                            className="w-10 h-10 p-2"
+                                            onClick={() =>
+                                                setFollowersVisible(
+                                                    !followersVisible
                                                 )
-                                            ) : (
-                                                <li className="text-center">
-                                                    No followers
+                                            }
+                                        />
+                                        {user.followers !== undefined &&
+                                        user.followers.length > 0 ? (
+                                            user.followers.map((u: IUser) => (
+                                                <li
+                                                    key={u.id}
+                                                    className="flex items-center justify-between my-1"
+                                                >
+                                                    <Link to={`/user/${u.id}`}>
+                                                        <div className="flex items-center">
+                                                            <ProfileIcon
+                                                                avatar={
+                                                                    u.avatar
+                                                                }
+                                                                classNames="w-8 h-8 rounded-full shrink-0"
+                                                            />
+                                                            <p className="ml-2">
+                                                                {u.nickname}
+                                                            </p>
+                                                        </div>
+                                                    </Link>
                                                 </li>
-                                            )}
-                                        </ul>
-                                    ) : (
-                                        <>
-                                            <p className="font-bold text-gray-700 text-xl">
-                                                {user.followers !== undefined
-                                                    ? user.followers.length
-                                                    : 0}
-                                            </p>
-                                            <p className="text-gray-400 pr-2">
-                                                Followers
-                                            </p>
-                                        </>
-                                    )
-                                }
+                                            ))
+                                        ) : (
+                                            <li className="text-center">
+                                                No followers
+                                            </li>
+                                        )}
+                                    </ul>
+                                ) : (
+                                    <>
+                                        <p className="font-bold text-gray-700 text-xl">
+                                            {user.followers !== undefined
+                                                ? user.followers.length
+                                                : 0}
+                                        </p>
+                                        <p className="text-gray-400 pr-2">
+                                            Followers
+                                        </p>
+                                    </>
+                                )}
                             </div>
                             <div
                                 onClick={() =>
@@ -256,7 +247,7 @@ export default function User() {
                                 {
                                     // TODO: Tiia style
                                     followsVisible ? (
-                                        <ul>
+                                        <ul className="bg-white rounded-lg">
                                             <XMarkIcon
                                                 className="w-10 h-10 p-2"
                                                 onClick={() =>
