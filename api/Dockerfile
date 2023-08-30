@@ -20,5 +20,7 @@ FROM alpine:3.18
 
 COPY --from=build /main /
 COPY /db /db
+ENV ISDOCKER=true
+
 
 CMD ["/main"]

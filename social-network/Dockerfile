@@ -23,6 +23,7 @@ COPY --from=builder /social-network/build/ .
 # Copy nginx configuration
 COPY backend.conf /etc/nginx/conf.d/backend.conf
 # Expose the default HTTP port
+ENV ISDOCKER=true
 EXPOSE 80
 # Run the web service
 CMD ["nginx", "-g", "daemon off;"]
