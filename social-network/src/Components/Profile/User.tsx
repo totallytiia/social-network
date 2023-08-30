@@ -214,7 +214,7 @@ export default function User() {
                                                                 classNames="w-8 h-8 rounded-full shrink-0"
                                                             />
                                                             <p className="ml-2">
-                                                                {u.nickname}
+                                                                {`${u.fName} ${u.lName}`}
                                                             </p>
                                                         </div>
                                                     </Link>
@@ -274,7 +274,7 @@ export default function User() {
                                                                     classNames="w-8 h-8 rounded-full shrink-0"
                                                                 />
                                                                 <p className="ml-2">
-                                                                    {u.nickname}
+                                                                    {`${u.fName} ${u.lName}`}
                                                                 </p>
                                                             </div>
                                                         </Link>
