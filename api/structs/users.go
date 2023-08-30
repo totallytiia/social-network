@@ -113,7 +113,7 @@ func (u NewUser) Validate() error {
 		return errors.New("invalid nickname")
 	}
 	// Validate the avatar blob using regex
-	var avatarReqEx = regexp.MustCompile(`^data:image\/(png|jpg|jpeg);base64,([a-zA-Z0-9+/=]+)$`)
+	var avatarReqEx = regexp.MustCompile(`^data:image\/(png|jpg|jpeg|gif);base64,([a-zA-Z0-9+/=]+)$`)
 	if !avatarReqEx.MatchString(u.Avatar) && u.Avatar != "" {
 		return errors.New("invalid avatar")
 	}

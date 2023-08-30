@@ -41,7 +41,7 @@ func (c *NewChat) Validate() error {
 	if len(c.Message) > 500 {
 		return errors.New("chat message cannot be longer than 1000 characters")
 	}
-	var imageRegEx = regexp.MustCompile(`^data:image\/(png|jpg|jpeg);base64,([a-zA-Z0-9+/=]+)$`)
+	var imageRegEx = regexp.MustCompile(`^data:image\/(png|jpg|jpeg|gif);base64,([a-zA-Z0-9+/=]+)$`)
 	if !imageRegEx.MatchString(c.Image) && c.Image != "" {
 		return errors.New("invalid image")
 	}

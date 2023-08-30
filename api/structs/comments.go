@@ -40,7 +40,7 @@ func (c *NewComment) Validate() error {
 	if len(c.Comment) > 1000 {
 		return errors.New("comment comment cannot be longer than 1000 characters")
 	}
-	var imageRegEx = regexp.MustCompile(`^data:image\/(png|jpg|jpeg);base64,([a-zA-Z0-9+/=]+)$`)
+	var imageRegEx = regexp.MustCompile(`^data:image\/(png|jpg|jpeg|gif);base64,([a-zA-Z0-9+/=]+)$`)
 	if !imageRegEx.MatchString(c.Image) && c.Image != "" {
 		return errors.New("invalid image")
 	}

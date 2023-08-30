@@ -64,7 +64,7 @@ func (p *NewPost) Validate() error {
 			}
 		}
 	}
-	var imageRegEx = regexp.MustCompile(`^data:image\/(png|jpg|jpeg);base64,([a-zA-Z0-9+/=]+)$`)
+	var imageRegEx = regexp.MustCompile(`^data:image\/(png|jpg|jpeg|gif);base64,([a-zA-Z0-9+/=]+)$`)
 	if !imageRegEx.MatchString(p.Image) && p.Image != "" {
 		return errors.New("invalid image")
 	}
