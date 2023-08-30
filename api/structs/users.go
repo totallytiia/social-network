@@ -108,7 +108,7 @@ func (u NewUser) Validate() error {
 		return errors.New("invalid date of birth")
 	}
 	// Validate the nickname using regex
-	var nicknameReqEx = regexp.MustCompile(`^[a-zA-Z0-9._%+\-]{3,}$`)
+	var nicknameReqEx = regexp.MustCompile(`^[a-zA-Z0-9._%+\-]{1,}$`)
 	if !nicknameReqEx.MatchString(u.Nickname) && u.Nickname != "" {
 		return errors.New("invalid nickname")
 	}
