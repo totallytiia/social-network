@@ -22,6 +22,7 @@ WORKDIR /usr/share/nginx/html
 COPY --from=builder /social-network/build/ .
 # Copy nginx configuration
 COPY backend.conf /etc/nginx/conf.d/backend.conf
+COPY frontend.conf /etc/nginx/conf.d/default.conf
 # Expose the default HTTP port
 ENV ISDOCKER=true
 EXPOSE 80
