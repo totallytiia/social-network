@@ -66,7 +66,7 @@ func GetGroup(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	var g = s.Group{GroupID: groupID}
-	err = g.Get()
+	err = g.Get(u.ID)
 	if err != nil {
 		BadRequest(w, r, err.Error())
 		return
@@ -148,7 +148,7 @@ func UpdateGroup(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	var g = s.Group{GroupID: groupID}
-	err = g.Get()
+	err = g.Get(u.ID)
 	if err != nil {
 		BadRequest(w, r, err.Error())
 		return
@@ -197,7 +197,7 @@ func DeleteGroup(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	var g = s.Group{GroupID: groupID}
-	err = g.Get()
+	err = g.Get(u.ID)
 	if err != nil {
 		BadRequest(w, r, err.Error())
 		return
@@ -236,7 +236,7 @@ func AddGroupMember(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	var g = s.Group{GroupID: groupID}
-	err = g.Get()
+	err = g.Get(u.ID)
 	if err != nil {
 		BadRequest(w, r, err.Error())
 		return
@@ -275,7 +275,7 @@ func RemoveGroupMember(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	var g = s.Group{GroupID: groupID}
-	err = g.Get()
+	err = g.Get(u.ID)
 	if err != nil {
 		BadRequest(w, r, err.Error())
 		return
@@ -314,7 +314,7 @@ func GroupJoinRequest(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	var g = s.Group{GroupID: groupID}
-	err = g.Get()
+	err = g.Get(u.ID)
 	if err != nil {
 		BadRequest(w, r, err.Error())
 		return
@@ -369,7 +369,7 @@ func RespondToGroupRequest(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	var g = s.Group{GroupID: groupID}
-	err = g.Get()
+	err = g.Get(u.ID)
 	if err != nil {
 		BadRequest(w, r, err.Error())
 		return
@@ -465,7 +465,7 @@ func LeaveGroup(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	var g = s.Group{GroupID: groupID}
-	err = g.Get()
+	err = g.Get(u.ID)
 	if err != nil {
 		BadRequest(w, r, err.Error())
 		return
@@ -500,7 +500,7 @@ func InviteToGroup(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	var g = s.Group{GroupID: groupID}
-	err = g.Get()
+	err = g.Get(u.ID)
 	if err != nil {
 		BadRequest(w, r, err.Error())
 		return
@@ -556,7 +556,7 @@ func RespondToInvite(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	var g = s.Group{GroupID: groupID}
-	err = g.Get()
+	err = g.Get(u.ID)
 	if err != nil {
 		BadRequest(w, r, err.Error())
 		return

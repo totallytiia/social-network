@@ -28,7 +28,7 @@ func CreateEvent(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	var group = s.Group{GroupID: groupID}
-	err = group.Get()
+	err = group.Get(u.ID)
 	if err != nil {
 		BadRequest(w, r, err.Error())
 		return
@@ -53,7 +53,7 @@ func CreateEvent(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	var e = s.Event{ID: id}
-	err = e.Get()
+	err = e.Get(0)
 	if err != nil {
 		fmt.Println("Could not get event")
 		w.WriteHeader(http.StatusInternalServerError)
@@ -94,7 +94,7 @@ func CreateEvent(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetEvents(w http.ResponseWriter, r *http.Request) {
-	v, _ := ValidateCookie(w, r)
+	v, u := ValidateCookie(w, r)
 	if !v {
 		http.Error(w, "Unauthorized", http.StatusUnauthorized)
 	}
@@ -108,7 +108,7 @@ func GetEvents(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	var group = s.Group{GroupID: groupID}
-	err = group.Get()
+	err = group.Get(u.ID)
 	if err != nil {
 		BadRequest(w, r, err.Error())
 		return
@@ -124,7 +124,7 @@ func GetEvents(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetEvent(w http.ResponseWriter, r *http.Request) {
-	v, _ := ValidateCookie(w, r)
+	v, u := ValidateCookie(w, r)
 	if !v {
 		http.Error(w, "Unauthorized", http.StatusUnauthorized)
 	}
@@ -138,7 +138,7 @@ func GetEvent(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	var e = s.Event{ID: eventID}
-	err = e.Get()
+	err = e.Get(u.ID)
 	if err != nil {
 		BadRequest(w, r, err.Error())
 		return

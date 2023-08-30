@@ -167,7 +167,7 @@ func GetPosts(IDs map[string]any, index, userFetching int) (Posts, error) {
 			continue
 		}
 		group := Group{GroupID: posts[i].GroupID}
-		group.Get()
+		group.Get(0)
 		if !group.IsMember(userFetching) {
 			posts = append(posts[:i], posts[i+1:]...)
 			i--

@@ -77,11 +77,11 @@ func (g Group) GetEvents() ([]Event, error) {
 	return events, nil
 }
 
-func (e *Event) Get() error {
+func (e *Event) Get(uFetching int) error {
 	var err = db.DB.QueryRow(`
-	SELECT e.id, e.group_id, e.start_date_time, e.end_date_time, e.description, e.title, (SELECT COUNT(*) FROM event_users eu WHERE eu.event_id = e.id AND eu.going = 1) AS user_going, (SELECT COUNT(*) FROM event_users eu WHERE eu.event_id = e.id AND eu.going = 0) AS user_not_going
+	SELECT e.id, e.group_id, e.start_date_time, e.end_date_time, e.description, e.title, (SELECT COUNT(*) FROM event_users eu WHERE eu.event_id = e.id AND eu.going = 1 AND eu.user_id = ?) AS user_going, (SELECT COUNT(*) FROM event_users eu WHERE eu.event_id = e.id AND eu.going = 0 AND eu.user_id = ?) AS user_not_going
 	FROM events e
-	WHERE e.id = ?`, e.ID).Scan(&e.ID, &e.GroupID, &e.StartDateTime, &e.EndDateTime, &e.Description, &e.Title, &e.UserGoing, &e.UserNotGoing)
+	WHERE e.id = ?`, uFetching, uFetching, e.ID).Scan(&e.ID, &e.GroupID, &e.StartDateTime, &e.EndDateTime, &e.Description, &e.Title, &e.UserGoing, &e.UserNotGoing)
 	if err != nil {
 		return err
 	}

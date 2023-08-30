@@ -56,7 +56,7 @@ func (g NewGroup) Create() (Group, error) {
 	return group, nil
 }
 
-func (g *Group) Get() error {
+func (g *Group) Get(uFetching int) error {
 	row := db.DB.QueryRow(`SELECT g.group_name, g.group_description, g.user_id, (SELECT GROUP_CONCAT(gm.user_id, ", ") FROM group_members gm WHERE gm.group_id = g.id) AS members FROM groups g WHERE g.id = ?`, g.GroupID, g.GroupID)
 	var members string
 	err := row.Scan(&g.GroupName, &g.GroupDescription, &g.GroupOwner, &members)
@@ -106,7 +106,7 @@ func (g *Group) Get() error {
 		if err != nil {
 			return err
 		}
-		err = event.Get()
+		err = event.Get(uFetching)
 		if err != nil {
 			return err
 		}

@@ -60,7 +60,7 @@ func (c *NewChat) Validate() error {
 	}
 	if c.GroupID != 0 {
 		var group = Group{GroupID: c.GroupID}
-		err := group.Get()
+		err := group.Get(0)
 		if err != nil {
 			return errors.New("invalid group_id")
 		}
