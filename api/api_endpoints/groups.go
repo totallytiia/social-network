@@ -338,7 +338,7 @@ func GroupJoinRequest(w http.ResponseWriter, r *http.Request) {
 		BadRequest(w, r, err.Error())
 		return
 	}
-	err = groupOwner.AddNotification(u.ID, "groupJoinReq", fmt.Sprintf("%s %s has requested to join your group %s", u.FName, u.LName, g.GroupName), g.GroupID)
+	err = groupOwner.AddNotification(u.ID, "groupJoinReq", fmt.Sprintf("has requested to join your group %s", g.GroupName), g.GroupID)
 	if err != nil {
 		BadRequest(w, r, err.Error())
 		return
@@ -525,7 +525,7 @@ func InviteToGroup(w http.ResponseWriter, r *http.Request) {
 		BadRequest(w, r, err.Error())
 		return
 	}
-	err = user.AddNotification(g.GroupOwner, "groupInvite", fmt.Sprintf(" has invited you to join their group %s", g.GroupName), g.GroupID)
+	err = user.AddNotification(u.ID, "groupInvite", fmt.Sprintf(" has invited you to join their group %s", g.GroupName), g.GroupID)
 	if err != nil {
 		BadRequest(w, r, err.Error())
 		return
