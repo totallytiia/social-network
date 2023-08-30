@@ -33,17 +33,6 @@ const ChatInputBox = ({ sendMessage, receiver }: Props) => {
                         }
                     }}
                 />
-                {/* <label htmlFor={`chatImageUpload-${receiver.id}`}>
-                    <DocumentIcon className="w-4 h-4 rounded-full" />
-                </label>
-                <input
-                    type="file"
-                    className="hidden"
-                    id={`chatImageUpload-${receiver.id}`}
-                    name={`chatImageUpload-${receiver.id}`}
-                    accept="image/png, image/jpeg, image/jpg"
-                    onChange={handleFormImageChange}
-                /> */}
                 <button
                     type="button"
                     className="px-3 py-2 text-xs font-medium text-center text-gray-600 rounded-lg hover:bg-blue-800 outline-none disabled:opacity-50"
