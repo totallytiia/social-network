@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 export default function Login() {
     const [email, setEmail] = useState('');
@@ -59,12 +60,9 @@ export default function Login() {
                             Submit
                         </button>
                     </form>
-                    <button
-                        onClick={() => (window.location.href = '/register')}
-                        className="text-sm text-gray-500 mt-3"
-                    >
+                    <Link to="/register">
                         Don't have an account? Register here.
-                    </button>
+                    </Link>
                 </div>
             </div>
         </>

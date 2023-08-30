@@ -10,6 +10,7 @@ import {
     ChatBubbleOvalLeftIcon,
 } from '@heroicons/react/24/solid';
 import { TrashIcon } from '@heroicons/react/24/outline';
+import { Link } from 'react-router-dom';
 
 interface PostProps {
     deletePost: (id: number) => void;
@@ -137,37 +138,30 @@ export default function Post({ postInput, deletePost }: PostProps) {
             <div className="mt-4 mx-6 mb-0 p-4 bg-blue-50 rounded-xl">
                 <div className="flex justify-between">
                     <div className="flex">
-                        <div
-                            onClick={() =>
-                                (window.location.href = `/user/${post.user_id}`)
-                            }
+                        <Link
+                            to={`/user/${post.user_id}`}
                             className="cursor-pointer h-8 w-8 relative overflow-hidden rounded-full shrink-0 bg-pink-200"
                         >
                             <ProfileIcon
                                 avatar={post.user_avatar}
                                 classNames="h-10 w-10"
                             />
-                        </div>
+                        </Link>
                         <div className="ml-2">
-                            <h1
-                                onClick={(e) =>
-                                    e.target === e.currentTarget &&
-                                    (window.location.href = `/user/${post.user_id}`)
-                                }
+                            <Link
+                                to={`/user/${post.user_id}`}
                                 className="cursor-pointer text-sm font-bold"
                             >
                                 {`${post.user_fname} ${post.user_lname}`}
                                 {post.group_id !== 0 ? (
-                                    <span
+                                    <Link
                                         className="text-xs"
-                                        onClick={() =>
-                                            (window.location.href = `/group/${post.group_id}`)
-                                        }
+                                        to={`/group/${post.group_id}`}
                                     >
                                         {` in ${post.group_name}`}
-                                    </span>
+                                    </Link>
                                 ) : null}
-                            </h1>
+                            </Link>
                             <p className="text-xs">
                                 {new Date(post.created_at).toLocaleString()}
                             </p>

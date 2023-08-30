@@ -7,20 +7,30 @@ import Group from '../Group/Group';
 
 import { Routes, Route } from 'react-router-dom';
 import User from '../Profile/User';
+import Login from '../Login/Login';
+import Register from '../Register/Register';
 
-function Page() {
+function Page({ isAuthenticated }: any) {
     return (
         <>
-            <Header></Header>
+            {isAuthenticated ? <Header /> : null}
             <Routes>
-                <Route path="/" element={<Posts />} />
-                <Route path="/user/:id" element={<User />} />
-                {/*  <Route path="/notifications" element={<Notifications />} /> */}
-                <Route path="/groups" element={<Groups />} />
-                <Route path="/group/:id" element={<Group />} />
-                <Route path="*" element={<FourOneFour />} />
+                {!isAuthenticated ? (
+                    <>
+                        <Route path="/register" element={<Register />} />
+                        <Route path="/*" element={<Login />} />
+                    </>
+                ) : (
+                    <>
+                        <Route path="/" element={<Posts />} />
+                        <Route path="/user/:id" element={<User />} />
+                        <Route path="/groups" element={<Groups />} />
+                        <Route path="/group/:id" element={<Group />} />
+                        <Route path="*" element={<FourOneFour />} />
+                    </>
+                )}
             </Routes>
-            <Footer></Footer>
+            {isAuthenticated ? <Footer /> : null}
         </>
     );
 }

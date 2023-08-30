@@ -96,12 +96,12 @@ export default function Header() {
         <header className="HEADER bg-white sticky top-0 shadow-lg z-50">
             <nav className="NAVIGATION grid grid-cols-2 gap-3 items-center px-2 py-2 mx-2">
                 <div className="LOGO">
-                    <h1
-                        onClick={() => (window.location.href = '/')}
+                    <Link
+                        to="/"
                         className="LOGO-TEXT cursor-pointer text-black text-2xl font-bold"
                     >
                         SOCIAL NETWORK
-                    </h1>
+                    </Link>
                 </div>
                 <div className="DESKTOP-MENU space-x-3 text-xs justify-end flex lg:flex">
                     <div>

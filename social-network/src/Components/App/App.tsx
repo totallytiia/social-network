@@ -3,7 +3,6 @@ import { useState, createContext, useEffect } from 'react';
 import Page from '../Page/Page';
 import '../../styles.css';
 import { BrowserRouter } from 'react-router-dom';
-import SignInOrRegister from '../SignInOrRegister/SignInOrRegister';
 import WSProvider from '../WSProvider/WSProvider';
 
 interface ApiUserContextInterface {
@@ -59,23 +58,13 @@ function App() {
         }
         checkAuth();
     }, [isAuthenticated]);
-    if (!isAuthenticated) {
-        return (
-            <>
-                <BrowserRouter>
-                    <UserContext.Provider value={{ userData, setUserData }}>
-                        <SignInOrRegister></SignInOrRegister>
-                    </UserContext.Provider>
-                </BrowserRouter>
-            </>
-        );
-    }
+    console.log(isAuthenticated);
     return (
         <>
             <BrowserRouter>
                 <UserContext.Provider value={{ userData, setUserData }}>
                     <WSProvider>
-                        <Page></Page>
+                        <Page isAuthenticated={isAuthenticated}></Page>
                     </WSProvider>
                 </UserContext.Provider>
             </BrowserRouter>

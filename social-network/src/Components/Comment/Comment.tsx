@@ -2,6 +2,7 @@ import { useContext } from 'react';
 import { UserContext } from '../App/App';
 import ProfileIcon from '../Profile/ProfileIcon';
 import { TrashIcon } from '@heroicons/react/24/outline';
+import { Link } from 'react-router-dom';
 
 interface IComment {
     id: number;
@@ -26,10 +27,8 @@ export default function Comment({ comment, deleteComment }: ICommentProps) {
     return comment !== undefined ? (
         <>
             <div className="flex flex-row gap-2">
-                <div
-                    onClick={() =>
-                        (window.location.href = `/user/${comment.user_id}`)
-                    }
+                <Link
+                    to={`/user/${comment.user_id}`}
                     className="cursor-pointer mt-2 w-6 h-6 relative overflow-hidden shrink-0 rounded-full bg-pink-200 border-none outline-none"
                 >
                     <img
@@ -38,17 +37,15 @@ export default function Comment({ comment, deleteComment }: ICommentProps) {
                         alt=""
                     />
                     <ProfileIcon classNames="w-8 h-8" />
-                </div>
+                </Link>
                 <div className="flex flex-col text-sm bg-gray-50 my-1 p-2 rounded-lg ">
                     <div className="flex font-bold gap-2 justify-between">
-                        <p
+                        <Link
                             className="cursor-pointer"
-                            onClick={() =>
-                                (window.location.href = `/user/${comment.user_id}`)
-                            }
+                            to={`/user/${comment.user_id}`}
                         >
                             {comment.user_fname + ' ' + comment.user_lname}
-                        </p>
+                        </Link>
                         {comment.user_id === userData.id ? (
                             <button
                                 onClick={() => deleteComment(comment.id)}

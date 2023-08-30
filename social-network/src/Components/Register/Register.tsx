@@ -1,6 +1,6 @@
 import { PlusIcon } from '@heroicons/react/24/solid';
 import { useState } from 'react';
-import Notification from '../Notification/Notification';
+import { Link } from 'react-router-dom';
 
 interface iFormKeys {
     [key: string]: {
@@ -295,7 +295,7 @@ export default function Register() {
             }
         );
         if (response.status === 200) {
-            window.location.href = '/login';
+            window.location.href = '/';
             // show home page
         }
         document.getElementById('errorMsgRegister')!.classList.remove('hidden');
@@ -465,12 +465,9 @@ export default function Register() {
                             className="btn-custom font-semibold"
                         ></input>
                     </form>
-                    <button
-                        onClick={() => (window.location.href = '/login')}
-                        className="text-sm text-gray-500 mt-3"
-                    >
+                    <Link to={'/login'} className="text-sm text-gray-500 mt-3">
                         Already have an account? Login here.
-                    </button>
+                    </Link>
                 </div>
             </div>
         </>
